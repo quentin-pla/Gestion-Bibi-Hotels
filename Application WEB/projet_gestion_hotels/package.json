@@ -1,0 +1,20 @@
+{
+  "name": "projet_gestion_hotels",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "13.8.x"
+  },
+  "dependencies": {
+    "express": "latest",
+    "socket.io": "latest"
+  },
+  "cacheDirectories": [
+    "node_modules",
+    "react-ui/node_modules"
+  ],
+  "scripts": {
+    "start": "node server/server.js",
+    "build": "cd react-ui/ && npm install && npm run build"
+  }
+}

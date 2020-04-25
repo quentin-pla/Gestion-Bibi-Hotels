@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="Mise à jour des fichiers de configuration">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/style.css" afterDir="false" />
+    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="Ajout de la classe Main et du fichier de style style.css">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/database/JDBC.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/Administration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/Bill.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/BillingService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/Client.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/ClientService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/Hotel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/Occupant.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/Occupation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/Reservation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/ReservationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/Room.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/RoomType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/models/Service.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
@@ -12,6 +26,8 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +63,12 @@
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="application" type="c8890929:TasksNode$1" />
               </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Projet_Gestion_Hotels" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
             </expand>
             <select />
           </tree_state>
@@ -57,8 +79,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="CSS File" />
+        <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -66,7 +89,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="ProjectId" id="1ayw5ep9QaaN4tDaS9IDgS4qp1C" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -82,8 +107,20 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="models.roomtypes" />
+    </key>
+  </component>
   <component name="RunManager" selected="Gradle.Projet_Gestion_Hotels [run]">
-    <configuration name="Projet_Gestion_Hotels [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="Projet_Gestion_Hotels.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Projet_Gestion_Hotels [classes]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -94,7 +131,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="build" />
+            <option value="classes" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -102,7 +139,7 @@
       <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="Projet_Gestion_Hotels [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="Projet_Gestion_Hotels [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -113,7 +150,26 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="dependencies" />
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="Projet_Gestion_Hotels [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -143,8 +199,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.Projet_Gestion_Hotels [run]" />
-        <item itemvalue="Gradle.Projet_Gestion_Hotels [dependencies]" />
-        <item itemvalue="Gradle.Projet_Gestion_Hotels [build]" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Gradle.Projet_Gestion_Hotels [jar]" />
+        <item itemvalue="Gradle.Projet_Gestion_Hotels [clean]" />
+        <item itemvalue="Gradle.Projet_Gestion_Hotels [classes]" />
       </list>
     </recent_temporary>
   </component>
@@ -159,7 +217,8 @@
       <option name="presentableId" value="Default" />
       <updated>1587720959628</updated>
       <workItem from="1587720962429" duration="186000" />
-      <workItem from="1587721958691" duration="777000" />
+      <workItem from="1587721958691" duration="2951000" />
+      <workItem from="1587801534449" duration="14821000" />
     </task>
     <task id="LOCAL-00001" summary="Mise à jour des fichiers de configuration + ajout .gitignore">
       <created>1587722130974</created>
@@ -175,7 +234,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587722188781</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Ajout de la classe Main et du fichier de style style.css">
+      <created>1587722810720</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1587722810720</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -184,40 +250,49 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Mise à jour des fichiers de configuration + ajout .gitignore" />
     <MESSAGE value="Mise à jour des fichiers de configuration" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mise à jour des fichiers de configuration" />
+    <MESSAGE value="Ajout de la classe Main et du fichier de style style.css" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout de la classe Main et du fichier de style style.css" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="115" key="#Project_Structure" timestamp="1587721001399">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="320" y="115" key="#Project_Structure/0.0.1440.900@0.0.1440.900" timestamp="1587721001399" />
-    <state x="144" y="52" key="CommitChangelistDialog2" timestamp="1587722232109">
+    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser" timestamp="1587821308296">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="144" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1587722232109" />
+    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1587821308296" />
+    <state x="276" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1587805397204">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="276" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.900@0.0.1440.900" timestamp="1587805397204" />
+    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1587801562893">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1587801562893" />
     <state x="144" y="78" key="DiffContextDialog" timestamp="1587722093877">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="144" y="78" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1587722093877" />
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1587722707720">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1587817742144">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1587722707720" />
-    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1587722707719">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1587817742144" />
+    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1587817742143">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1587722707719" />
-    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1587722707718">
+    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1587817742143" />
+    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1587817742141">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1587722707718" />
-    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1587722707720">
+    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1587817742141" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1587817742144">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1587722707720" />
-    <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1587722197136">
+    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1587817742144" />
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1587722814164">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="320" y="190" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1587722197136" />
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1587722814164" />
   </component>
 </project>

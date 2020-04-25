@@ -1,8 +1,9 @@
 package models;
 
+import database.DatabaseColumns;
 import database.DatabaseModel;
 
-public class Bill implements DatabaseModel {
+public class Bill extends DatabaseModel {
     //ID
     private int ID;
     //ID du client lié
@@ -11,8 +12,13 @@ public class Bill implements DatabaseModel {
     private float AMOUNT;
 
     //Liste des colonnes
-    private enum columns {
+    private enum Columns implements DatabaseColumns {
         ID,CLIENT_ID,AMOUNT
+    }
+
+    @Override
+    public DatabaseColumns[] getModelColumns() {
+        return Columns.values();
     }
 
     @Override
@@ -20,45 +26,21 @@ public class Bill implements DatabaseModel {
         return new Bill();
     }
 
-    @Override
-    public void setColumn(String columnItem, String value) {
-        Bill.columns column = Bill.columns.valueOf(columnItem);
-        switch (column) {
-            case ID:
-                this.setID(Integer.parseInt(value));
-                break;
-            case CLIENT_ID:
-                this.setCLIENT_ID(Integer.parseInt(value));
-                break;
-            case AMOUNT:
-                this.setAMOUNT(Float.parseFloat(value));
-                break;
-            default:
-                break;
-        }
-    }
-
     public int getID() {
         return ID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
+    public void setID(String ID) { this.ID = Integer.parseInt(ID); }
 
     public int getCLIENT_ID() {
         return CLIENT_ID;
     }
 
-    public void setCLIENT_ID(int CLIENT_ID) {
-        this.CLIENT_ID = CLIENT_ID;
-    }
+    public void setCLIENT_ID(String CLIENT_ID) { this.CLIENT_ID = Integer.parseInt(CLIENT_ID); }
 
     public float getAMOUNT() {
         return AMOUNT;
     }
 
-    public void setAMOUNT(float AMOUNT) {
-        this.AMOUNT = AMOUNT;
-    }
+    public void setAMOUNT(String AMOUNT) { this.AMOUNT = Float.parseFloat(AMOUNT); }
 }

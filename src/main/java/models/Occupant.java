@@ -1,8 +1,9 @@
 package models;
 
+import database.DatabaseColumns;
 import database.DatabaseModel;
 
-public class Occupant implements DatabaseModel {
+public class Occupant extends DatabaseModel {
     //ID
     private int ID;
     //ID de l'occupation liée
@@ -13,8 +14,13 @@ public class Occupant implements DatabaseModel {
     private String LASTNAME;
 
     //Liste des colonnes
-    private enum columns {
+    private enum Columns implements DatabaseColumns {
         ID,OCCUPATION_ID,FIRSTNAME,LASTNAME
+    }
+
+    @Override
+    public DatabaseColumns[] getModelColumns() {
+        return Columns.values();
     }
 
     @Override
@@ -22,41 +28,18 @@ public class Occupant implements DatabaseModel {
         return new Occupant();
     }
 
-    @Override
-    public void setColumn(String columnItem, String value) {
-        Occupant.columns column = Occupant.columns.valueOf(columnItem);
-        switch (column) {
-            case ID:
-                this.setID(Integer.parseInt(value));
-                break;
-            case OCCUPATION_ID:
-                this.setOCCUPATION_ID(Integer.parseInt(value));
-                break;
-            case FIRSTNAME:
-                this.setFIRSTNAME(value);
-                break;
-            case LASTNAME:
-                this.setLASTNAME(value);
-                break;
-            default:
-                break;
-        }
-    }
-
     public int getID() {
         return ID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
+    public void setID(String ID) { this.ID = Integer.parseInt(ID); }
 
     public int getOCCUPATION_ID() {
         return OCCUPATION_ID;
     }
 
-    public void setOCCUPATION_ID(int OCCUPATION_ID) {
-        this.OCCUPATION_ID = OCCUPATION_ID;
+    public void setOCCUPATION_ID(String OCCUPATION_ID) {
+        this.OCCUPATION_ID = Integer.parseInt(OCCUPATION_ID);
     }
 
     public String getFIRSTNAME() {

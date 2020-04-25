@@ -1,8 +1,9 @@
 package models;
 
+import database.DatabaseColumns;
 import database.DatabaseModel;
 
-public class Client implements DatabaseModel {
+public class Client extends DatabaseModel {
     //ID
     private int ID;
     //Nom
@@ -21,7 +22,7 @@ public class Client implements DatabaseModel {
     private boolean IS_REGULAR;
 
     //Liste des colonnes
-    private enum columns {
+    private enum Columns implements DatabaseColumns {
         ID,FIRSTNAME,LASTNAME,STREET,CITY,MAIL,PASSWORD,IS_REGULAR
     }
 
@@ -31,44 +32,16 @@ public class Client implements DatabaseModel {
     }
 
     @Override
-    public void setColumn(String columnItem, String value) {
-        columns column = columns.valueOf(columnItem);
-        switch (column) {
-            case ID:
-                this.setID(Integer.parseInt(value));
-                break;
-            case FIRSTNAME:
-                this.setFIRSTNAME(value);
-                break;
-            case LASTNAME:
-                this.setLASTNAME(value);
-                break;
-            case STREET:
-                this.setSTREET(value);
-                break;
-            case CITY:
-                this.setCITY(value);
-                break;
-            case MAIL:
-                this.setMAIL(value);
-                break;
-            case PASSWORD:
-                this.setPASSWORD(value);
-                break;
-            case IS_REGULAR:
-                this.setIS_REGULAR(Boolean.parseBoolean(value));
-                break;
-            default:
-                break;
-        }
+    public DatabaseColumns[] getModelColumns() {
+        return Columns.values();
     }
 
     public int getID() {
         return ID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setID(String ID) {
+        this.ID = Integer.parseInt(ID);
     }
 
     public String getFIRSTNAME() {
@@ -119,11 +92,9 @@ public class Client implements DatabaseModel {
         this.PASSWORD = PASSWORD;
     }
 
-    public boolean isIS_REGULAR() {
+    public boolean getIS_REGULAR() {
         return IS_REGULAR;
     }
 
-    public void setIS_REGULAR(boolean IS_REGULAR) {
-        this.IS_REGULAR = IS_REGULAR;
-    }
+    public void setIS_REGULAR(String IS_REGULAR) { this.IS_REGULAR = Boolean.parseBoolean(IS_REGULAR); }
 }

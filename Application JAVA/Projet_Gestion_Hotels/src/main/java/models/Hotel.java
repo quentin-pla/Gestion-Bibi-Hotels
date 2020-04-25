@@ -1,8 +1,9 @@
 package models;
 
+import database.DatabaseColumns;
 import database.DatabaseModel;
 
-public class Hotel implements DatabaseModel {
+public class Hotel extends DatabaseModel {
     //ID
     private int ID;
     //Nom
@@ -15,8 +16,13 @@ public class Hotel implements DatabaseModel {
     private int STAR_RATING;
 
     //Liste des colonnes
-    private enum columns {
+    private enum Columns implements DatabaseColumns {
         ID,NAME,STREET,CITY,STAR_RATING
+    }
+
+    @Override
+    public DatabaseColumns[] getModelColumns() {
+        return Columns.values();
     }
 
     @Override
@@ -24,37 +30,11 @@ public class Hotel implements DatabaseModel {
         return new Hotel();
     }
 
-    @Override
-    public void setColumn(String columnItem, String value) {
-        Hotel.columns column = Hotel.columns.valueOf(columnItem);
-        switch (column) {
-            case ID:
-                this.setID(Integer.parseInt(value));
-                break;
-            case NAME:
-                this.setNAME(value);
-                break;
-            case STREET:
-                this.setSTREET(value);
-                break;
-            case CITY:
-                this.setCITY(value);
-                break;
-            case STAR_RATING:
-                this.setSTAR_RATING(Integer.parseInt(value));
-                break;
-            default:
-                break;
-        }
-    }
-
     public int getID() {
         return ID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
+    public void setID(String ID) { this.ID = Integer.parseInt(ID); }
 
     public String getNAME() {
         return NAME;
@@ -84,7 +64,5 @@ public class Hotel implements DatabaseModel {
         return STAR_RATING;
     }
 
-    public void setSTAR_RATING(int STAR_RATING) {
-        this.STAR_RATING = STAR_RATING;
-    }
+    public void setSTAR_RATING(String STAR_RATING) { this.STAR_RATING = Integer.parseInt(STAR_RATING); }
 }

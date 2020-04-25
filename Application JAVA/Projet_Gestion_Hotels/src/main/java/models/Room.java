@@ -1,8 +1,9 @@
 package models;
 
+import database.DatabaseColumns;
 import database.DatabaseModel;
 
-public class Room implements DatabaseModel {
+public class Room extends DatabaseModel {
     //ID
     private int ID;
     //ID de l'hotel lié
@@ -11,8 +12,13 @@ public class Room implements DatabaseModel {
     private int ROOMTYPE_ID;
 
     //Liste des colonnes
-    private enum columns {
+    private enum Columns implements DatabaseColumns {
         ID,HOTEL_ID,ROOMTYPE_ID
+    }
+
+    @Override
+    public DatabaseColumns[] getModelColumns() {
+        return Columns.values();
     }
 
     @Override
@@ -20,45 +26,25 @@ public class Room implements DatabaseModel {
         return new Room();
     }
 
-    @Override
-    public void setColumn(String columnItem, String value) {
-        Room.columns column = Room.columns.valueOf(columnItem);
-        switch (column) {
-            case ID:
-                this.setID(Integer.parseInt(value));
-                break;
-            case HOTEL_ID:
-                this.setHOTEL_ID(Integer.parseInt(value));
-                break;
-            case ROOMTYPE_ID:
-                this.setROOMTYPE_ID(Integer.parseInt(value));
-                break;
-            default:
-                break;
-        }
-    }
-
     public int getID() {
         return ID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
+    public void setID(String ID) { this.ID = Integer.parseInt(ID); }
 
     public int getHOTEL_ID() {
         return HOTEL_ID;
     }
 
-    public void setHOTEL_ID(int HOTEL_ID) {
-        this.HOTEL_ID = HOTEL_ID;
+    public void setHOTEL_ID(String HOTEL_ID) {
+        this.HOTEL_ID = Integer.parseInt(HOTEL_ID);
     }
 
     public int getROOMTYPE_ID() {
         return ROOMTYPE_ID;
     }
 
-    public void setROOMTYPE_ID(int ROOMTYPE_ID) {
-        this.ROOMTYPE_ID = ROOMTYPE_ID;
+    public void setROOMTYPE_ID(String ROOMTYPE_ID) {
+        this.ROOMTYPE_ID = Integer.parseInt(ROOMTYPE_ID);
     }
 }

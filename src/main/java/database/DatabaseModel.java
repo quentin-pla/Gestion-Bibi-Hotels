@@ -8,21 +8,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class DatabaseModel {
-    //ID
+    /**
+     * ID
+     */
     protected int ID;
 
-    //Table correspondante dans la base de données
+    /**
+     * Table correspondante dans la base de données
+     */
     protected Tables table;
 
-    //Liste des tables de la base de données
+    /**
+     * Liste des tables de la base de données
+     */
     public enum Tables {
         BILLS,CLIENTS,HOTELS,OCCUPANTS,OCCUPATIONS,RESERVATIONS,ROOMS,ROOMTYPES,SERVICES
     }
 
-    //Liste des colonnes du modèle
+    /**
+     * Liste des colonnes du modèle
+     * @return colonnes
+     */
     public abstract DatabaseColumns[] getModelColumns();
 
-    //Générer une nouvelle instance
+    /**
+     * Générer une nouvelle instance
+     * @param table table
+     * @return nouvelle instance
+     */
     public static DatabaseModel newModelInstance(Tables table) {
         switch (table) {
             case BILLS:         return new Bill();
@@ -48,12 +61,19 @@ public abstract class DatabaseModel {
         }
     }
 
-    //Récupérer toutes la valeur de chaque colonne
+    /**
+     * Récupérer toutes la valeur de chaque colonne
+     * @return valeur de chaque colonne
+     */
     public Map<String, String> getAttributesData() {
         return getAttributesData(null);
     }
 
-    //Récupérer les valeurs de colonnes spécifiques
+    /**
+     * Récupérer les valeurs de colonnes spécifiques
+     * @param columnsFilter colonnes sélectionnées
+     * @return valeur de chaque colonne
+     */
     public Map<String, String> getAttributesData(String columnsFilter) {
         //Résultats
         Map<String,String> data = new HashMap<>();
@@ -92,6 +112,8 @@ public abstract class DatabaseModel {
         }
         return data;
     }
+
+    //************* GETTERS & SETTERS ***************//
 
     public int getID() { return ID; }
     public void setID(String ID) { this.ID = Integer.parseInt(ID); }

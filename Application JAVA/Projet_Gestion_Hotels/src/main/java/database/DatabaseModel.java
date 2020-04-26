@@ -7,6 +7,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO - classe pour les références renvoyant un objet à partir d'un id
+
+import static database.JDBC.insertQuery;
+
 public abstract class DatabaseModel {
     /**
      * ID
@@ -51,7 +55,18 @@ public abstract class DatabaseModel {
         }
     }
 
-    //Définir un attribut à partir de la valeur d'une colonne de la base de données
+    /**
+     * Sauvegarder l'objet dans la base de données
+     */
+    public void save() {
+        insertQuery(this);
+    }
+
+    /**
+     * Définir un attribut à partir de la valeur d'une colonne de la base de données
+     * @param columnItem nom de la colonne
+     * @param value valeur à attribuer
+     */
     public void setColumnAttribute(String columnItem, String value) {
         try {
             Method setColumn = getClass().getMethod("set" + columnItem, String.class);

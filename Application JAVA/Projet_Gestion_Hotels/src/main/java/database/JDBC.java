@@ -11,13 +11,24 @@ import java.util.Map;
  * Liaison avec la base de données
  */
 public class JDBC {
-    //URL de connexion
+    /**
+     * URL de connexion
+     */
     private final String CONNECT_URL = "jdbc:mysql://mysql-gestion-hotel.alwaysdata.net/gestion-hotel_projet";
-    //Identifiant
+
+    /**
+     * Identifiant
+     */
     private final String LOGIN = "***REMOVED***";
-    //Mot de passe
+
+    /**
+     * Mot de passe
+     */
     private final String PASSWORD = "***REMOVED***";
-    //Connexion à la base de données
+
+    /**
+     * Connexion à la base de données
+     */
     private Connection connection;
 
     /**

@@ -4,20 +4,45 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class Room extends DatabaseModel {
-    //ID de l'hotel lié
+    /**
+     * Table liée à la base de données
+     */
+    private Tables table = Tables.ROOMS;
+
+    /**
+     * ID de l'hotel lié
+     */
     private int HOTEL_ID;
-    //ID type de chambre lié
+
+    /**
+     * ID type de chambre lié
+     */
     private int ROOMTYPE_ID;
 
-    //Liste des colonnes
+    /**
+     * Liste des colonnes
+     */
     private enum Columns implements DatabaseColumns {
         HOTEL_ID,ROOMTYPE_ID
     }
 
-    //Constructeur
-    public Room() {
-        this.table = Tables.ROOMS;
+    /**
+     * Constructeur
+     */
+    public Room() {}
+
+    /**
+     * Constructeur surchargé
+     * @param HOTEL_ID id de l'hotel lié
+     * @param ROOMTYPE_ID id du type de chambre lié
+     */
+    public Room(int HOTEL_ID, int ROOMTYPE_ID) {
+        this.HOTEL_ID = HOTEL_ID;
+        this.ROOMTYPE_ID = ROOMTYPE_ID;
+        this.save();
     }
+
+    //************* GETTERS & SETTERS ***************//
 
     @Override
     public DatabaseColumns[] getModelColumns() {

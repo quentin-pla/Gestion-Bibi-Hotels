@@ -4,24 +4,81 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class Hotel extends DatabaseModel {
-    //Nom
+    /**
+     * Service réservation de l'hotel
+     */
+    private ReservationService reservationService;
+
+    /**
+     * Service client de l'hotel
+     */
+    private ClientService clientService;
+
+    /**
+     * Service facturation de l'hotel
+     */
+    private BillingService billingService;
+
+    /**
+     * Table liée à la base de données
+     */
+    private Tables table = Tables.HOTELS;
+
+    /**
+     * Nom
+     */
     private String NAME;
-    //Adresse
+
+    /**
+     * Adresse
+     */
     private String STREET;
-    //Ville
+
+    /**
+     * Ville
+     */
     private String CITY;
-    //Nombre d'étoiles
+
+    /**
+     * Nombre d'étoiles
+     */
     private int STAR_RATING;
 
-    //Liste des colonnes
+    /**
+     * Liste des colonnes
+     */
     private enum Columns implements DatabaseColumns {
         NAME,STREET,CITY,STAR_RATING
     }
 
-    //Constructeur
+    /**
+     * Constructeur
+     */
     public Hotel() {
-        this.table = Tables.HOTELS;
+        this.reservationService = new ReservationService(this);
+        this.clientService = new ClientService(this);
+        this.billingService = new BillingService(this);
     }
+
+    /**
+     * Constructeur surchargé
+     * @param name
+     * @param street
+     * @param city
+     * @param star_rating
+     */
+    public Hotel(String name, String street, String city, int star_rating) {
+        this.NAME = name;
+        this.STREET = street;
+        this.CITY = city;
+        this.STAR_RATING = star_rating;
+        this.reservationService = new ReservationService(this);
+        this.clientService = new ClientService(this);
+        this.billingService = new BillingService(this);
+        this.save();
+    }
+
+    //************* GETTERS & SETTERS ***************//
 
     @Override
     public DatabaseColumns[] getModelColumns() {

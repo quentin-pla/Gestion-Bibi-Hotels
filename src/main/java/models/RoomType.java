@@ -4,20 +4,45 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class RoomType extends DatabaseModel {
-    //Nom
+    /**
+     * Table liée à la base de données
+     */
+    private Tables table = Tables.ROOMTYPES;
+
+    /**
+     * Nom
+     */
     private String NAME;
-    //Prix
+
+    /**
+     * Prix
+     */
     private int PRICE;
 
-    //Liste des colonnes
+    /**
+     * Liste des colonnes
+     */
     private enum Columns implements DatabaseColumns {
         NAME,PRICE
     }
 
-    //Constructeur
-    public RoomType() {
-        this.table = Tables.ROOMTYPES;
+    /**
+     * Constructeur
+     */
+    public RoomType() {}
+
+    /**
+     * Constructeur surchargé
+     * @param NAME nom du type de chambre
+     * @param PRICE prix du type de chambre
+     */
+    public RoomType(String NAME, int PRICE) {
+        this.NAME = NAME;
+        this.PRICE = PRICE;
+        this.save();
     }
+
+    //************* GETTERS & SETTERS ***************//
 
     @Override
     public DatabaseColumns[] getModelColumns() {

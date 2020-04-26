@@ -2,42 +2,83 @@ package models;
 
 import database.DatabaseColumns;
 import database.DatabaseModel;
-
-import javax.xml.crypto.Data;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Reservation extends DatabaseModel {
-    //ID du client lié
+    /**
+     * Table liée à la base de données
+     */
+    private Tables table = Tables.RESERVATIONS;
+
+    /**
+     * ID du client lié
+     */
     protected int CLIENT_ID;
-    //ID de l'hotel lié
+
+    /**
+     * ID de l'hotel lié
+     */
     protected int HOTEL_ID;
-    //ID du type de chambre lié
+
+    /**
+     * ID du type de chambre lié
+     */
     protected int ROOMTYPE_ID;
-    //Date d'arrivée
+
+    /**
+     * Date d'arrivée
+     */
     protected Date ARRIVAL_DATE;
-    //Date de sortie
+
+    /**
+     * Date de sortie
+     */
     protected Date EXIT_DATE;
-    //Durée
+
+    /**
+     * Durée
+     */
     protected int DURATION;
-    //Nombre de chambre
+
+    /**
+     * Nombre de chambre
+     */
     protected int ROOM_COUNT;
-    //Nombre d'occupants
+
+    /**
+     * Nombre d'occupants
+     */
     protected int PEOPLE_COUNT;
-    //Montant payé
+
+    /**
+     * Montant payé
+     */
     protected boolean IS_PAYED;
-    //Réservation confirmée
+
+    /**
+     * Réservation confirmée
+     */
     protected boolean IS_COMFIRMED;
-    //Réservation annulée
+
+    /**
+     * Réservation annulée
+     */
     protected boolean IS_CANCELLED;
 
-    //Liste des colonnes
+    /**
+     * Liste des colonnes
+     */
     private enum Columns implements DatabaseColumns {
         CLIENT_ID,HOTEL_ID,ROOMTYPE_ID,ARRIVAL_DATE,EXIT_DATE,DURATION,ROOM_COUNT,PEOPLE_COUNT,IS_PAYED,IS_COMFIRMED,IS_CANCELLED
     }
 
-    //Créer une date à partir d'un texte
+    /**
+     * Créer une date à partir d'un texte
+     * @param value date au format string
+     * @return Date
+     */
     private Date parseDate(String value) {
         try {
             return new SimpleDateFormat("dd/MM/yyyy").parse(value);
@@ -47,10 +88,41 @@ public class Reservation extends DatabaseModel {
         return null;
     }
 
-    //Constructeur
-    public Reservation() {
-        this.table = Tables.RESERVATIONS;
+    /**
+     * Constructeur
+     */
+    public Reservation() {}
+
+    /**
+     * Constructeur surchargé
+     * @param CLIENT_ID id du client lié
+     * @param HOTEL_ID id de l'hotel lié
+     * @param ROOMTYPE_ID id du type de chambre lié
+     * @param ARRIVAL_DATE date d'arrivée
+     * @param EXIT_DATE date de départ
+     * @param DURATION durée
+     * @param ROOM_COUNT nombre de chambres
+     * @param PEOPLE_COUNT nombre de personnes
+     * @param IS_PAYED paiement réservation
+     * @param IS_COMFIRMED est confirmée
+     * @param IS_CANCELLED est annulée
+     */
+    public Reservation(int CLIENT_ID, int HOTEL_ID, int ROOMTYPE_ID, Date ARRIVAL_DATE, Date EXIT_DATE, int DURATION, int ROOM_COUNT, int PEOPLE_COUNT, boolean IS_PAYED, boolean IS_COMFIRMED, boolean IS_CANCELLED) {
+        this.CLIENT_ID = CLIENT_ID;
+        this.HOTEL_ID = HOTEL_ID;
+        this.ROOMTYPE_ID = ROOMTYPE_ID;
+        this.ARRIVAL_DATE = ARRIVAL_DATE;
+        this.EXIT_DATE = EXIT_DATE;
+        this.DURATION = DURATION;
+        this.ROOM_COUNT = ROOM_COUNT;
+        this.PEOPLE_COUNT = PEOPLE_COUNT;
+        this.IS_PAYED = IS_PAYED;
+        this.IS_COMFIRMED = IS_COMFIRMED;
+        this.IS_CANCELLED = IS_CANCELLED;
+        this.save();
     }
+
+    //*************** GETTERS & SETTERS ***************//
 
     @Override
     public DatabaseColumns[] getModelColumns() {

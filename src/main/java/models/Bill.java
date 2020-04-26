@@ -4,20 +4,41 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class Bill extends DatabaseModel {
-    //ID du client lié
+    /**
+     * Table liée à la base de données
+     */
+    private Tables table = Tables.BILLS;
+
+    /**
+     * ID du client lié
+     */
     private int CLIENT_ID;
-    //Montant de la facture
+
+    /**
+     * Montant de la facture
+     */
     private float AMOUNT;
 
-    //Liste des colonnes
+    /**
+     * Liste des colonnes
+     */
     private enum Columns implements DatabaseColumns {
         CLIENT_ID,AMOUNT
     }
 
-    //Constructeur
-    public Bill() {
-        this.table = Tables.BILLS;
+    /**
+     * Constructeur
+     */
+    public Bill() {}
+
+    //Constructeur surchargé
+    public Bill(int client_id, float amount) {
+        this.CLIENT_ID = client_id;
+        this.AMOUNT = amount;
+        this.save();
     }
+
+    //************* GETTERS & SETTERS ***************//
 
     @Override
     public DatabaseColumns[] getModelColumns() {

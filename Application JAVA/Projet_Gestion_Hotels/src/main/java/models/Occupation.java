@@ -1,26 +1,54 @@
 package models;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import database.DatabaseColumns;
-import database.DatabaseModel;
 
 public class Occupation extends Reservation {
-    //ID de la réservation liée
+    /**
+     * Table liée à la base de données
+     */
+    private Tables table = Tables.OCCUPATIONS;
+
+    /**
+     * ID de la réservation liée
+     */
     private int RESERVATION_ID;
-    //ID de la chambre liée
+
+    /**
+     * ID de la chambre liée
+     */
     private int ROOM_ID;
-    //Client présent dans la chambre
+
+    /**
+     * Client présent dans la chambre
+     */
     private boolean IS_CLIENT_PRESENT;
 
-    //Liste des colonnes
+    /**
+     * Liste des colonnes
+     */
     private enum Columns implements DatabaseColumns {
         RESERVATION_ID,ROOM_ID,IS_CLIENT_PRESENT
     }
 
-    //Constructeur
-    public Occupation() {
-        this.table = Tables.OCCUPATIONS;
+    /**
+     * Constructeur
+     */
+    public Occupation() {}
+
+    /**
+     * Constructeur surchargé
+     * @param reservation_id id de la réservation liée
+     * @param room_id id de la chambre liée
+     * @param is_client_present client présent ou non dans la chambre
+     */
+    public Occupation(int reservation_id, int room_id, boolean is_client_present) {
+        this.RESERVATION_ID = reservation_id;
+        this.ROOM_ID = room_id;
+        this.IS_CLIENT_PRESENT = is_client_present;
+        this.save();
     }
+
+    //************* GETTERS & SETTERS ***************//
 
     @Override
     public DatabaseColumns[] getModelColumns() { return Columns.values(); }

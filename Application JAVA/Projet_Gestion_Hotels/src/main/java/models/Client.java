@@ -4,30 +4,78 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class Client extends DatabaseModel {
-    //Nom
+    /**
+     * Table liée à la base de données
+     */
+    private Tables table = Tables.CLIENTS;
+
+    /**
+     * Nom
+     */
     private String FIRSTNAME;
-    //Prénom
+
+    /**
+     * Prénom
+     */
     private String LASTNAME;
-    //Adresse
+
+    /**
+     * Adresse
+     */
     private String STREET;
-    //Ville
+
+    /**
+     * Ville
+     */
     private String CITY;
-    //Adresse mail
+
+    /**
+     * Adresse mail
+     */
     private String MAIL;
-    //Mot de passe
+
+    /**
+     * Mot de passe
+     */
     private String PASSWORD;
-    //Régulier
+
+    /**
+     * Régulier
+     */
     private boolean IS_REGULAR;
 
-    //Liste des colonnes
+    /**
+     * Liste des colonnes
+     */
     private enum Columns implements DatabaseColumns {
         FIRSTNAME,LASTNAME,STREET,CITY,MAIL,PASSWORD,IS_REGULAR
     }
 
-    //Constructeur
-    public Client() {
-        this.table = Tables.CLIENTS;
+    /**
+     * Constructeur
+     */
+    public Client() {}
+
+    /**
+     * Constructeur surchargé
+     * @param firstname nom
+     * @param lastname prénom
+     * @param street adresse
+     * @param city ville
+     * @param mail adresse mail
+     * @param password mot de passe
+     */
+    public Client(String firstname, String lastname, String street, String city, String mail, String password) {
+        this.FIRSTNAME = firstname;
+        this.LASTNAME = lastname;
+        this.STREET = street;
+        this.CITY = city;
+        this.MAIL = mail;
+        this.PASSWORD = password;
+        this.save();
     }
+
+    //************* GETTERS & SETTERS ***************//
 
     @Override
     public DatabaseColumns[] getModelColumns() {

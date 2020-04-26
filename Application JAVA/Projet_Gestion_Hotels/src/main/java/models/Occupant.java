@@ -4,22 +4,52 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class Occupant extends DatabaseModel {
-    //ID de l'occupation liée
+    /**
+     * Table liée à la base de données
+     */
+    private Tables table = Tables.OCCUPANTS;
+
+    /**
+     * ID de l'occupation liée
+     */
     private int OCCUPATION_ID;
-    //Nom
+
+    /**
+     * Nom
+     */
     private String FIRSTNAME;
-    //Prénom
+
+    /**
+     * Prénom
+     */
     private String LASTNAME;
 
-    //Liste des colonnes
+    /**
+     * Liste des colonnes
+     */
     private enum Columns implements DatabaseColumns {
         OCCUPATION_ID,FIRSTNAME,LASTNAME
     }
 
-    //Constructeur
-    public Occupant() {
-        this.table = Tables.OCCUPANTS;
+    /**
+     * Constructeur
+     */
+    public Occupant() {}
+
+    /**
+     * Constructeur surchargé
+     * @param occupation_id
+     * @param firstname
+     * @param lastname
+     */
+    public Occupant(int occupation_id, String firstname, String lastname) {
+        this.OCCUPATION_ID = occupation_id;
+        this.FIRSTNAME = firstname;
+        this.LASTNAME = lastname;
+        this.save();
     }
+
+    //************* GETTERS & SETTERS ***************//
 
     @Override
     public DatabaseColumns[] getModelColumns() {

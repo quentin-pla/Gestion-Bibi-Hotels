@@ -1,6 +1,8 @@
 package database;
 
 import models.*;
+
+import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
@@ -17,55 +19,6 @@ public class JDBC {
     private final String PASSWORD = "***REMOVED***";
     //Connexion à la base de données
     private Connection connection;
-
-    //Liaison des classes aux modèles
-    public enum Models {
-        //Liste des modèles avec en paramètre une nouvelle instance de la classe à laquelle ils sont liés
-        BILLS(new Bill()),
-        CLIENTS(new Client()),
-        HOTELS(new Hotel()),
-        OCCUPANTS(new Occupant()),
-        OCCUPATIONS(new Occupation()),
-        RESERVATIONS(new Reservation()),
-        ROOMS(new Room()),
-        ROOMTYPES(new RoomType()),
-        SERVICES(new Service());
-
-        //Modèle
-        private DatabaseModel model;
-
-        //Définir un attibut du modèle
-        public void setColumnAttribute(String column, String value) {
-            this.model.setColumnAttribute(column,value);
-        }
-
-        //Générer une nouvelle instance de la classe liée
-        public void createNewInstance() {
-            this.model = this.model.newInstance();
-        }
-
-        //Récupérer les valeurs pour chaque attribut du modèle
-        public Map<String,String> getData() {
-            return this.model.getAttributesData();
-        }
-
-        //Récupérer la classe générée
-        public DatabaseModel getModel() {
-            return this.model;
-        }
-
-        //Mettre à jour le modèle
-        public void setModel(DatabaseModel model) {
-            if (model.getClass() == this.model.getClass()) {
-                this.model = model;
-            }
-        }
-
-        //Constructeur
-        private Models(DatabaseModel model) {
-            this.model = model;
-        }
-    }
 
     /**
      * Constructeur JDBC
@@ -98,20 +51,21 @@ public class JDBC {
     /**
      * Exécuter une requête SQL SELECT simple
      * @param columns colonnes sélectionnées
-     * @param model modèle
+     * @param table table
      * @return classes issues du modèle
      */
-    public static ArrayList<DatabaseModel> selectQuery(String columns, Models model) {
-        return selectQuery(columns, model, "");
+    public static ArrayList<DatabaseModel> selectQuery(DatabaseModel.Tables table, String columns) {
+        return selectQuery(table, columns, "");
     }
 
     /**
      * Exécuter une requête SQL SELECT avec condition
      * @param columns colonnes sélectionnées
-     * @param model modèle
+     * @param table table
      * @return classes issues du modèle
      */
-    public static ArrayList<DatabaseModel> selectQuery(String columns, Models model, String where) {
+    public static ArrayList<DatabaseModel> selectQuery(DatabaseModel.Tables table, String columns, String where) {
+        DatabaseModel model = DatabaseModel.newModelInstance(table);
         //Liste des résultats
         ArrayList<DatabaseModel> results = new ArrayList<>();
         //Récupération de l'instance
@@ -120,7 +74,7 @@ public class JDBC {
             //Creation d'une instruction SQL
             Statement instruction = jdbc.connection.createStatement();
             //Execution de la requête
-            ResultSet resultSet = instruction.executeQuery("SELECT " + columns + " FROM " + model.name() + " " + where);
+            ResultSet resultSet = instruction.executeQuery("SELECT " + columns + " FROM " + table + " " + where);
             //Récupération des paramètres de la requête
             ResultSetMetaData columnSet = resultSet.getMetaData();
             //Définition de variables utilisée pour le nom de la colonne et la valeur associée
@@ -137,9 +91,9 @@ public class JDBC {
                     model.setColumnAttribute(columnName, value);
                 }
                 //Ajout de la classe à la liste des résultats
-                results.add(model.getModel());
+                results.add(model);
                 //Initialisation
-                model.createNewInstance();
+                model = DatabaseModel.newModelInstance(table);
             }
             //Fermeture de l'instruction (liberation des ressources)
             instruction.close();
@@ -153,22 +107,49 @@ public class JDBC {
 
     /**
      * Insérer un tuple dans la base de données
-     * @param model type de modèle
-     * @param modelToInsert modèle à insérer
+     * @param model modèle à insérer
      */
-    public static void insertQuery(Models model, DatabaseModel modelToInsert) {
-        //Définition du model
-        model.setModel(modelToInsert);
+    public static void insertQuery(DatabaseModel model) {
         //Récupération des données de la classe à insérer
-        Map<String,String> modelData = model.getData();
-        //Valeur de l'ID définie sur NULL pour qu'elle soit attribuée automatiquement
-        modelData.remove("ID");
+        Map<String,String> modelData = model.getAttributesData();
         //Requête SQL
         String query = (
-            "INSERT INTO " + model.name() +
+            "INSERT INTO " + model.getTable() +
             " (" + String.join(",",modelData.keySet()) + ")" +
             " VALUES" +
             " ('" + String.join("','",modelData.values()) + "')");
+        //Récupération de l'instance
+        JDBC jdbc = getInstance();
+        try {
+            //Creation d'une instruction SQL
+            Statement instruction = jdbc.connection.createStatement();
+            //Execution de la requête
+            instruction.executeUpdate(query);
+            //Fermeture de l'instruction (liberation des ressources)
+            instruction.close();
+        } catch (SQLException e) {
+            //Message d'erreur
+            System.err.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Modifier un tuple dans la base de données
+     * @param model modèle à mettre à jour
+     */
+    public static void updateQuery(DatabaseModel model, String columns) {
+        //Récupération des données de la classe à insérer
+        Map<String,String> modelData = model.getAttributesData(columns);
+        //Requête SQL
+        String query = "UPDATE " + model.getTable() + " SET ";
+        //Pour chaque colonne à modifier
+        for (Map.Entry<String, String> entry : modelData.entrySet())
+            //Concaténation à la requête
+            query = query.concat(entry.getKey() + "='" + entry.getValue() + "',");
+        //Suppression de la virgule à la fin de la chaine
+        query = query.substring(0,query.length()-1);
+        //Condition WHERE pour modifier seulement le tuple concerné
+        query = query.concat(" WHERE ID=" + model.getID());
         //Récupération de l'instance
         JDBC jdbc = getInstance();
         try {

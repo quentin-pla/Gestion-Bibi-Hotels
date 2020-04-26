@@ -9,8 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Reservation extends DatabaseModel {
-    //ID
-    protected int ID;
     //ID du client lié
     protected int CLIENT_ID;
     //ID de l'hotel lié
@@ -36,7 +34,7 @@ public class Reservation extends DatabaseModel {
 
     //Liste des colonnes
     private enum Columns implements DatabaseColumns {
-        ID,CLIENT_ID,HOTEL_ID,ROOMTYPE_ID,ARRIVAL_DATE,EXIT_DATE,DURATION,ROOM_COUNT,PEOPLE_COUNT,IS_PAYED,IS_COMFIRMED,IS_CANCELLED
+        CLIENT_ID,HOTEL_ID,ROOMTYPE_ID,ARRIVAL_DATE,EXIT_DATE,DURATION,ROOM_COUNT,PEOPLE_COUNT,IS_PAYED,IS_COMFIRMED,IS_CANCELLED
     }
 
     //Créer une date à partir d'un texte
@@ -49,20 +47,14 @@ public class Reservation extends DatabaseModel {
         return null;
     }
 
+    //Constructeur
+    public Reservation() {
+        this.table = Tables.RESERVATIONS;
+    }
+
     @Override
     public DatabaseColumns[] getModelColumns() {
         return Columns.values();
-    }
-
-    @Override
-    public DatabaseModel newInstance() { return new Reservation(); }
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = Integer.parseInt(ID);
     }
 
     public int getCLIENT_ID() {

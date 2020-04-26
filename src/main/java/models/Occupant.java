@@ -4,8 +4,6 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class Occupant extends DatabaseModel {
-    //ID
-    private int ID;
     //ID de l'occupation liée
     private int OCCUPATION_ID;
     //Nom
@@ -15,24 +13,18 @@ public class Occupant extends DatabaseModel {
 
     //Liste des colonnes
     private enum Columns implements DatabaseColumns {
-        ID,OCCUPATION_ID,FIRSTNAME,LASTNAME
+        OCCUPATION_ID,FIRSTNAME,LASTNAME
+    }
+
+    //Constructeur
+    public Occupant() {
+        this.table = Tables.OCCUPANTS;
     }
 
     @Override
     public DatabaseColumns[] getModelColumns() {
         return Columns.values();
     }
-
-    @Override
-    public DatabaseModel newInstance() {
-        return new Occupant();
-    }
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(String ID) { this.ID = Integer.parseInt(ID); }
 
     public int getOCCUPATION_ID() {
         return OCCUPATION_ID;

@@ -4,8 +4,6 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class Client extends DatabaseModel {
-    //ID
-    private int ID;
     //Nom
     private String FIRSTNAME;
     //Prénom
@@ -23,25 +21,17 @@ public class Client extends DatabaseModel {
 
     //Liste des colonnes
     private enum Columns implements DatabaseColumns {
-        ID,FIRSTNAME,LASTNAME,STREET,CITY,MAIL,PASSWORD,IS_REGULAR
+        FIRSTNAME,LASTNAME,STREET,CITY,MAIL,PASSWORD,IS_REGULAR
     }
 
-    @Override
-    public DatabaseModel newInstance() {
-        return new Client();
+    //Constructeur
+    public Client() {
+        this.table = Tables.CLIENTS;
     }
 
     @Override
     public DatabaseColumns[] getModelColumns() {
         return Columns.values();
-    }
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = Integer.parseInt(ID);
     }
 
     public String getFIRSTNAME() {

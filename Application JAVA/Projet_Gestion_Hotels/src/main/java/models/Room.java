@@ -4,8 +4,6 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class Room extends DatabaseModel {
-    //ID
-    private int ID;
     //ID de l'hotel lié
     private int HOTEL_ID;
     //ID type de chambre lié
@@ -13,24 +11,18 @@ public class Room extends DatabaseModel {
 
     //Liste des colonnes
     private enum Columns implements DatabaseColumns {
-        ID,HOTEL_ID,ROOMTYPE_ID
+        HOTEL_ID,ROOMTYPE_ID
+    }
+
+    //Constructeur
+    public Room() {
+        this.table = Tables.ROOMS;
     }
 
     @Override
     public DatabaseColumns[] getModelColumns() {
         return Columns.values();
     }
-
-    @Override
-    public DatabaseModel newInstance() {
-        return new Room();
-    }
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(String ID) { this.ID = Integer.parseInt(ID); }
 
     public int getHOTEL_ID() {
         return HOTEL_ID;

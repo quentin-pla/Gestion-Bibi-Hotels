@@ -4,8 +4,6 @@ import database.DatabaseColumns;
 import database.DatabaseModel;
 
 public class Bill extends DatabaseModel {
-    //ID
-    private int ID;
     //ID du client lié
     private int CLIENT_ID;
     //Montant de la facture
@@ -13,24 +11,18 @@ public class Bill extends DatabaseModel {
 
     //Liste des colonnes
     private enum Columns implements DatabaseColumns {
-        ID,CLIENT_ID,AMOUNT
+        CLIENT_ID,AMOUNT
+    }
+
+    //Constructeur
+    public Bill() {
+        this.table = Tables.BILLS;
     }
 
     @Override
     public DatabaseColumns[] getModelColumns() {
         return Columns.values();
     }
-
-    @Override
-    public DatabaseModel newInstance() {
-        return new Bill();
-    }
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(String ID) { this.ID = Integer.parseInt(ID); }
 
     public int getCLIENT_ID() {
         return CLIENT_ID;

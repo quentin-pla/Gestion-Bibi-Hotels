@@ -14,18 +14,16 @@ public class Occupation extends Reservation {
 
     //Liste des colonnes
     private enum Columns implements DatabaseColumns {
-        ID,RESERVATION_ID,ROOM_ID,IS_CLIENT_PRESENT
+        RESERVATION_ID,ROOM_ID,IS_CLIENT_PRESENT
+    }
+
+    //Constructeur
+    public Occupation() {
+        this.table = Tables.OCCUPATIONS;
     }
 
     @Override
-    public DatabaseColumns[] getModelColumns() {
-        return Columns.values();
-    }
-
-    @Override
-    public DatabaseModel newInstance() {
-        return new Occupation();
-    }
+    public DatabaseColumns[] getModelColumns() { return Columns.values(); }
 
     public int getRESERVATION_ID() {
         return RESERVATION_ID;

@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="Ajout de la classe Main et du fichier de style style.css">
-      <change afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseColumns.java" afterDir="false" />
+    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="JDBC méthode SELECT et INSERT disponible pour chaque classe">
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/database/DatabaseModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/database/JDBC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/JDBC.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/Bill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Bill.java" afterDir="false" />
@@ -76,8 +72,8 @@
       <list>
         <option value="CSS File" />
         <option value="Class" />
-        <option value="Interface" />
         <option value="Enum" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -209,7 +205,9 @@
       <updated>1587720959628</updated>
       <workItem from="1587720962429" duration="186000" />
       <workItem from="1587721958691" duration="2951000" />
-      <workItem from="1587801534449" duration="25186000" />
+      <workItem from="1587801534449" duration="28197000" />
+      <workItem from="1587852649530" duration="4465000" />
+      <workItem from="1587894664541" duration="2434000" />
     </task>
     <task id="LOCAL-00001" summary="Mise à jour des fichiers de configuration + ajout .gitignore">
       <created>1587722130974</created>
@@ -239,7 +237,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587821947127</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="JDBC méthode SELECT et INSERT disponible pour chaque classe">
+      <created>1587836132817</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1587836132817</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -250,7 +255,8 @@
     <MESSAGE value="Mise à jour des fichiers de configuration" />
     <MESSAGE value="Ajout de la classe Main et du fichier de style style.css" />
     <MESSAGE value="Liaison des classes aux modèles de la table de la base de données" />
-    <option name="LAST_COMMIT_MESSAGE" value="Liaison des classes aux modèles de la table de la base de données" />
+    <MESSAGE value="JDBC méthode SELECT et INSERT disponible pour chaque classe" />
+    <option name="LAST_COMMIT_MESSAGE" value="JDBC méthode SELECT et INSERT disponible pour chaque classe" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="115" key="#Project_Structure" timestamp="1587721001399">
@@ -261,42 +267,46 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="320" y="115" key="#SQL_Dialects/0.0.1440.900@0.0.1440.900" timestamp="1587834981895" />
-    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser" timestamp="1587832447570">
+    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser" timestamp="1587899393484">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1587832447570" />
+    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1587899393484" />
     <state x="276" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1587805397204">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="276" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.900@0.0.1440.900" timestamp="1587805397204" />
-    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1587836052603">
+    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1587896021414">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1587836052603" />
+    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1587896021414" />
+    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1587847529322">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1587847529321" />
     <state x="144" y="78" key="DiffContextDialog" timestamp="1587722093877">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="144" y="78" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1587722093877" />
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1587835950354">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1587899854213">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1587835950354" />
-    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1587835950352">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1587899854213" />
+    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1587899854212">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1587835950352" />
-    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1587835950352">
+    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1587899854212" />
+    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1587899854212">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1587835950352" />
-    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1587835950353">
+    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1587899854212" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1587899854213">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1587835950353" />
-    <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1587821958815">
+    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1587899854213" />
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1587836134809">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="320" y="190" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1587821958815" />
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1587836134809" />
     <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587832799373">
       <screen x="0" y="23" width="1440" height="813" />
     </state>

@@ -5,6 +5,7 @@ import "./App.css";
 import PrivateRoute from "./components/routing/PrivateRoute";
 import Home from "./components/Home";
 import Login from "./components/auth/Login";
+import Profil from './components/Profil'
 import Signup from './components/auth/Signup';
 import AuthButton from './components/auth/AuthButton';
 import {AuthContext} from "./context/AuthContext";
@@ -46,7 +47,7 @@ class App extends Component {
                         <Signup/>
                     </Route>
                     <PrivateRoute path="/profile">
-                        <h3>Profil utilisateur</h3>
+                        <Profil/>
                     </PrivateRoute>
                     <Redirect to="/"/>
                 </Switch>

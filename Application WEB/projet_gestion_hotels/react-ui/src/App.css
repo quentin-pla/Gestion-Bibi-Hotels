@@ -19,6 +19,11 @@ svg {
     height: calc(100% - 70px);
 }
 
+.User_info{
+    padding-top: 4%;
+    padding-right: 10%;
+}
+
 p {
     margin: 0;
 }

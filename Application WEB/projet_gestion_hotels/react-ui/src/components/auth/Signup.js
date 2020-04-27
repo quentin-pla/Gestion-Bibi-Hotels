@@ -101,6 +101,7 @@ class Signup extends Component {
             if (success) {
                 //Authentification validée
                 this.context.setAuthenticated(true);
+                alert("Informations modifiée avec succès");
             }
             //Affichage d'une erreur
             else this.setState({isError: true, errorMessage: errorMessage});

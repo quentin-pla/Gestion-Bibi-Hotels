@@ -3,12 +3,9 @@ package models;
 import database.DatabaseColumns;
 import database.DatabaseModel;
 
-public class Client extends DatabaseModel {
-    /**
-     * Table liée à la base de données
-     */
-    private Tables table = Tables.CLIENTS;
+//TODO - hash password avec bcrypt
 
+public class Client extends DatabaseModel {
     /**
      * Nom
      */
@@ -47,14 +44,16 @@ public class Client extends DatabaseModel {
     /**
      * Liste des colonnes
      */
-    private enum Columns implements DatabaseColumns {
+    public enum Columns implements DatabaseColumns {
         FIRSTNAME,LASTNAME,STREET,CITY,MAIL,PASSWORD,IS_REGULAR
     }
 
     /**
      * Constructeur
      */
-    public Client() {}
+    public Client() {
+        super(Tables.CLIENTS);
+    }
 
     /**
      * Constructeur surchargé
@@ -66,6 +65,7 @@ public class Client extends DatabaseModel {
      * @param password mot de passe
      */
     public Client(String firstname, String lastname, String street, String city, String mail, String password) {
+        super(Tables.CLIENTS);
         this.FIRSTNAME = firstname;
         this.LASTNAME = lastname;
         this.STREET = street;
@@ -78,7 +78,7 @@ public class Client extends DatabaseModel {
     //************* GETTERS & SETTERS ***************//
 
     @Override
-    public DatabaseColumns[] getModelColumns() {
+    public DatabaseColumns[] getColumns() {
         return Columns.values();
     }
 

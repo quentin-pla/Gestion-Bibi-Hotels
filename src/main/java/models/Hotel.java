@@ -20,11 +20,6 @@ public class Hotel extends DatabaseModel {
     private BillingService billingService;
 
     /**
-     * Table liée à la base de données
-     */
-    private Tables table = Tables.HOTELS;
-
-    /**
      * Nom
      */
     private String NAME;
@@ -47,7 +42,7 @@ public class Hotel extends DatabaseModel {
     /**
      * Liste des colonnes
      */
-    private enum Columns implements DatabaseColumns {
+    public enum Columns implements DatabaseColumns {
         NAME,STREET,CITY,STAR_RATING
     }
 
@@ -55,25 +50,25 @@ public class Hotel extends DatabaseModel {
      * Constructeur
      */
     public Hotel() {
+        super(Tables.HOTELS);
         this.reservationService = new ReservationService(this);
-        this.clientService = new ClientService(this);
         this.billingService = new BillingService(this);
     }
 
     /**
      * Constructeur surchargé
-     * @param name
-     * @param street
-     * @param city
-     * @param star_rating
+     * @param name nom
+     * @param street adresse
+     * @param city ville
+     * @param star_rating nombre d'étoiles
      */
     public Hotel(String name, String street, String city, int star_rating) {
+        super(Tables.HOTELS);
         this.NAME = name;
         this.STREET = street;
         this.CITY = city;
         this.STAR_RATING = star_rating;
         this.reservationService = new ReservationService(this);
-        this.clientService = new ClientService(this);
         this.billingService = new BillingService(this);
         this.save();
     }
@@ -81,7 +76,7 @@ public class Hotel extends DatabaseModel {
     //************* GETTERS & SETTERS ***************//
 
     @Override
-    public DatabaseColumns[] getModelColumns() {
+    public DatabaseColumns[] getColumns() {
         return Columns.values();
     }
 
@@ -114,4 +109,12 @@ public class Hotel extends DatabaseModel {
     }
 
     public void setSTAR_RATING(String STAR_RATING) { this.STAR_RATING = Integer.parseInt(STAR_RATING); }
+
+    public ReservationService getReservationService() {
+        return reservationService;
+    }
+
+    public BillingService getBillingService() {
+        return billingService;
+    }
 }

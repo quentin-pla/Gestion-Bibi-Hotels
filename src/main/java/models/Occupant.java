@@ -1,14 +1,10 @@
 package models;
 
 import database.DatabaseColumns;
+import database.DatabaseData;
 import database.DatabaseModel;
 
 public class Occupant extends DatabaseModel {
-    /**
-     * Table liée à la base de données
-     */
-    private Tables table = Tables.OCCUPANTS;
-
     /**
      * ID de l'occupation liée
      */
@@ -27,14 +23,16 @@ public class Occupant extends DatabaseModel {
     /**
      * Liste des colonnes
      */
-    private enum Columns implements DatabaseColumns {
+    public enum Columns implements DatabaseColumns {
         OCCUPATION_ID,FIRSTNAME,LASTNAME
     }
 
     /**
      * Constructeur
      */
-    public Occupant() {}
+    public Occupant() {
+        super(Tables.OCCUPANTS);
+    }
 
     /**
      * Constructeur surchargé
@@ -43,16 +41,27 @@ public class Occupant extends DatabaseModel {
      * @param lastname
      */
     public Occupant(int occupation_id, String firstname, String lastname) {
+        super(Tables.OCCUPANTS);
         this.OCCUPATION_ID = occupation_id;
         this.FIRSTNAME = firstname;
         this.LASTNAME = lastname;
         this.save();
     }
 
+    //************* REFERENCES ***************//
+
+    /**
+     * Occupation liée
+     * @return occupation
+     */
+    public Occupation getHotel() {
+        return (Occupation) DatabaseData.getInstance().getReferenceFromID(Tables.OCCUPATIONS,OCCUPATION_ID);
+    }
+
     //************* GETTERS & SETTERS ***************//
 
     @Override
-    public DatabaseColumns[] getModelColumns() {
+    public DatabaseColumns[] getColumns() {
         return Columns.values();
     }
 

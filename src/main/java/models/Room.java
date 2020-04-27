@@ -1,14 +1,10 @@
 package models;
 
 import database.DatabaseColumns;
+import database.DatabaseData;
 import database.DatabaseModel;
 
 public class Room extends DatabaseModel {
-    /**
-     * Table liée à la base de données
-     */
-    private Tables table = Tables.ROOMS;
-
     /**
      * ID de l'hotel lié
      */
@@ -22,14 +18,16 @@ public class Room extends DatabaseModel {
     /**
      * Liste des colonnes
      */
-    private enum Columns implements DatabaseColumns {
+    public enum Columns implements DatabaseColumns {
         HOTEL_ID,ROOMTYPE_ID
     }
 
     /**
      * Constructeur
      */
-    public Room() {}
+    public Room() {
+        super(Tables.ROOMS);
+    }
 
     /**
      * Constructeur surchargé
@@ -37,15 +35,34 @@ public class Room extends DatabaseModel {
      * @param ROOMTYPE_ID id du type de chambre lié
      */
     public Room(int HOTEL_ID, int ROOMTYPE_ID) {
+        super(Tables.ROOMS);
         this.HOTEL_ID = HOTEL_ID;
         this.ROOMTYPE_ID = ROOMTYPE_ID;
         this.save();
     }
 
+    //************* REFERENCES ***************//
+
+    /**
+     * Hotel lié
+     * @return hotel
+     */
+    public Hotel getHotel() {
+        return (Hotel) DatabaseData.getInstance().getReferenceFromID(Tables.HOTELS,HOTEL_ID);
+    }
+
+    /**
+     * Type de chambre lié
+     * @return type de chambre
+     */
+    public RoomType getRoomType() {
+        return (RoomType) DatabaseData.getInstance().getReferenceFromID(Tables.ROOMTYPES,ROOMTYPE_ID);
+    }
+
     //************* GETTERS & SETTERS ***************//
 
     @Override
-    public DatabaseColumns[] getModelColumns() {
+    public DatabaseColumns[] getColumns() {
         return Columns.values();
     }
 

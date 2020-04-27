@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="">
+    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="Renommage JDBC -&gt; DatabaseConnection + ajout d'une méthode pour appeler la procédure getAvailableRooms(...) depuis la base de données">
       <change afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/database/DatabaseModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/database/JDBC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/Administration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Administration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/Bill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Bill.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/BillingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/BillingService.java" afterDir="false" />
@@ -29,6 +23,9 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -101,10 +98,11 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15527344" />
+    <property name="project.structure.side.proportion" value="0.4" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -214,7 +212,7 @@
       <workItem from="1587801534449" duration="28197000" />
       <workItem from="1587852649530" duration="4465000" />
       <workItem from="1587894664541" duration="15160000" />
-      <workItem from="1587985609424" duration="16485000" />
+      <workItem from="1587985609424" duration="16676000" />
     </task>
     <task id="LOCAL-00001" summary="Mise à jour des fichiers de configuration + ajout .gitignore">
       <created>1587722130974</created>
@@ -286,7 +284,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587905449887</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Renommage JDBC -&gt; DatabaseConnection + ajout d'une méthode pour appeler la procédure getAvailableRooms(...) depuis la base de données">
+      <created>1588008589797</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1588008589797</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -303,7 +308,8 @@
     <MESSAGE value="Ajout d'un constructeur surchargé pour chaque classe modèle + revue commentaires code" />
     <MESSAGE value="Revue commentaires" />
     <MESSAGE value="Ajout d'une méthode dans la classe DatabaseModel pour sauvegarder une instance d'objet dans la base de données" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajout d'une méthode dans la classe DatabaseModel pour sauvegarder une instance d'objet dans la base de données" />
+    <MESSAGE value="Renommage JDBC -&gt; DatabaseConnection + ajout d'une méthode pour appeler la procédure getAvailableRooms(...) depuis la base de données" />
+    <option name="LAST_COMMIT_MESSAGE" value="Renommage JDBC -&gt; DatabaseConnection + ajout d'une méthode pour appeler la procédure getAvailableRooms(...) depuis la base de données" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="115" key="#Project_Structure" timestamp="1587721001399">
@@ -326,14 +332,14 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1587896021414" />
-    <state x="438" y="294" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1588007960849">
+    <state x="438" y="294" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1588008699364">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="438" y="294" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900@0.0.1440.900" timestamp="1588007960849" />
-    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1587905449745">
+    <state x="438" y="294" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900@0.0.1440.900" timestamp="1588008699364" />
+    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1588008863708">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1587905449745" />
+    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1588008863708" />
     <state x="144" y="78" key="DiffContextDialog" timestamp="1587722093877">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -370,6 +376,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="303" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1588003286753" />
+    <state x="221" y="63" key="SettingsEditor" timestamp="1588008806833">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="221" y="63" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1588008806833" />
     <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1587905460189">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -383,6 +393,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="503" y="374" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1440.900@0.0.1440.900" timestamp="1587826109436" />
+    <state x="358" y="351" key="git4idea.ui.GitResetDialog" timestamp="1588008853637">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="358" y="351" key="git4idea.ui.GitResetDialog/0.0.1440.900@0.0.1440.900" timestamp="1588008853637" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1587998232081">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

@@ -69,9 +69,10 @@ io.sockets.on('connection', function (socket) {
             //Vérification que le client a bien été trouvé dans la base de données
             if (item !== null) {
                 //Comparaison du mot de passe avec celui passé en paramètre
-                if (item.dataValues.PASSWORD === password)
-                //Renvoi d'un message de validation de l'authentification vers la classe Login
+                if (item.dataValues.PASSWORD === password){
+                    //Renvoi d'un message de validation de l'authentification vers la classe Login
                     socket.emit('auth_info', true);
+                }
                 //Renvoi d'un message d'erreur si mot de passe invalide
                 else socket.emit('auth_info', false);
             }
@@ -79,6 +80,23 @@ io.sockets.on('connection', function (socket) {
             else socket.emit('auth_info', false);
         });
     });
+
+    socket.on("update_user", function (data) {
+        Client.update({
+            mail: data.mail,
+            firstname:  data.firstname,
+            lastname:   data.lastname,
+            street:     data.street,
+            city:       data.city,
+            password:   data.password
+
+        }, {where: {MAIL: data.mail}}).then((item) => {
+            if (item !== null){
+                socket.emit('update_result',true);
+            }else socket.emit('update_result',false);
+        });
+    });
+
 
     /**
      * Inscription de l'utilisateur
@@ -103,6 +121,17 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });
+
+    socket.on('profil', function(mail){
+       Client.findOne({
+           where: {
+               MAIL : mail
+           }
+       }).then((item)=> {
+           socket.emit('profil_info', item);
+       })
+    });
+
 
     /**
      * Lorsque le client se déconnecte

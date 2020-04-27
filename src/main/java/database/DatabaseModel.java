@@ -1,15 +1,12 @@
 package database;
 
 import models.*;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO - classe pour les références renvoyant un objet à partir d'un id
-
-import static database.JDBC.insertQuery;
+import static database.DatabaseConnection.*;
 
 public abstract class DatabaseModel {
     /**
@@ -33,7 +30,7 @@ public abstract class DatabaseModel {
      * Liste des colonnes du modèle
      * @return colonnes
      */
-    public abstract DatabaseColumns[] getModelColumns();
+    public abstract DatabaseColumns[] getColumns();
 
     /**
      * Générer une nouvelle instance
@@ -56,10 +53,26 @@ public abstract class DatabaseModel {
     }
 
     /**
+     * Constructeur
+     * @param table table liée
+     */
+    protected DatabaseModel(Tables table) {
+        this.table = table;
+    }
+
+    /**
      * Sauvegarder l'objet dans la base de données
      */
     public void save() {
         insertQuery(this);
+    }
+
+    /**
+     * Mettre à jour une colonne dans la base de données
+     * @param column colonne
+     */
+    public void updateColumn(DatabaseColumns column) {
+        updateQuery(this, column.toString());
     }
 
     /**
@@ -94,7 +107,7 @@ public abstract class DatabaseModel {
         Map<String,String> data = new HashMap<>();
         try {
             //Pour chaque attributs de la classe
-            for (DatabaseColumns column : getModelColumns()) {
+            for (DatabaseColumns column : getColumns()) {
                 //Booléen pour trier les colonnes à récupérer
                 boolean isContained = (columnsFilter == null) || columnsFilter.contains(column.toString());
                 //Si la colonne est sélectionnée

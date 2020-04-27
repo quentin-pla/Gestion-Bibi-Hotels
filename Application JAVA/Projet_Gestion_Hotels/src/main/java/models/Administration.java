@@ -11,20 +11,32 @@ public class Administration {
     /**
      * Constructeur
      */
-    public Administration() {
+    private Administration() {
          this.hotels = new ArrayList<>();
     }
 
     /**
-     * Ajouter un nouvel hotel à la chaine
-     * @return hotel
+     * Instance unique
      */
-    public Hotel buildHotel(String name, String street, String city, int star_rating) {
-        //Instanciation d'un nouvel hotel
-        Hotel hotel = new Hotel(name, street, city, star_rating);
-        //Ajout de l'hotel à la liste de ceux qu'elle administre
-        hotels.add(hotel);
-        //Retour de l'hotel
-        return hotel;
+    private static Administration instance = null;
+
+    /**
+     * Récupérer l'instance unique
+     */
+    public static Administration getInstance() {
+        //Si l'instance n'est pas initialisée
+        if (instance == null)
+            //Initialisation de l'instance
+            instance = new Administration();
+        //Retour de l'instance
+        return instance;
+    }
+
+    public void getAvailableBilledRoomRatio(int room_type_id) {
+        //
+    }
+
+    public void getBilledAmounds(int hotel_id) {
+        //
     }
 }

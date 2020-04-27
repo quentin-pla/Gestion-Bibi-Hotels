@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="Renommage JDBC -&gt; DatabaseConnection + ajout d'une méthode pour appeler la procédure getAvailableRooms(...) depuis la base de données">
-      <change beforePath="$PROJECT_DIR$/src/main/java/database/DatabaseModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Administration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Administration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Bill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Bill.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/BillingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/BillingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/ClientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Hotel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Hotel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Occupant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Occupant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Occupation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Occupation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Reservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Reservation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/ReservationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Room.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Room.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/RoomType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/RoomType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Service.java" afterDir="false" />
+    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="Ajout de méthodes pour récupérer les références liées au modèle + constructeur surchargé">
+      <change afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +198,7 @@
       <workItem from="1587801534449" duration="28197000" />
       <workItem from="1587852649530" duration="4465000" />
       <workItem from="1587894664541" duration="15160000" />
-      <workItem from="1587985609424" duration="16986000" />
+      <workItem from="1587985609424" duration="17239000" />
     </task>
     <task id="LOCAL-00001" summary="Mise à jour des fichiers de configuration + ajout .gitignore">
       <created>1587722130974</created>
@@ -303,7 +291,35 @@
       <option name="project" value="LOCAL" />
       <updated>1588009000785</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Classe DatabaseModel : ajout d'un constructeur avec une table en paramètre + méthode pour mettre à jour une colonne dans la base de données">
+      <created>1588009064201</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1588009064201</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Implémentation des classes de type service">
+      <created>1588009113168</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1588009113168</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Implémentation de la classe Administration">
+      <created>1588009133488</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1588009133488</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Ajout de méthodes pour récupérer les références liées au modèle + constructeur surchargé">
+      <created>1588009200077</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1588009200077</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,7 +339,10 @@
     <MESSAGE value="Renommage JDBC -&gt; DatabaseConnection + ajout d'une méthode pour appeler la procédure getAvailableRooms(...) depuis la base de données" />
     <MESSAGE value="Ajout d'une classe pour récupérer les données de la base de données et les stocker pour un accès local sans query" />
     <MESSAGE value="Classe DatabaseModel : ajout d'un constructeur avec une table en paramètre + méthode pour mettre à jour une colonne dans la base de données" />
-    <option name="LAST_COMMIT_MESSAGE" value="Classe DatabaseModel : ajout d'un constructeur avec une table en paramètre + méthode pour mettre à jour une colonne dans la base de données" />
+    <MESSAGE value="Implémentation des classes de type service" />
+    <MESSAGE value="Implémentation de la classe Administration" />
+    <MESSAGE value="Ajout de méthodes pour récupérer les références liées au modèle + constructeur surchargé" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout de méthodes pour récupérer les références liées au modèle + constructeur surchargé" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="115" key="#Project_Structure" timestamp="1587721001399">
@@ -350,10 +369,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="438" y="294" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900@0.0.1440.900" timestamp="1588008699364" />
-    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1588009133362">
+    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1588009206563">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1588009133362" />
+    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1588009206563" />
     <state x="144" y="78" key="DiffContextDialog" timestamp="1587722093877">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -394,10 +413,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="221" y="63" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1588008806833" />
-    <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1588009054054">
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1588009214653">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="320" y="190" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1588009054054" />
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1588009214653" />
     <state x="100" y="85" width="1240" height="775" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587902499731">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

@@ -1,14 +1,10 @@
 package models;
 
 import database.DatabaseColumns;
+import database.DatabaseData;
 import database.DatabaseModel;
 
 public class Service extends DatabaseModel {
-    /**
-     * Table liée à la base de données
-     */
-    private Tables table = Tables.SERVICES;
-
     /**
      * ID de l'hotel lié
      */
@@ -22,19 +18,26 @@ public class Service extends DatabaseModel {
     /**
      * Prix
      */
-    private int PRICE;
+    private double PRICE;
+
+    /**
+     * Achat multiple
+     */
+    private boolean UNIQUE_ORDER;
 
     /**
      * Liste des colonnes
      */
-    private enum Columns implements DatabaseColumns {
-        HOTEL_ID,NAME,PRICE
+    public enum Columns implements DatabaseColumns {
+        HOTEL_ID,NAME,PRICE,UNIQUE_ORDER
     }
 
     /**
      * Constructeur
      */
-    public Service() {}
+    public Service() {
+        super(Tables.SERVICES);
+    }
 
     /**
      * Constructeur surchargé
@@ -42,16 +45,27 @@ public class Service extends DatabaseModel {
      * @param NAME nom du service
      * @param PRICE prix du service
      */
-    public Service(int HOTEL_ID, String NAME, int PRICE) {
+    public Service(int HOTEL_ID, String NAME, double PRICE) {
+        super(Tables.SERVICES);
         this.HOTEL_ID = HOTEL_ID;
         this.NAME = NAME;
         this.PRICE = PRICE;
     }
 
+    //************* REFERENCES ***************//
+
+    /**
+     * Hotel lié
+     * @return hotel
+     */
+    public Hotel getHotel() {
+        return (Hotel) DatabaseData.getInstance().getReferenceFromID(Tables.HOTELS,HOTEL_ID);
+    }
+
     //************* GETTERS & SETTERS ***************//
 
     @Override
-    public DatabaseColumns[] getModelColumns() {
+    public DatabaseColumns[] getColumns() {
         return Columns.values();
     }
 
@@ -67,11 +81,15 @@ public class Service extends DatabaseModel {
         this.NAME = NAME;
     }
 
-    public int getPRICE() {
+    public double getPRICE() {
         return PRICE;
     }
 
     public void setPRICE(String PRICE) {
-        this.PRICE = Integer.parseInt(PRICE);
+        this.PRICE = Double.parseDouble(PRICE);
     }
+
+    public boolean getUNIQUE_ORDER() { return UNIQUE_ORDER; }
+
+    public void setUNIQUE_ORDER(String UNIQUE_ORDER) { this.UNIQUE_ORDER = Boolean.parseBoolean(UNIQUE_ORDER); }
 }

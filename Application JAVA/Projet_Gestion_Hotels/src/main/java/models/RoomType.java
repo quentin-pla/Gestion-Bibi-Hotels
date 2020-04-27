@@ -5,11 +5,6 @@ import database.DatabaseModel;
 
 public class RoomType extends DatabaseModel {
     /**
-     * Table liée à la base de données
-     */
-    private Tables table = Tables.ROOMTYPES;
-
-    /**
      * Nom
      */
     private String NAME;
@@ -17,35 +12,56 @@ public class RoomType extends DatabaseModel {
     /**
      * Prix
      */
-    private int PRICE;
+    private double PRICE;
+
+    /**
+     * Nombre de lits
+     */
+    private int BED_CAPACITY;
+
+    /**
+     * Téléphone compris
+     */
+    private boolean HAS_PHONE;
+
+    /**
+     * Télévision comprise
+     */
+    private boolean HAS_TV;
 
     /**
      * Liste des colonnes
      */
-    private enum Columns implements DatabaseColumns {
-        NAME,PRICE
+    public enum Columns implements DatabaseColumns {
+        NAME,PRICE,BED_CAPACITY,HAS_PHONE,HAS_TV
     }
 
     /**
      * Constructeur
      */
-    public RoomType() {}
+    public RoomType() {
+        super(Tables.ROOMTYPES);
+    }
 
     /**
      * Constructeur surchargé
      * @param NAME nom du type de chambre
      * @param PRICE prix du type de chambre
      */
-    public RoomType(String NAME, int PRICE) {
+    public RoomType(String NAME, double PRICE, int BED_CAPACITY, boolean HAS_PHONE, boolean HAS_TV) {
+        super(Tables.ROOMTYPES);
         this.NAME = NAME;
         this.PRICE = PRICE;
+        this.BED_CAPACITY = BED_CAPACITY;
+        this.HAS_PHONE = HAS_PHONE;
+        this.HAS_TV = HAS_TV;
         this.save();
     }
 
     //************* GETTERS & SETTERS ***************//
 
     @Override
-    public DatabaseColumns[] getModelColumns() {
+    public DatabaseColumns[] getColumns() {
         return Columns.values();
     }
 
@@ -59,11 +75,23 @@ public class RoomType extends DatabaseModel {
         this.NAME = NAME;
     }
 
-    public int getPRICE() {
+    public double getPRICE() {
         return PRICE;
     }
 
     public void setPRICE(String PRICE) {
-        this.PRICE = Integer.parseInt(PRICE);
+        this.PRICE = Double.parseDouble(PRICE);
     }
+
+    public int getBED_CAPACITY() { return BED_CAPACITY; }
+
+    public void setBED_CAPACITY(String BED_CAPACITY) { this.BED_CAPACITY = Integer.parseInt(BED_CAPACITY); }
+
+    public boolean getHAS_PHONE() { return HAS_PHONE; }
+
+    public void setHAS_PHONE(String HAS_PHONE) { this.HAS_PHONE = Boolean.parseBoolean(HAS_PHONE); }
+
+    public boolean getHAS_TV() { return HAS_TV; }
+
+    public void setHAS_TV(String HAS_TV) { this.HAS_TV = Boolean.parseBoolean(HAS_TV); }
 }

@@ -1,17 +1,14 @@
 package models;
 
 import database.DatabaseColumns;
+import database.DatabaseData;
 import database.DatabaseModel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Reservation extends DatabaseModel {
-    /**
-     * Table liée à la base de données
-     */
-    private Tables table = Tables.RESERVATIONS;
-
     /**
      * ID du client lié
      */
@@ -70,28 +67,16 @@ public class Reservation extends DatabaseModel {
     /**
      * Liste des colonnes
      */
-    private enum Columns implements DatabaseColumns {
+    public enum Columns implements DatabaseColumns {
         CLIENT_ID,HOTEL_ID,ROOMTYPE_ID,ARRIVAL_DATE,EXIT_DATE,DURATION,ROOM_COUNT,PEOPLE_COUNT,IS_PAYED,IS_COMFIRMED,IS_CANCELLED
-    }
-
-    /**
-     * Créer une date à partir d'un texte
-     * @param value date au format string
-     * @return Date
-     */
-    private Date parseDate(String value) {
-        try {
-            return new SimpleDateFormat("dd/MM/yyyy").parse(value);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     /**
      * Constructeur
      */
-    public Reservation() {}
+    public Reservation() {
+        super(Tables.RESERVATIONS);
+    }
 
     /**
      * Constructeur surchargé
@@ -108,11 +93,22 @@ public class Reservation extends DatabaseModel {
      * @param IS_CANCELLED est annulée
      */
     public Reservation(int CLIENT_ID, int HOTEL_ID, int ROOMTYPE_ID, Date ARRIVAL_DATE, Date EXIT_DATE, int DURATION, int ROOM_COUNT, int PEOPLE_COUNT, boolean IS_PAYED, boolean IS_COMFIRMED, boolean IS_CANCELLED) {
+        super(Tables.RESERVATIONS);
         this.CLIENT_ID = CLIENT_ID;
         this.HOTEL_ID = HOTEL_ID;
         this.ROOMTYPE_ID = ROOMTYPE_ID;
-        this.ARRIVAL_DATE = ARRIVAL_DATE;
-        this.EXIT_DATE = EXIT_DATE;
+        //Récupération de l'instance du calendrier
+        Calendar cal = Calendar.getInstance();
+        //Définition de l'heure
+        cal.setTime(ARRIVAL_DATE);
+        //Heure à minuit
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        this.ARRIVAL_DATE = cal.getTime();
+        //Définition de l'heure
+        cal.setTime(EXIT_DATE);
+        //Heure à minuit
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        this.EXIT_DATE = cal.getTime();
         this.DURATION = DURATION;
         this.ROOM_COUNT = ROOM_COUNT;
         this.PEOPLE_COUNT = PEOPLE_COUNT;
@@ -122,10 +118,51 @@ public class Reservation extends DatabaseModel {
         this.save();
     }
 
+    /**
+     * Créer une date à partir d'un texte
+     * @param value date au format string
+     * @return Date
+     */
+    private Date parseDate(String value) {
+        try {
+            value = value.substring(0, value.indexOf(" "));
+            return new SimpleDateFormat("yyyy-MM-dd").parse(value);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //************* REFERENCES ***************//
+
+    /**
+     * Hotel lié
+     * @return hotel
+     */
+    public Client getClient() {
+        return (Client) DatabaseData.getInstance().getReferenceFromID(Tables.CLIENTS,CLIENT_ID);
+    }
+
+    /**
+     * Hotel lié
+     * @return hotel
+     */
+    public Hotel getHotel() {
+        return (Hotel) DatabaseData.getInstance().getReferenceFromID(Tables.HOTELS,HOTEL_ID);
+    }
+
+    /**
+     * Hotel lié
+     * @return hotel
+     */
+    public RoomType getRoomType() {
+        return (RoomType) DatabaseData.getInstance().getReferenceFromID(Tables.ROOMTYPES,ROOMTYPE_ID);
+    }
+
     //*************** GETTERS & SETTERS ***************//
 
     @Override
-    public DatabaseColumns[] getModelColumns() {
+    public DatabaseColumns[] getColumns() {
         return Columns.values();
     }
 
@@ -153,9 +190,7 @@ public class Reservation extends DatabaseModel {
         this.ROOMTYPE_ID = Integer.parseInt(ROOMTYPE_ID);
     }
 
-    public Date getARRIVAL_DATE() {
-        return ARRIVAL_DATE;
-    }
+    public Date getARRIVAL_DATE() { return ARRIVAL_DATE; }
 
     public void setARRIVAL_DATE(String ARRIVAL_DATE) { this.ARRIVAL_DATE = parseDate(ARRIVAL_DATE); }
 

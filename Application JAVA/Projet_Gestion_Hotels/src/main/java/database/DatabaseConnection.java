@@ -1,16 +1,19 @@
 package database;
 
-import models.*;
+import models.Occupation;
+import models.Reservation;
 
-import javax.xml.crypto.Data;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Liaison avec la base de données
  */
-public class JDBC {
+public class DatabaseConnection {
     /**
      * URL de connexion
      */
@@ -34,7 +37,7 @@ public class JDBC {
     /**
      * Constructeur JDBC
      */
-    private JDBC() {
+    private DatabaseConnection() {
         try {
             //Connexion à la base de données
             connection = DriverManager.getConnection(CONNECT_URL,LOGIN,PASSWORD);
@@ -47,26 +50,35 @@ public class JDBC {
     /**
      * Classe responsable de l'instanciation de l'instance unique JDBC
      */
-    private static class JDBCHolder {
-        private final static JDBC instance = new JDBC();
+    private static class DatabaseConnectionHolder {
+        private final static DatabaseConnection instance = new DatabaseConnection();
     }
 
     /**
      * Instance JDBC
      * @return instance
      */
-    private static JDBC getInstance() {
-        return JDBCHolder.instance;
+    private static DatabaseConnection getInstance() {
+        return DatabaseConnectionHolder.instance;
     }
 
     /**
-     * Exécuter une requête SQL SELECT simple
-     * @param columns colonnes sélectionnées
+     * Exécuter une requête SQL SELECT sur une table en prenant toutes les colonnes
      * @param table table
      * @return classes issues du modèle
      */
-    public static ArrayList<DatabaseModel> selectQuery(DatabaseModel.Tables table, String columns) {
-        return selectQuery(table, columns, "");
+    public static ArrayList<DatabaseModel> selectQuery(DatabaseModel.Tables table) {
+        return selectQuery(table, "*", "");
+    }
+
+    /**
+     * Exécuter une requête SQL SELECT sur une table pour récupérer un tuple spécifique
+     * @param table table
+     * @param ID id de l'élément
+     * @return classes issues du modèle
+     */
+    public static DatabaseModel selectQuery(DatabaseModel.Tables table, int ID) {
+        return selectQuery(table, "*", "WHERE ID=" + ID).get(0);
     }
 
     /**
@@ -80,10 +92,10 @@ public class JDBC {
         //Liste des résultats
         ArrayList<DatabaseModel> results = new ArrayList<>();
         //Récupération de l'instance
-        JDBC jdbc = getInstance();
+        DatabaseConnection databaseConnection = getInstance();
         try {
             //Creation d'une instruction SQL
-            Statement instruction = jdbc.connection.createStatement();
+            Statement instruction = databaseConnection.connection.createStatement();
             //Execution de la requête
             ResultSet resultSet = instruction.executeQuery("SELECT " + columns + " FROM " + table + " " + where);
             //Récupération des paramètres de la requête
@@ -130,10 +142,10 @@ public class JDBC {
             " VALUES" +
             " ('" + String.join("','",modelData.values()) + "')");
         //Récupération de l'instance
-        JDBC jdbc = getInstance();
+        DatabaseConnection databaseConnection = getInstance();
         try {
             //Creation d'une instruction SQL
-            Statement instruction = jdbc.connection.createStatement();
+            Statement instruction = databaseConnection.connection.createStatement();
             //Execution de la requête
             instruction.executeUpdate(query);
             //Fermeture de l'instruction (liberation des ressources)
@@ -162,10 +174,10 @@ public class JDBC {
         //Condition WHERE pour modifier seulement le tuple concerné
         query = query.concat(" WHERE ID=" + model.getID());
         //Récupération de l'instance
-        JDBC jdbc = getInstance();
+        DatabaseConnection databaseConnection = getInstance();
         try {
             //Creation d'une instruction SQL
-            Statement instruction = jdbc.connection.createStatement();
+            Statement instruction = databaseConnection.connection.createStatement();
             //Execution de la requête
             instruction.executeUpdate(query);
             //Fermeture de l'instruction (liberation des ressources)
@@ -174,5 +186,44 @@ public class JDBC {
             //Message d'erreur
             System.err.println(e.getMessage());
         }
+    }
+
+    /**
+     * Appeler la procédure getAvailableRooms(...)
+     * @param reservation réservation
+     * @return IDs des chambres disponibles
+     */
+    public static List<Integer> getAvailableRoomsQuery(Reservation reservation) {
+        List<Integer> results = new ArrayList<>();
+        //Récupération de l'instance
+        DatabaseConnection databaseConnection = getInstance();
+        try {
+            //Creation d'une instruction SQL
+            Statement instruction = databaseConnection.connection.createStatement();
+            //Formatter les dates avec une syntaxe spécifique
+            SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+            //Execution de la requête
+            ResultSet resultSet = instruction.executeQuery(
+            "call getAvailableRooms(" + reservation.getHOTEL_ID() + ",'" +
+                formater.format(reservation.getARRIVAL_DATE()) + "','" +
+                formater.format(reservation.getEXIT_DATE()) + "'," +
+                reservation.getROOMTYPE_ID() + ")"
+            );
+            //Pour chaque tuple
+            while (resultSet.next())
+                //Récupération de l'ID
+                results.add(resultSet.getInt("ID"));
+            //Fermeture de l'instruction (liberation des ressources)
+            instruction.close();
+        } catch (SQLException e) {
+            //Message d'erreur
+            e.printStackTrace();
+        }
+        //Retour des résultats
+        return results;
+    }
+
+    public static void main(String[] args) {
+        DatabaseData.getInstance();
     }
 }

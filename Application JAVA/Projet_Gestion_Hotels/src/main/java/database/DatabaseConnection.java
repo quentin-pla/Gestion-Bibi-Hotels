@@ -109,7 +109,7 @@ public class DatabaseConnection {
                     //Récupération de la valeur de la colonne
                     value = resultSet.getString(columnName);
                     //Définition d'une colonne
-                    model.setColumnAttribute(columnName, value);
+                    if (model != null) model.setColumnAttribute(columnName, value);
                 }
                 //Ajout de la classe à la liste des résultats
                 results.add(model);

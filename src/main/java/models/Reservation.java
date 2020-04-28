@@ -12,63 +12,68 @@ public class Reservation extends DatabaseModel {
     /**
      * ID du client lié
      */
-    protected int CLIENT_ID;
+    private int CLIENT_ID;
 
     /**
      * ID de l'hotel lié
      */
-    protected int HOTEL_ID;
+    private int HOTEL_ID;
 
     /**
      * ID du type de chambre lié
      */
-    protected int ROOMTYPE_ID;
+    private int ROOMTYPE_ID;
 
     /**
      * Date d'arrivée
      */
-    protected Date ARRIVAL_DATE;
+    private Date ARRIVAL_DATE;
 
     /**
      * Date de sortie
      */
-    protected Date EXIT_DATE;
+    private Date EXIT_DATE;
 
     /**
      * Durée
      */
-    protected int DURATION;
+    private int DURATION;
 
     /**
      * Nombre de chambre
      */
-    protected int ROOM_COUNT;
+    private int ROOM_COUNT;
 
     /**
      * Nombre d'occupants
      */
-    protected int PEOPLE_COUNT;
+    private int PEOPLE_COUNT;
 
     /**
      * Montant payé
      */
-    protected boolean IS_PAYED;
+    private boolean IS_PAYED;
 
     /**
      * Réservation confirmée
      */
-    protected boolean IS_COMFIRMED;
+    private boolean IS_COMFIRMED;
 
     /**
      * Réservation annulée
      */
-    protected boolean IS_CANCELLED;
+    private boolean IS_CANCELLED;
+
+    /**
+     * Réservation archivée
+     */
+    private boolean IS_ARCHIVED;
 
     /**
      * Liste des colonnes
      */
     public enum Columns implements DatabaseColumns {
-        CLIENT_ID,HOTEL_ID,ROOMTYPE_ID,ARRIVAL_DATE,EXIT_DATE,DURATION,ROOM_COUNT,PEOPLE_COUNT,IS_PAYED,IS_COMFIRMED,IS_CANCELLED
+        CLIENT_ID,HOTEL_ID,ROOMTYPE_ID,ARRIVAL_DATE,EXIT_DATE,DURATION,ROOM_COUNT,PEOPLE_COUNT,IS_PAYED,IS_COMFIRMED,IS_CANCELLED,IS_ARCHIVED
     }
 
     /**
@@ -92,7 +97,7 @@ public class Reservation extends DatabaseModel {
      * @param IS_COMFIRMED est confirmée
      * @param IS_CANCELLED est annulée
      */
-    public Reservation(int CLIENT_ID, int HOTEL_ID, int ROOMTYPE_ID, Date ARRIVAL_DATE, Date EXIT_DATE, int DURATION, int ROOM_COUNT, int PEOPLE_COUNT, boolean IS_PAYED, boolean IS_COMFIRMED, boolean IS_CANCELLED) {
+    public Reservation(int CLIENT_ID, int HOTEL_ID, int ROOMTYPE_ID, Date ARRIVAL_DATE, Date EXIT_DATE, int DURATION, int ROOM_COUNT, int PEOPLE_COUNT, boolean IS_PAYED, boolean IS_COMFIRMED, boolean IS_CANCELLED, boolean IS_ARCHIVED) {
         super(Tables.RESERVATIONS);
         this.CLIENT_ID = CLIENT_ID;
         this.HOTEL_ID = HOTEL_ID;
@@ -115,6 +120,7 @@ public class Reservation extends DatabaseModel {
         this.IS_PAYED = IS_PAYED;
         this.IS_COMFIRMED = IS_COMFIRMED;
         this.IS_CANCELLED = IS_CANCELLED;
+        this.IS_ARCHIVED = IS_ARCHIVED;
         this.save();
     }
 
@@ -224,13 +230,13 @@ public class Reservation extends DatabaseModel {
         this.PEOPLE_COUNT = Integer.parseInt(PEOPLE_COUNT);
     }
 
-    public boolean isIS_PAYED() {
+    public boolean getIS_PAYED() {
         return IS_PAYED;
     }
 
     public void setIS_PAYED(String IS_PAYED) { this.IS_PAYED = Boolean.parseBoolean(IS_PAYED); }
 
-    public boolean isIS_COMFIRMED() {
+    public boolean getIS_COMFIRMED() {
         return IS_COMFIRMED;
     }
 
@@ -238,11 +244,15 @@ public class Reservation extends DatabaseModel {
         this.IS_COMFIRMED = Boolean.parseBoolean(IS_COMFIRMED);
     }
 
-    public boolean isIS_CANCELLED() {
+    public boolean getIS_CANCELLED() {
         return IS_CANCELLED;
     }
 
     public void setIS_CANCELLED(String IS_CANCELLED) {
         this.IS_CANCELLED = Boolean.parseBoolean(IS_CANCELLED);
     }
+
+    public boolean getIS_ARCHIVED() { return IS_ARCHIVED; }
+
+    public void setIS_ARCHIVED(String IS_ARCHIVED) { this.IS_ARCHIVED = Boolean.parseBoolean(IS_ARCHIVED); }
 }

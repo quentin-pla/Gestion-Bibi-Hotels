@@ -6,13 +6,13 @@ public class SelectPanelController {
     /**
      * Fenêtre de sélection
      */
-    private SelectPanel selectPanel;
+    private SelectPanel panel;
 
     /**
      * Constructeur
      */
     public SelectPanelController() {
-        selectPanel = new SelectPanel();
+        panel = new SelectPanel();
         //Initialisation des boutons
         initPanelButtons();
     }
@@ -22,24 +22,16 @@ public class SelectPanelController {
      */
     private void initPanelButtons() {
         //Lorsque l'utilisateur clique sur le bouton service client
-        selectPanel.getService_client().setOnAction(e -> {
-            System.out.println("Service client");
-        });
+        panel.getService_client().setOnAction(e -> MainController.getInstance().switchToClientService());
         //Lorsque l'utilisateur clique sur le bouton service réservation
-        selectPanel.getService_reservation().setOnAction(e -> {
-            System.out.println("Service réservation");
-        });
+        panel.getService_reservation().setOnAction(e -> MainController.getInstance().switchToReservationService());
         //Lorsque l'utilisateur clique sur le bouton service facturation
-        selectPanel.getService_facturation().setOnAction(e -> {
-            System.out.println("Service facturation");
-        });
+        panel.getService_facturation().setOnAction(e -> MainController.getInstance().switchToBillingService());
         //Lorsque l'utilisateur clique sur le bouton administration
-        selectPanel.getAdministration().setOnAction(e -> {
-            System.out.println("Administration");
-        });
+        panel.getAdministration().setOnAction(e -> MainController.getInstance().switchToAdministration());
     }
 
     //************* GETTERS & SETTERS ***************//
 
-    public SelectPanel getSelectPanel() { return selectPanel; }
+    public SelectPanel getPanel() { return panel; }
 }

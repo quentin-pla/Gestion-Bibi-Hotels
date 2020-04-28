@@ -17,14 +17,46 @@ public class MainController {
     private SelectPanelController selectPanelController;
 
     /**
+     * Controleur du panneau de sélection
+     */
+    private AdministrationController administrationController;
+
+    /**
+     * Controleur du panneau de sélection
+     */
+    private ClientServiceController clientServiceController;
+
+    /**
+     * Controleur du panneau de sélection
+     */
+    private ReservationServiceController reservationServiceController;
+
+    /**
+     * Controleur du panneau de sélection
+     */
+    private BillingServiceController billingServiceController;
+
+    /**
      * Constructeur
      */
     public MainController() {
-        this.selectPanelController = new SelectPanelController();
+        //Initialisation des controleurs
+        initControllers();
         //Définition de la fenêtre sur le panneau de connexion
-        windowContent = selectPanelController.getSelectPanel();
-        //Récupération des données de la base de données
-        DatabaseData.getInstance();
+        windowContent = selectPanelController.getPanel();
+        //Récupération des données de la base de données de manière asynchrone
+        new Thread(DatabaseData::getInstance).start();
+    }
+
+    /**
+     * Initialisation des controleurs
+     */
+    private void initControllers() {
+        this.selectPanelController = new SelectPanelController();
+        this.administrationController = new AdministrationController();
+        this.clientServiceController = new ClientServiceController();
+        this.reservationServiceController = new ReservationServiceController();
+        this.billingServiceController = new BillingServiceController();
     }
 
     /**
@@ -43,6 +75,34 @@ public class MainController {
      * Instance unique
      */
     private static MainController instance = null;
+
+    /**
+     * Changement de fenêtre sur le panneau d'administration
+     */
+    public void switchToAdministration() {
+        setWindow(administrationController.getPanel());
+    }
+
+    /**
+     * Changement de fenêtre sur le panneau d'administration
+     */
+    public void switchToClientService() {
+        setWindow(clientServiceController.getPanel());
+    }
+
+    /**
+     * Changement de fenêtre sur le panneau d'administration
+     */
+    public void switchToReservationService() {
+        setWindow(reservationServiceController.getPanel());
+    }
+
+    /**
+     * Changement de fenêtre sur le panneau d'administration
+     */
+    public void switchToBillingService() {
+        setWindow(billingServiceController.getPanel());
+    }
 
     /**
      * Afficher une fenêtre à l'écran

@@ -1,8 +1,8 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import database.DatabaseData;
+
+import java.util.*;
 
 public class ReservationService {
     /**
@@ -16,12 +16,34 @@ public class ReservationService {
     private ArrayList<Reservation> reservations;
 
     /**
+     * Réservations archivées
+     */
+    private ArrayList<Reservation> archives;
+
+    /**
      * Constructeur
      * @param hotel hotel lié
      */
     public ReservationService(Hotel hotel) {
         this.hotel = hotel;
         this.reservations = new ArrayList<>();
+        this.archives = new ArrayList<>();
+    }
+
+    /**
+     * Récupérer les réservations depuis les données locales
+     */
+    public void initReservations() {
+        //Récupération des réservations depuis les données de la base de données
+        Collection<Reservation> data = DatabaseData.getInstance().getReservations().values();
+        //Pour chaque réservation
+        for (Reservation reservation : data)
+            //Si l'id de l'hotel est égal à celui du service réservation
+            if (reservation.getHOTEL_ID() == hotel.getID())
+                //Si la réservation est archivée on l'ajoute aux archives
+                if (reservation.getIS_ARCHIVED()) archives.add(reservation);
+                //Sinon on l'ajoute dans les réservations
+                else reservations.add(reservation);
     }
 
     /**
@@ -48,7 +70,7 @@ public class ReservationService {
         //Vérifier que la réservation soit bien effectuée 2 jours avant la date d'arrivée
         boolean checkArrivalDate = !getCurrentDate(2).after(reservation.getARRIVAL_DATE());
         //Création de/des occupation(s) pour la réservation
-        if (checkArrivalDate && getClientService().addOccupation(reservation)) {
+        if (checkArrivalDate && ClientService.getInstance().addOccupation(reservation)) {
             //Ajout de la réservation à la liste
             reservations.add(reservation);
             //Retourne vrai
@@ -70,6 +92,10 @@ public class ReservationService {
             reservation.setIS_CANCELLED("true");
             //Mise à jour dans la base de données
             reservation.updateColumn(Reservation.Columns.IS_CANCELLED);
+            //Suppression de la réservation dans la liste
+            reservations.remove(reservation);
+            //Ajout de la réservation dans les archives
+            archives.add(reservation);
             //Retourne vrai
             return true;
         }
@@ -83,7 +109,7 @@ public class ReservationService {
      */
     public void confirmArrival(Reservation reservation) {
         //Confirmation de l'arrivée du client
-        getClientService().confirmClientPresence(reservation);
+        ClientService.getInstance().confirmClientPresence(reservation);
     }
 
     /**
@@ -110,11 +136,11 @@ public class ReservationService {
 
     //************* GETTERS & SETTERS ***************//
 
-    /**
-     * Récupérer l'instance du service client
-     * @return service client
-     */
-    public ClientService getClientService() {
-        return ClientService.getInstance();
-    }
+    public ArrayList<Reservation> getArchives() { return archives; }
+
+    public ArrayList<Reservation> getReservations() { return reservations; }
+
+    public void setReservations(ArrayList<Reservation> reservations) { this.reservations = reservations; }
+
+    public void setArchives(ArrayList<Reservation> archives) { this.archives = archives; }
 }

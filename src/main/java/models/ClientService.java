@@ -4,6 +4,7 @@ import database.DatabaseData;
 import database.DatabaseModel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static database.DatabaseConnection.getAvailableRoomsQuery;
@@ -26,16 +27,14 @@ public class ClientService {
     private ClientService() {
         this.occupations = new ArrayList<>();
         this.archives = new ArrayList<>();
-        //Initialisation des occupations
-        initOccupations();
     }
 
     /**
      * Récupérer les occupations depuis les données locales
      */
-    private void initOccupations() {
+    public void initOccupations() {
         //Récupération des occupations depuis les données de la base de données
-        ArrayList<Occupation> data = (ArrayList<Occupation>) DatabaseData.getInstance().getOccupations().values();
+        Collection<Occupation> data = DatabaseData.getInstance().getOccupations().values();
         //Pour chaque occupation
         for (Occupation occupation : data)
             //Si elle est archivée on l'ajoute aux archives
@@ -131,7 +130,7 @@ public class ClientService {
             //Si l'occupation est liée à la réservation
             if (occupation.getRESERVATION_ID() == reservation.getID()) {
                 //Passage du booléen concernant la présence du client à vrai
-                occupation.setIS_CLIENT_PRESENT("true");
+                occupation.setIS_CLIENT_PRESENT(true);
                 //Mise à jour dans la base de données
                 occupation.updateColumn(Occupation.Columns.IS_CLIENT_PRESENT);
             }
@@ -145,7 +144,7 @@ public class ClientService {
      */
     public void updatePresence(Occupation occupation, boolean value) {
         //Passage du booléen à la valeur passée en paramètre
-        occupation.setIS_CLIENT_PRESENT(String.valueOf(value));
+        occupation.setIS_CLIENT_PRESENT(value);
         //Mise à jour dans la base de données
         occupation.updateColumn(Occupation.Columns.IS_CLIENT_PRESENT);
     }
@@ -168,7 +167,7 @@ public class ClientService {
         //Récupération du client depuis la base de données
         Client client = (Client) selectQuery(DatabaseModel.Tables.CLIENTS, client_id);
         //Passage du booléen à vrai
-        client.setIS_REGULAR("true");
+        client.setIS_REGULAR(true);
         //Mise à jour dans la base de données
         client.updateColumn(Client.Columns.IS_REGULAR);
     }

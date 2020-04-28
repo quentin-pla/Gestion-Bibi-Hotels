@@ -85,6 +85,22 @@ public class Hotel extends DatabaseModel {
         return Columns.values();
     }
 
+    public ReservationService getReservationService() {
+        return reservationService;
+    }
+
+    public void setReservationService(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
+
+    public BillingService getBillingService() {
+        return billingService;
+    }
+
+    public void setBillingService(BillingService billingService) {
+        this.billingService = billingService;
+    }
+
     public String getNAME() {
         return NAME;
     }
@@ -113,13 +129,7 @@ public class Hotel extends DatabaseModel {
         return STAR_RATING;
     }
 
-    public void setSTAR_RATING(String STAR_RATING) { this.STAR_RATING = Integer.parseInt(STAR_RATING); }
-
-    public ReservationService getReservationService() {
-        return reservationService;
-    }
-
-    public BillingService getBillingService() {
-        return billingService;
+    public void setSTAR_RATING(int STAR_RATING) {
+        this.STAR_RATING = STAR_RATING;
     }
 }

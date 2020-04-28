@@ -71,17 +71,17 @@ public class Occupation extends DatabaseModel {
 
     /**
      * Constructeur surchargé
-     * @param reservation_id id de la réservation liée
-     * @param room_id id de la chambre liée
-     * @param is_client_present client présent ou non dans la chambre
+     * @param RESERVATION_ID id de la réservation liée
+     * @param ROOM_ID id de la chambre liée
+     * @param IS_CLIENT_PRESENT client présent ou non dans la chambre
      */
-    public Occupation(int reservation_id, int room_id, boolean is_client_present) {
+    public Occupation(int RESERVATION_ID, int ROOM_ID, boolean IS_CLIENT_PRESENT) {
         super(Tables.OCCUPATIONS);
         this.billedServices = new ArrayList<>();
         this.occupants = new ArrayList<>();
-        this.RESERVATION_ID = reservation_id;
-        this.ROOM_ID = room_id;
-        this.IS_CLIENT_PRESENT = is_client_present;
+        this.RESERVATION_ID = RESERVATION_ID;
+        this.ROOM_ID = ROOM_ID;
+        this.IS_CLIENT_PRESENT = IS_CLIENT_PRESENT;
         this.save();
     }
 
@@ -108,37 +108,51 @@ public class Occupation extends DatabaseModel {
     @Override
     public DatabaseColumns[] getColumns() { return Columns.values(); }
 
-    public int getRESERVATION_ID() {
-        return RESERVATION_ID;
-    }
-
-    public void setRESERVATION_ID(String RESERVATION_ID) {
-        this.RESERVATION_ID = Integer.parseInt(RESERVATION_ID);
-    }
-
-    public int getROOM_ID() {
-        return ROOM_ID;
-    }
-
-    public void setROOM_ID(String ROOM_ID) {
-        this.ROOM_ID = Integer.parseInt(ROOM_ID);
-    }
-
-    public boolean getIS_CLIENT_PRESENT() {
-        return IS_CLIENT_PRESENT;
-    }
-
-    public void setIS_CLIENT_PRESENT(String IS_CLIENT_PRESENT) { this.IS_CLIENT_PRESENT = Boolean.parseBoolean(IS_CLIENT_PRESENT); }
-
     public ArrayList<Service> getBilledServices() {
         return billedServices;
+    }
+
+    public void setBilledServices(ArrayList<Service> billedServices) {
+        this.billedServices = billedServices;
     }
 
     public ArrayList<Occupant> getOccupants() {
         return occupants;
     }
 
-    public boolean getIS_ARCHIVED() { return IS_ARCHIVED; }
+    public void setOccupants(ArrayList<Occupant> occupants) {
+        this.occupants = occupants;
+    }
 
-    public void setIS_ARCHIVED(String IS_ARCHIVED) { this.IS_ARCHIVED = Boolean.parseBoolean(IS_ARCHIVED); }
+    public int getRESERVATION_ID() {
+        return RESERVATION_ID;
+    }
+
+    public void setRESERVATION_ID(int RESERVATION_ID) {
+        this.RESERVATION_ID = RESERVATION_ID;
+    }
+
+    public int getROOM_ID() {
+        return ROOM_ID;
+    }
+
+    public void setROOM_ID(int ROOM_ID) {
+        this.ROOM_ID = ROOM_ID;
+    }
+
+    public boolean getIS_CLIENT_PRESENT() {
+        return IS_CLIENT_PRESENT;
+    }
+
+    public void setIS_CLIENT_PRESENT(boolean IS_CLIENT_PRESENT) {
+        this.IS_CLIENT_PRESENT = IS_CLIENT_PRESENT;
+    }
+
+    public boolean getIS_ARCHIVED() {
+        return IS_ARCHIVED;
+    }
+
+    public void setIS_ARCHIVED(boolean IS_ARCHIVED) {
+        this.IS_ARCHIVED = IS_ARCHIVED;
+    }
 }

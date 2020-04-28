@@ -36,15 +36,15 @@ public class Occupant extends DatabaseModel {
 
     /**
      * Constructeur surchargé
-     * @param occupation_id
-     * @param firstname
-     * @param lastname
+     * @param OCCUPATION_ID id de l'occupation liée
+     * @param FIRSTNAME nom
+     * @param LASTNAME prénom
      */
-    public Occupant(int occupation_id, String firstname, String lastname) {
+    public Occupant(int OCCUPATION_ID, String FIRSTNAME, String LASTNAME) {
         super(Tables.OCCUPANTS);
-        this.OCCUPATION_ID = occupation_id;
-        this.FIRSTNAME = firstname;
-        this.LASTNAME = lastname;
+        this.OCCUPATION_ID = OCCUPATION_ID;
+        this.FIRSTNAME = FIRSTNAME;
+        this.LASTNAME = LASTNAME;
         this.save();
     }
 
@@ -69,8 +69,8 @@ public class Occupant extends DatabaseModel {
         return OCCUPATION_ID;
     }
 
-    public void setOCCUPATION_ID(String OCCUPATION_ID) {
-        this.OCCUPATION_ID = Integer.parseInt(OCCUPATION_ID);
+    public void setOCCUPATION_ID(int OCCUPATION_ID) {
+        this.OCCUPATION_ID = OCCUPATION_ID;
     }
 
     public String getFIRSTNAME() {

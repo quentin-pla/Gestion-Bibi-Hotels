@@ -74,23 +74,35 @@ public class Bill extends DatabaseModel {
         return Columns.values();
     }
 
+    public int getRESERVATION_ID() {
+        return RESERVATION_ID;
+    }
+
+    public void setRESERVATION_ID(int RESERVATION_ID) {
+        this.RESERVATION_ID = RESERVATION_ID;
+    }
+
     public int getCLIENT_ID() {
         return CLIENT_ID;
     }
 
-    public void setCLIENT_ID(String CLIENT_ID) { this.CLIENT_ID = Integer.parseInt(CLIENT_ID); }
+    public void setCLIENT_ID(int CLIENT_ID) {
+        this.CLIENT_ID = CLIENT_ID;
+    }
 
     public double getAMOUNT() {
         return AMOUNT;
     }
 
-    public void setAMOUNT(String AMOUNT) { this.AMOUNT = Float.parseFloat(AMOUNT); }
+    public void setAMOUNT(double AMOUNT) {
+        this.AMOUNT = AMOUNT;
+    }
 
-    public boolean getIS_ARCHIVED() { return IS_ARCHIVED; }
+    public boolean getIS_ARCHIVED() {
+        return IS_ARCHIVED;
+    }
 
-    public void setIS_ARCHIVED(String IS_ARCHIVED) { this.IS_ARCHIVED = Boolean.parseBoolean(IS_ARCHIVED); }
-
-    public int getRESERVATION_ID() { return RESERVATION_ID; }
-
-    public void setRESERVATION_ID(String RESERVATION_ID) { this.RESERVATION_ID = Integer.parseInt(RESERVATION_ID); }
+    public void setIS_ARCHIVED(boolean IS_ARCHIVED) {
+        this.IS_ARCHIVED = IS_ARCHIVED;
+    }
 }

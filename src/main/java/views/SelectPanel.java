@@ -1,5 +1,6 @@
 package views;
 
+import controllers.MainController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -22,6 +23,7 @@ public class SelectPanel extends BorderPane {
     private ImageView icon              = new ImageView(new Image("/hotels.png"));
 
     public SelectPanel() {
+        setMinSize(MainController.width, MainController.height);
         brand.getStyleClass().add("title");
         service_client.getStyleClass().add("select-button");
         service_reservation.getStyleClass().add("select-button");

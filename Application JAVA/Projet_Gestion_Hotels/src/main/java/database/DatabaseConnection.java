@@ -1,12 +1,10 @@
 package database;
 
-import models.Occupation;
 import models.Reservation;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -105,7 +103,7 @@ public class DatabaseConnection {
             //Pour chaque tuple
             while (resultSet.next()) {
                 //Pour chaque colonne
-                for (int index = 1; index < columnSet.getColumnCount(); index++) {
+                for (int index = 1; index <= columnSet.getColumnCount(); index++) {
                     //Récupération du nom de la colonne
                     columnName = columnSet.getColumnLabel(index);
                     //Récupération de la valeur de la colonne
@@ -221,9 +219,5 @@ public class DatabaseConnection {
         }
         //Retour des résultats
         return results;
-    }
-
-    public static void main(String[] args) {
-        DatabaseData.getInstance();
     }
 }

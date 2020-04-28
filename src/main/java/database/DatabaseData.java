@@ -81,9 +81,12 @@ public class DatabaseData {
      */
     public static DatabaseData getInstance() {
         //Si l'instance n'est pas initialisée
-        if (instance == null)
+        if (instance == null) {
             //Initialisation de l'instance
             instance = new DatabaseData();
+            //Initialisation des services
+            instance.initServices();
+        }
         //Retour de l'instance
         return instance;
     }
@@ -92,18 +95,10 @@ public class DatabaseData {
      * Rafraichir les données locales
      */
     public void refreshData() {
-        //Suppression des données locales
-        bills.clear();
-        clients.clear();
-        hotels.clear();
-        occupants.clear();
-        occupations.clear();
-        reservations.clear();
-        rooms.clear();
-        roomTypes.clear();
-        services.clear();
-        //Récupération des données de la base de données
-        retrieveDatabase();
+        //Instance null pour initialiser à nouveau la classe
+        instance = null;
+        //Initialisation avec une nouvelle instance
+        getInstance();
     }
 
     /**
@@ -128,6 +123,20 @@ public class DatabaseData {
         retrieveDatabaseServices();
         //Factures
         retrieveDatabaseBills();
+    }
+
+    /**
+     * Initialisation des services de la chaine d'hotels
+     */
+    public void initServices() {
+        //Pour chaque hotel
+        for (Hotel hotel : hotels.values())
+            //Initialisation du service réservation et facturation
+            hotel.initServices();
+        //Initialisation des hotels pour l'administration
+        Administration.getInstance().initHotels();
+        //Initialisation des occupations pour le service client
+        ClientService.getInstance().initOccupations();
     }
 
     /**
@@ -252,9 +261,7 @@ public class DatabaseData {
         return bills;
     }
 
-    public Map<Integer, Client> getClients() {
-        return clients;
-    }
+    public Map<Integer, Client> getClients() { return clients; }
 
     public Map<Integer, Hotel> getHotels() {
         return hotels;

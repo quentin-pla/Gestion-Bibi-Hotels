@@ -4,11 +4,8 @@
     <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="Résolution d'un bug lors de la récupération des données depuis la base de données">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/Administration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Administration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Bill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Bill.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/BillingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/BillingService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/ClientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Hotel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Hotel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/Reservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Reservation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +201,7 @@
       <workItem from="1587852649530" duration="4465000" />
       <workItem from="1587894664541" duration="15160000" />
       <workItem from="1587985609424" duration="19738000" />
-      <workItem from="1588073494672" duration="4623000" />
+      <workItem from="1588073494672" duration="4761000" />
     </task>
     <task id="LOCAL-00001" summary="Mise à jour des fichiers de configuration + ajout .gitignore">
       <created>1587722130974</created>
@@ -353,7 +350,28 @@
       <option name="project" value="LOCAL" />
       <updated>1588078817066</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Ajout de la colonne IS_ARCHIVED pour la classe Réservation">
+      <created>1588078944088</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1588078944088</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Ajout de la référence vers la réservation liée pour la classe Bill">
+      <created>1588078978856</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1588078978856</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Ajout d'une méthode pour initialiser les services locaux liés à l'hotel">
+      <created>1588079018901</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1588079018901</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -380,7 +398,10 @@
     <MESSAGE value="Résolution d'un bug lors de la récupération des données depuis la base de données" />
     <MESSAGE value="Ajout de commentaires classe DatabaseData" />
     <MESSAGE value="Ajout des archives pour le service réservation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajout des archives pour le service réservation" />
+    <MESSAGE value="Ajout de la colonne IS_ARCHIVED pour la classe Réservation" />
+    <MESSAGE value="Ajout de la référence vers la réservation liée pour la classe Bill" />
+    <MESSAGE value="Ajout d'une méthode pour initialiser les services locaux liés à l'hotel" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout d'une méthode pour initialiser les services locaux liés à l'hotel" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="115" key="#Project_Structure" timestamp="1587721001399">
@@ -407,10 +428,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="438" y="294" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900@0.0.1440.900" timestamp="1588008699364" />
-    <state x="0" y="51" key="CommitChangelistDialog2" timestamp="1588078978729">
+    <state x="0" y="51" key="CommitChangelistDialog2" timestamp="1588079023913">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="0" y="51" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1588078978729" />
+    <state x="0" y="51" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1588079023913" />
     <state x="144" y="78" key="DiffContextDialog" timestamp="1587722093877">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

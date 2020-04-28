@@ -6,6 +6,11 @@ import database.DatabaseModel;
 
 public class Bill extends DatabaseModel {
     /**
+     * Réservation liée à la facture
+     */
+    private int RESERVATION_ID;
+
+    /**
      * ID du client lié
      */
     private int CLIENT_ID;
@@ -24,7 +29,7 @@ public class Bill extends DatabaseModel {
      * Liste des colonnes
      */
     public enum Columns implements DatabaseColumns {
-        CLIENT_ID,AMOUNT,IS_ARCHIVED
+        RESERVATION_ID,CLIENT_ID,AMOUNT,IS_ARCHIVED
     }
 
     /**
@@ -35,14 +40,24 @@ public class Bill extends DatabaseModel {
     }
 
     //Constructeur surchargé
-    public Bill(int client_id, double amount) {
+    public Bill(int RESERVATION_ID, int CLIENT_ID, double AMOUNT, boolean IS_ARCHIVED) {
         super(Tables.BILLS);
-        this.CLIENT_ID = client_id;
-        this.AMOUNT = amount;
+        this.RESERVATION_ID = RESERVATION_ID;
+        this.CLIENT_ID = CLIENT_ID;
+        this.AMOUNT = AMOUNT;
+        this.IS_ARCHIVED = IS_ARCHIVED;
         this.save();
     }
 
     //************* REFERENCES ***************//
+
+    /**
+     * Réservation liée
+     * @return réservation
+     */
+    public Reservation getReservation() {
+        return (Reservation) DatabaseData.getInstance().getReferenceFromID(Tables.RESERVATIONS,RESERVATION_ID);
+    }
 
     /**
      * Client lié
@@ -74,4 +89,8 @@ public class Bill extends DatabaseModel {
     public boolean getIS_ARCHIVED() { return IS_ARCHIVED; }
 
     public void setIS_ARCHIVED(String IS_ARCHIVED) { this.IS_ARCHIVED = Boolean.parseBoolean(IS_ARCHIVED); }
+
+    public int getRESERVATION_ID() { return RESERVATION_ID; }
+
+    public void setRESERVATION_ID(String RESERVATION_ID) { this.RESERVATION_ID = Integer.parseInt(RESERVATION_ID); }
 }

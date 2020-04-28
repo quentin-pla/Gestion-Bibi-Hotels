@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="Ajout de méthodes pour récupérer les références liées au modèle + constructeur surchargé">
-      <change afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseData.java" afterDir="false" />
+    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/database/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/database/DatabaseData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/Administration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Administration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/Bill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Bill.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/BillingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/BillingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/ClientService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/Hotel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Hotel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/Reservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Reservation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/models/ReservationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/ReservationService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +206,8 @@
       <workItem from="1587801534449" duration="28197000" />
       <workItem from="1587852649530" duration="4465000" />
       <workItem from="1587894664541" duration="15160000" />
-      <workItem from="1587985609424" duration="17239000" />
+      <workItem from="1587985609424" duration="19738000" />
+      <workItem from="1588073494672" duration="4270000" />
     </task>
     <task id="LOCAL-00001" summary="Mise à jour des fichiers de configuration + ajout .gitignore">
       <created>1587722130974</created>
@@ -319,7 +328,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588009200077</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Ajout d'une classe pour récupérer les données de la base de données et les stocker localement">
+      <created>1588009291261</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1588009291261</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -342,7 +358,8 @@
     <MESSAGE value="Implémentation des classes de type service" />
     <MESSAGE value="Implémentation de la classe Administration" />
     <MESSAGE value="Ajout de méthodes pour récupérer les références liées au modèle + constructeur surchargé" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajout de méthodes pour récupérer les références liées au modèle + constructeur surchargé" />
+    <MESSAGE value="Ajout d'une classe pour récupérer les données de la base de données et les stocker localement" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout d'une classe pour récupérer les données de la base de données et les stocker localement" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="115" key="#Project_Structure" timestamp="1587721001399">
@@ -353,10 +370,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="320" y="115" key="#SQL_Dialects/0.0.1440.900@0.0.1440.900" timestamp="1587834981895" />
-    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser" timestamp="1588004603656">
+    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser" timestamp="1588074087131">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1588004603656" />
+    <state x="533" y="141" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1588074087131" />
     <state x="276" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1587908931781">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -369,30 +386,30 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="438" y="294" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900@0.0.1440.900" timestamp="1588008699364" />
-    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1588009206563">
+    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1588009291133">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1588009206563" />
+    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1588009291133" />
     <state x="144" y="78" key="DiffContextDialog" timestamp="1587722093877">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="144" y="78" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1587722093877" />
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1588008367565">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1588078484398">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1588008367565" />
-    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1588008367561">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1588078484398" />
+    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1588078484397">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1588008367561" />
-    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1588008367559">
+    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1588078484397" />
+    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1588078484397">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1588008367559" />
-    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1588008367562">
+    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1588078484397" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1588078484398">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1588008367562" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1588078484398" />
     <state width="1398" height="303" key="GridCell.Tab.1.bottom" timestamp="1588003286753">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -413,10 +430,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="221" y="63" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1588008806833" />
-    <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1588009214653">
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2" timestamp="1588009293078">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="320" y="190" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1588009214653" />
+    <state x="320" y="190" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1588009293078" />
     <state x="100" y="85" width="1240" height="775" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587902499731">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

@@ -1,4 +1,4 @@
-import {Container, Row, Col, Button, Form} from "react-bootstrap";
+import {Container, Row, Col} from "react-bootstrap";
 import React, {Component} from "react";
 import {AuthContext} from "../context/AuthContext";
 
@@ -12,7 +12,7 @@ class Home extends Component {
         const auth = this.context;
 
         return (
-            <Container className="flex-center position-ref full-height" fluid>
+            <Container fluid>
                 <Row className="justify-content-md-center">
                     <Col className="col-12 text-center">
                         <h1 className="display-3">{auth.authenticated ? "Bienvenue " + auth.mail : "Bienvenue"}</h1>

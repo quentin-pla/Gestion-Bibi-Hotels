@@ -5,7 +5,8 @@ class Hotel extends Model {}
 Hotel.init({
     id: {
         type: DataTypes.INTEGER,
-        field: 'ID'
+        field: 'ID',
+        primaryKey: true
     },
     name: {
         type: DataTypes.STRING,
@@ -21,7 +22,7 @@ Hotel.init({
     },
     stars: {
         type: DataTypes.INTEGER,
-        field: 'STARS'
+        field: 'STAR_RATING'
     },
 }, {
     modelName: 'hotels',

@@ -24,6 +24,29 @@ svg {
     padding-right: 10%;
 }
 
+.media-object{
+    width: 160px;
+}
+
+.ul{
+    padding-left: 0px;
+}
+
+.hotel-view{
+    margin-top: 5%;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    border-style: solid;
+    border-width: 10px;
+    background-color: gainsboro;
+}
+
+.media-body{
+    padding-left: 13px;
+}
+
 p {
     margin: 0;
 }

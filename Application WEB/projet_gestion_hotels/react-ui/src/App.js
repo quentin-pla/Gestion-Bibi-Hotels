@@ -9,6 +9,8 @@ import Profil from './components/Profil'
 import Signup from './components/auth/Signup';
 import AuthButton from './components/auth/AuthButton';
 import {AuthContext} from "./context/AuthContext";
+import Hotels from "./components/Hotels";
+import HotelView from "./components/HotelView";
 
 class App extends Component {
     /**
@@ -39,6 +41,7 @@ class App extends Component {
                 <Switch>
                     <Route exact path="/">
                         <Home />
+                        <Hotels />
                     </Route>
                     <Route path="/login">
                         <Login/>
@@ -46,7 +49,10 @@ class App extends Component {
                     <Route path="/signup">
                         <Signup/>
                     </Route>
-                    <PrivateRoute path="/profile">
+                    <Route path="/hotel/:id" component={HotelView}>
+                        <HotelView/>
+                    </Route>
+                    <PrivateRoute path="/profil">
                         <Profil/>
                     </PrivateRoute>
                     <Redirect to="/"/>
@@ -63,7 +69,7 @@ function NavLinks(props) {
     //Si l'utilisateur est authentifié
     return props.authenticated ? (
         <Nav className="mr-auto">
-            <Link className="nav-link text-white" to="/profile">Profil</Link>
+            <Link className="nav-link text-white" to="/profil">Profil</Link>
         </Nav>
     ) : (
         <Nav className="mr-auto"/>

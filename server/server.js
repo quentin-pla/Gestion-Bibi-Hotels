@@ -1,6 +1,7 @@
 /**
  * Utilisation d'express
  */
+
 const express = require('express');
 
 /**
@@ -33,6 +34,8 @@ const io = require('socket.io')(app);
  * Modèle Client de la base de données
  */
 const Client = require(path.join(__dirname, "../react-ui/src/database/models/Client"));
+
+const Hotel = require(path.join(__dirname,"../react-ui/src/database/models/Hotel"));
 
 /**
  * Connexion à la base de données
@@ -127,9 +130,17 @@ io.sockets.on('connection', function (socket) {
            where: {
                MAIL : mail
            }
-       }).then((item)=> {
-           socket.emit('profil_info', item);
+       }).then((item) => {
+           if (item !== null)
+               socket.emit('profil_info', item);
        })
+    });
+
+    socket.on('hotels', function(){
+        Hotel.findAll().then((item) => {
+            if (item !== null)
+                socket.emit('hotels_res', item);
+        })
     });
 
 

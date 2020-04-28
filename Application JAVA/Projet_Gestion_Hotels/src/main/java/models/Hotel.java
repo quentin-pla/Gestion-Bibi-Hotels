@@ -10,11 +10,6 @@ public class Hotel extends DatabaseModel {
     private ReservationService reservationService;
 
     /**
-     * Service client de l'hotel
-     */
-    private ClientService clientService;
-
-    /**
      * Service facturation de l'hotel
      */
     private BillingService billingService;
@@ -57,20 +52,30 @@ public class Hotel extends DatabaseModel {
 
     /**
      * Constructeur surchargé
-     * @param name nom
-     * @param street adresse
-     * @param city ville
-     * @param star_rating nombre d'étoiles
+     * @param NAME nom
+     * @param STREET adresse
+     * @param CITY ville
+     * @param STAR_RATING nombre d'étoiles
      */
-    public Hotel(String name, String street, String city, int star_rating) {
+    public Hotel(String NAME, String STREET, String CITY, int STAR_RATING) {
         super(Tables.HOTELS);
-        this.NAME = name;
-        this.STREET = street;
-        this.CITY = city;
-        this.STAR_RATING = star_rating;
+        this.NAME = NAME;
+        this.STREET = STREET;
+        this.CITY = CITY;
+        this.STAR_RATING = STAR_RATING;
         this.reservationService = new ReservationService(this);
         this.billingService = new BillingService(this);
         this.save();
+    }
+
+    /**
+     * Initialisation des données nécessaires pour les services
+     */
+    public void initServices() {
+        //Initialisation des réservations
+        getReservationService().initReservations();
+        //Initialisation des factures
+        getBillingService().initBills();
     }
 
     //************* GETTERS & SETTERS ***************//

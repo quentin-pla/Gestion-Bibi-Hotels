@@ -1,6 +1,9 @@
 package models;
 
+import database.DatabaseData;
+
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class BillingService {
     /**
@@ -34,6 +37,22 @@ public class BillingService {
      */
     public BillingService(Hotel hotel) {
         this.hotel = hotel;
+        this.pending_bills = new ArrayList<>();
+        this.archives = new ArrayList<>();
+    }
+
+    /**
+     * Récupérer les factures depuis les données locales
+     */
+    public void initBills() {
+        //Récupération des factures depuis les données de la base de données
+        Collection<Bill> data = DatabaseData.getInstance().getBills().values();
+        //Pour chaque facture
+        for (Bill bill : data)
+            //Si elle est archivée on l'ajoute aux archives
+            if (bill.getIS_ARCHIVED()) archives.add(bill);
+            //Sinon on l'ajoute dans les factures en attente
+            else pending_bills.add(bill);
     }
 
     /**
@@ -50,7 +69,7 @@ public class BillingService {
             //Incrémentation du montant total
             total_amount += getTotalBillAmount(occupation);
         //Création d'une nouvelle facture
-        pending_bills.add(new Bill(reservation.getCLIENT_ID(), total_amount));
+        pending_bills.add(new Bill(reservation.getID(), reservation.getCLIENT_ID(), total_amount, false));
     }
 
     /**

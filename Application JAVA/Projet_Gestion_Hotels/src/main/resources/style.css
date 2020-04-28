@@ -1,0 +1,25 @@
+.root {
+    -fx-background-color: darkred;
+}
+
+.select-button {
+    -fx-min-height: 180px;
+    -fx-min-width: 180px;
+    -fx-text-fill: white;
+    -fx-font-size: 25px;
+    -fx-border-color: white;
+    -fx-background-color: darkred;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-text-alignment: center;
+}
+
+.select-button:hover {
+    -fx-background-color: white;
+    -fx-text-fill: darkred;
+}
+
+.title {
+    -fx-font-size: 40px;
+    -fx-text-fill: white;
+}

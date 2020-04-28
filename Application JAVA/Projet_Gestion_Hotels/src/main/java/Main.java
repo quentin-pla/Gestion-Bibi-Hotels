@@ -1,6 +1,5 @@
+import controllers.MainController;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -11,8 +10,8 @@ public class Main extends Application {
         primaryStage.setTitle("Gestion Hôtels");
         //Fenêtre non redimensionable
         primaryStage.setResizable(false);
-        //Définition de la scène
-        primaryStage.setScene(new Scene(new Pane()));
+        //Définition de la scène avec la scène du MainController
+        primaryStage.setScene(MainController.getInstance().getScene());
         //Ajout du style
         primaryStage.getScene().getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         //Affichage de la fenêtre

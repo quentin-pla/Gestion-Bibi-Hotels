@@ -69,9 +69,13 @@ public class Service extends DatabaseModel {
         return Columns.values();
     }
 
-    public int getHOTEL_ID() { return HOTEL_ID; }
+    public int getHOTEL_ID() {
+        return HOTEL_ID;
+    }
 
-    public void setHOTEL_ID(String HOTEL_ID) { this.HOTEL_ID = Integer.parseInt(HOTEL_ID); }
+    public void setHOTEL_ID(int HOTEL_ID) {
+        this.HOTEL_ID = HOTEL_ID;
+    }
 
     public String getNAME() {
         return NAME;
@@ -85,11 +89,15 @@ public class Service extends DatabaseModel {
         return PRICE;
     }
 
-    public void setPRICE(String PRICE) {
-        this.PRICE = Double.parseDouble(PRICE);
+    public void setPRICE(double PRICE) {
+        this.PRICE = PRICE;
     }
 
-    public boolean getUNIQUE_ORDER() { return UNIQUE_ORDER; }
+    public boolean getUNIQUE_ORDER() {
+        return UNIQUE_ORDER;
+    }
 
-    public void setUNIQUE_ORDER(String UNIQUE_ORDER) { this.UNIQUE_ORDER = Boolean.parseBoolean(UNIQUE_ORDER); }
+    public void setUNIQUE_ORDER(boolean UNIQUE_ORDER) {
+        this.UNIQUE_ORDER = UNIQUE_ORDER;
+    }
 }

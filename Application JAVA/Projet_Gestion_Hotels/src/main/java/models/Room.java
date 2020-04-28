@@ -70,15 +70,15 @@ public class Room extends DatabaseModel {
         return HOTEL_ID;
     }
 
-    public void setHOTEL_ID(String HOTEL_ID) {
-        this.HOTEL_ID = Integer.parseInt(HOTEL_ID);
+    public void setHOTEL_ID(int HOTEL_ID) {
+        this.HOTEL_ID = HOTEL_ID;
     }
 
     public int getROOMTYPE_ID() {
         return ROOMTYPE_ID;
     }
 
-    public void setROOMTYPE_ID(String ROOMTYPE_ID) {
-        this.ROOMTYPE_ID = Integer.parseInt(ROOMTYPE_ID);
+    public void setROOMTYPE_ID(int ROOMTYPE_ID) {
+        this.ROOMTYPE_ID = ROOMTYPE_ID;
     }
 }

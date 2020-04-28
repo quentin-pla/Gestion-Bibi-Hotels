@@ -79,19 +79,31 @@ public class RoomType extends DatabaseModel {
         return PRICE;
     }
 
-    public void setPRICE(String PRICE) {
-        this.PRICE = Double.parseDouble(PRICE);
+    public void setPRICE(double PRICE) {
+        this.PRICE = PRICE;
     }
 
-    public int getBED_CAPACITY() { return BED_CAPACITY; }
+    public int getBED_CAPACITY() {
+        return BED_CAPACITY;
+    }
 
-    public void setBED_CAPACITY(String BED_CAPACITY) { this.BED_CAPACITY = Integer.parseInt(BED_CAPACITY); }
+    public void setBED_CAPACITY(int BED_CAPACITY) {
+        this.BED_CAPACITY = BED_CAPACITY;
+    }
 
-    public boolean getHAS_PHONE() { return HAS_PHONE; }
+    public boolean getHAS_PHONE() {
+        return HAS_PHONE;
+    }
 
-    public void setHAS_PHONE(String HAS_PHONE) { this.HAS_PHONE = Boolean.parseBoolean(HAS_PHONE); }
+    public void setHAS_PHONE(boolean HAS_PHONE) {
+        this.HAS_PHONE = HAS_PHONE;
+    }
 
-    public boolean getHAS_TV() { return HAS_TV; }
+    public boolean getHAS_TV() {
+        return HAS_TV;
+    }
 
-    public void setHAS_TV(String HAS_TV) { this.HAS_TV = Boolean.parseBoolean(HAS_TV); }
+    public void setHAS_TV(boolean HAS_TV) {
+        this.HAS_TV = HAS_TV;
+    }
 }

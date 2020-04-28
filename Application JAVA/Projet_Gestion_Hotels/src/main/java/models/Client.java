@@ -57,21 +57,21 @@ public class Client extends DatabaseModel {
 
     /**
      * Constructeur surchargé
-     * @param firstname nom
-     * @param lastname prénom
-     * @param street adresse
-     * @param city ville
-     * @param mail adresse mail
-     * @param password mot de passe
+     * @param FIRSTNAME nom
+     * @param LASTNAME prénom
+     * @param STREET adresse
+     * @param CITY ville
+     * @param MAIL adresse mail
+     * @param PASSWORD mot de passe
      */
-    public Client(String firstname, String lastname, String street, String city, String mail, String password) {
+    public Client(String FIRSTNAME, String LASTNAME, String STREET, String CITY, String MAIL, String PASSWORD) {
         super(Tables.CLIENTS);
-        this.FIRSTNAME = firstname;
-        this.LASTNAME = lastname;
-        this.STREET = street;
-        this.CITY = city;
-        this.MAIL = mail;
-        this.PASSWORD = password;
+        this.FIRSTNAME = FIRSTNAME;
+        this.LASTNAME = LASTNAME;
+        this.STREET = STREET;
+        this.CITY = CITY;
+        this.MAIL = MAIL;
+        this.PASSWORD = PASSWORD;
         this.save();
     }
 
@@ -134,5 +134,7 @@ public class Client extends DatabaseModel {
         return IS_REGULAR;
     }
 
-    public void setIS_REGULAR(String IS_REGULAR) { this.IS_REGULAR = Boolean.parseBoolean(IS_REGULAR); }
+    public void setIS_REGULAR(boolean IS_REGULAR) {
+        this.IS_REGULAR = IS_REGULAR;
+    }
 }

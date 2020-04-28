@@ -89,7 +89,7 @@ public class ReservationService {
         //Si la date est valide
         if (checkArrivalDate) {
             //Passage du booléen confirmée à vrai
-            reservation.setIS_CANCELLED("true");
+            reservation.setIS_CANCELLED(true);
             //Mise à jour dans la base de données
             reservation.updateColumn(Reservation.Columns.IS_CANCELLED);
             //Suppression de la réservation dans la liste
@@ -118,7 +118,7 @@ public class ReservationService {
      */
     public void confirmPayment(Reservation reservation) {
         //Passage du booléen confirmée à vrai
-        reservation.setIS_PAYED("true");
+        reservation.setIS_PAYED(true);
         //Mise à jour dans la base de données
         reservation.updateColumn(Reservation.Columns.IS_PAYED);
     }
@@ -129,7 +129,7 @@ public class ReservationService {
      */
     public void confirmReservation(Reservation reservation) {
         //Passage du booléen confirmée à vrai
-        reservation.setIS_COMFIRMED("true");
+        reservation.setIS_COMFIRMED(true);
         //Mise à jour dans la base de données
         reservation.updateColumn(Reservation.Columns.IS_COMFIRMED);
     }

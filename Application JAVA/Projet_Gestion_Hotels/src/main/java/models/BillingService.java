@@ -49,10 +49,12 @@ public class BillingService {
         Collection<Bill> data = DatabaseData.getInstance().getBills().values();
         //Pour chaque facture
         for (Bill bill : data)
-            //Si elle est archivée on l'ajoute aux archives
-            if (bill.getIS_ARCHIVED()) archives.add(bill);
-            //Sinon on l'ajoute dans les factures en attente
-            else pending_bills.add(bill);
+            //Si la facture appartient bien à l'hotel
+            if (bill.getReservation().getHOTEL_ID() == hotel.getID())
+                //Si elle est archivée on l'ajoute aux archives
+                if (bill.getIS_ARCHIVED()) archives.add(bill);
+                    //Sinon on l'ajoute dans les factures en attente
+                else pending_bills.add(bill);
     }
 
     /**

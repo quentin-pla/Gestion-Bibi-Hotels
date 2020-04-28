@@ -21,7 +21,7 @@ public class ReservationServiceController {
      * Initialiser les boutons de la fenêtre
      */
     private void initPanelButtons() {
-        //
+        panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelectPanel());
     }
 
     //************* GETTERS & SETTERS ***************//

@@ -19,6 +19,16 @@
     -fx-text-fill: darkred;
 }
 
+.back {
+    -fx-background-color: darkred;
+    -fx-text-fill: white;
+    -fx-border-width: 0;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-font-size: 30px;
+    -fx-padding: 0;
+}
+
 .title {
     -fx-font-size: 40px;
     -fx-text-fill: white;

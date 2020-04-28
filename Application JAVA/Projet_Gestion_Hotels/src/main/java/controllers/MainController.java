@@ -12,6 +12,16 @@ public class MainController {
     private Pane windowContent;
 
     /**
+     * Hauteur de la fenêtre
+     */
+    public static final int height = 600;
+
+    /**
+     * Largeur de la fenêtre
+     */
+    public static final int width = 1000;
+
+    /**
      * Controleur du panneau de sélection
      */
     private SelectPanelController selectPanelController;
@@ -42,8 +52,10 @@ public class MainController {
     public MainController() {
         //Initialisation des controleurs
         initControllers();
-        //Définition de la fenêtre sur le panneau de connexion
-        windowContent = selectPanelController.getPanel();
+        //Initialisation de la fenêtre
+        windowContent = new Pane();
+        //Définition de la fenêtre sur le panneau de sélection
+        switchToSelectPanel();
         //Récupération des données de la base de données de manière asynchrone
         new Thread(DatabaseData::getInstance).start();
     }
@@ -75,6 +87,11 @@ public class MainController {
      * Instance unique
      */
     private static MainController instance = null;
+
+    /**
+     * Changement de fenêtre sur la sélection
+     */
+    public void switchToSelectPanel() { setWindow(selectPanelController.getPanel()); }
 
     /**
      * Changement de fenêtre sur le panneau d'administration
@@ -121,6 +138,6 @@ public class MainController {
      */
     public Scene getScene() {
         //Retour de la scène
-        return new Scene(windowContent, 1000, 600);
+        return new Scene(windowContent, width, height);
     }
 }

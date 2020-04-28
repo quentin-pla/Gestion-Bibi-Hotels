@@ -1,5 +1,6 @@
 package models;
 
+import database.DatabaseData;
 import database.DatabaseModel;
 
 import java.util.ArrayList;
@@ -24,6 +25,23 @@ public class ClientService {
      */
     private ClientService() {
         this.occupations = new ArrayList<>();
+        this.archives = new ArrayList<>();
+        //Initialisation des occupations
+        initOccupations();
+    }
+
+    /**
+     * Récupérer les occupations depuis les données locales
+     */
+    private void initOccupations() {
+        //Récupération des occupations depuis les données de la base de données
+        ArrayList<Occupation> data = (ArrayList<Occupation>) DatabaseData.getInstance().getOccupations().values();
+        //Pour chaque occupation
+        for (Occupation occupation : data)
+            //Si elle est archivée on l'ajoute aux archives
+            if (occupation.getIS_ARCHIVED()) archives.add(occupation);
+                //Sinon on l'ajoute dans les occupations
+            else occupations.add(occupation);
     }
 
     /**

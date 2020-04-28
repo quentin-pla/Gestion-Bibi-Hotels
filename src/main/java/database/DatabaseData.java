@@ -110,15 +110,24 @@ public class DatabaseData {
      * Récupérer toutes les données de la base de données
      */
     public void retrieveDatabase() {
-        retrieveDatabaseBills();
-        retrieveDatabaseClients();
+        //Hotels
         retrieveDatabaseHotels();
-        retrieveDatabaseOccupants();
-        retrieveDatabaseOccupations();
-        retrieveDatabaseReservations();
-        retrieveDatabaseRooms();
+        //Clients
+        retrieveDatabaseClients();
+        //Types de chambre
         retrieveDatabaseRoomTypes();
+        //Chambres
+        retrieveDatabaseRooms();
+        //Reservations
+        retrieveDatabaseReservations();
+        //Occupations
+        retrieveDatabaseOccupations();
+        //Occupants
+        retrieveDatabaseOccupants();
+        //Services
         retrieveDatabaseServices();
+        //Factures
+        retrieveDatabaseBills();
     }
 
     /**

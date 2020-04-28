@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="">
+    <list default="true" id="0cc97ae4-8819-42f7-9836-9d3d10827011" name="Default Changelist" comment="Résolution d'un bug lors de la récupération des données depuis la base de données">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/database/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/database/DatabaseData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/DatabaseData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/Administration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Administration.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/Bill.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/Bill.java" afterDir="false" />
@@ -207,7 +206,7 @@
       <workItem from="1587852649530" duration="4465000" />
       <workItem from="1587894664541" duration="15160000" />
       <workItem from="1587985609424" duration="19738000" />
-      <workItem from="1588073494672" duration="4270000" />
+      <workItem from="1588073494672" duration="4428000" />
     </task>
     <task id="LOCAL-00001" summary="Mise à jour des fichiers de configuration + ajout .gitignore">
       <created>1587722130974</created>
@@ -335,7 +334,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588009291261</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Résolution d'un bug lors de la récupération des données depuis la base de données">
+      <created>1588078606675</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1588078606675</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -359,7 +365,8 @@
     <MESSAGE value="Implémentation de la classe Administration" />
     <MESSAGE value="Ajout de méthodes pour récupérer les références liées au modèle + constructeur surchargé" />
     <MESSAGE value="Ajout d'une classe pour récupérer les données de la base de données et les stocker localement" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajout d'une classe pour récupérer les données de la base de données et les stocker localement" />
+    <MESSAGE value="Résolution d'un bug lors de la récupération des données depuis la base de données" />
+    <option name="LAST_COMMIT_MESSAGE" value="Résolution d'un bug lors de la récupération des données depuis la base de données" />
   </component>
   <component name="WindowStateProjectService">
     <state x="320" y="115" key="#Project_Structure" timestamp="1587721001399">
@@ -386,10 +393,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="438" y="294" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.900@0.0.1440.900" timestamp="1588008699364" />
-    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1588009291133">
+    <state x="0" y="52" key="CommitChangelistDialog2" timestamp="1588078686000">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1588009291133" />
+    <state x="0" y="52" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1588078686000" />
     <state x="144" y="78" key="DiffContextDialog" timestamp="1587722093877">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

@@ -23,6 +23,7 @@ class App extends Component {
     }
 
     render() {
+        const auth = this.context;
         return (
             <Router>
                 <Navbar bg="dark">
@@ -41,7 +42,7 @@ class App extends Component {
                 <Switch>
                     <Route exact path="/">
                         <Home />
-                        <Hotels />
+                        {auth.authenticated ? <Hotels/> : ""}
                     </Route>
                     <Route path="/login">
                         <Login/>
@@ -49,7 +50,7 @@ class App extends Component {
                     <Route path="/signup">
                         <Signup/>
                     </Route>
-                    <Route path="/hotel/:id" component={HotelView}>
+                    <Route path="/room/:id" component={HotelView}>
                         <HotelView/>
                     </Route>
                     <PrivateRoute path="/profil">
@@ -70,6 +71,7 @@ function NavLinks(props) {
     return props.authenticated ? (
         <Nav className="mr-auto">
             <Link className="nav-link text-white" to="/profil">Profil</Link>
+            <Link className="nav-link text-white" to="/reservation">Mes Reservations</Link>
         </Nav>
     ) : (
         <Nav className="mr-auto"/>

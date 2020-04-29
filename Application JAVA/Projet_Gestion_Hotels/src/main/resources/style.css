@@ -2,34 +2,77 @@
     -fx-background-color: darkred;
 }
 
-.select-button {
-    -fx-min-height: 180px;
-    -fx-min-width: 180px;
+.h1 {
+    -fx-font-size: 40px;
+}
+
+.h2 {
+    -fx-font-size: 30px;
+}
+
+.h3 {
+    -fx-font-size: 20px;
+}
+
+.label {
     -fx-text-fill: white;
-    -fx-font-size: 25px;
+}
+
+.button {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
     -fx-border-color: white;
-    -fx-background-color: darkred;
-    -fx-background-radius: 15px;
-    -fx-border-radius: 15px;
     -fx-text-alignment: center;
 }
 
-.select-button:hover {
+.button:hover {
     -fx-background-color: white;
     -fx-text-fill: darkred;
 }
 
+.select-button {
+    -fx-min-height: 180px;
+    -fx-min-width: 180px;
+    -fx-font-size: 25px;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+}
+
 .back {
-    -fx-background-color: darkred;
-    -fx-text-fill: white;
     -fx-border-width: 0;
-    -fx-min-width: 35px;
-    -fx-min-height: 35px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
     -fx-font-size: 30px;
     -fx-padding: 0;
 }
 
-.title {
-    -fx-font-size: 40px;
+.back:hover {
+    -fx-background-color: transparent;
     -fx-text-fill: white;
+}
+
+.combo-box {
+    -fx-border-color: white;
+    -fx-background-color: transparent;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.combo-box .arrow {
+    -fx-background-color: darkred;
+}
+
+.combo-box .list-cell, .combo-box .arrow-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+.combo-box-popup .list-cell {
+    -fx-text-fill: black;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: lightgrey;
 }

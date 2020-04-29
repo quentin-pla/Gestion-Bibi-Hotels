@@ -28,6 +28,10 @@ svg {
     width: 160px;
 }
 
+.label{
+    color: black;
+}
+
 .ul{
     padding-left: 0px;
 }

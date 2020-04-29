@@ -37,6 +37,11 @@ const Client = require(path.join(__dirname, "../react-ui/src/database/models/Cli
 
 const Hotel = require(path.join(__dirname,"../react-ui/src/database/models/Hotel"));
 
+const Room = require(path.join(__dirname,"../react-ui/src/database/models/Room"));
+
+const Reservation = require(path.join(__dirname,"../react-ui/src/database/models/Reservation"));
+
+const RoomType = require(path.join(__dirname,"../react-ui/src/database/models/RoomType"));
 /**
  * Connexion à la base de données
  */
@@ -136,11 +141,77 @@ io.sockets.on('connection', function (socket) {
        })
     });
 
-    socket.on('hotels', function(){
-        Hotel.findAll().then((item) => {
-            if (item !== null)
-                socket.emit('hotels_res', item);
+    //SELECT * from ROOMS JOIN ROOMTYPES on ROOMS.ROOMTYPE_ID = ROOMTYPES.ID JOIN HOTELS ON ROOMS.HOTEL_ID = HOTELS.ID
+
+    socket.on('rooms', function(){
+        Room.findAll({
+        }).then((rooms) => {
+            RoomType.findAll({
+            }).then((roomTypes) =>{
+                Hotel.findAll({
+                }).then((hotels) => {
+                    socket.emit('rooms_res',rooms,hotels,roomTypes);
+                })
+            })
         })
+    });
+
+
+    socket.on('room_id',function (id) {
+        Room.findOne({
+            where : {
+                ID : id
+            }
+        }).then((room) => {
+            RoomType.findOne({
+                where : {
+                    ID : room.roomtype_id
+                }
+            }).then((roomtype) => {
+                Hotel.findOne({
+                    where : {
+                        ID : room.hotel_id
+                    }
+                }).then((hotel) => {
+                    socket.emit("roomId_res", room, roomtype, hotel);
+                })
+            })
+        })
+    });
+
+
+    socket.on('reserver', function (data) {
+        Client.findOne({
+            where: {
+                MAIL: data.mail
+            }
+        }).then((client) => {
+            console.log(data);
+            Reservation.create({
+                client_id: client.id,
+                hotel_id: data.hotel_id,
+                roomtype_id: data.room_id,
+                arrival_date: data.dateA,
+                exit_date: data.dateD,
+                duration: data.duree,
+                room_count: data.nbchambres,
+                people_count: data.nbpersonnes,
+                is_payed: 0,
+                is_comfirmed: 0,
+                is_cancelled: 0,
+                is_archived: 0
+            }).then((reservation) => {
+                socket.emit('reservation_res', true);
+            }).catch((err) => {
+                socket.emit('reservation_res', false, 'Erreur');
+            })
+        })
+    });
+
+
+    //SELECT * from ROOMS JOIN ROOMTYPES on ROOMS.ROOMTYPE_ID = ROOMTYPES.ID JOIN HOTELS ON ROOMS.HOTEL_ID = HOTELS.ID WHERE ROOMTYPES.NAME ="LUXURY" AND HOTELS.CITY = "Nice" AND ROOMTYPES.BED_CAPACITY >= 1
+    socket.on('apply_filter', function (data) {
+
     });
 
 

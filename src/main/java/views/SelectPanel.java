@@ -24,7 +24,7 @@ public class SelectPanel extends BorderPane {
 
     public SelectPanel() {
         setMinSize(MainController.width, MainController.height);
-        brand.getStyleClass().add("title");
+        brand.getStyleClass().add("h1");
         service_client.getStyleClass().add("select-button");
         service_reservation.getStyleClass().add("select-button");
         service_facturation.getStyleClass().add("select-button");

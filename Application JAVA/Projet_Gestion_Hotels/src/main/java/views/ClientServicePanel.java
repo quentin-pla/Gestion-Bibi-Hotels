@@ -8,12 +8,12 @@ import javafx.scene.layout.BorderPane;
  * Page du service client
  */
 public class ClientServicePanel extends BorderPane {
-    Button back = new Button("←");
+    private Button back = new Button("←");
 
     public ClientServicePanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
-        setCenter(back);
+        setTop(back);
     }
 
     //************* GETTERS & SETTERS ***************//

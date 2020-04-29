@@ -17,7 +17,7 @@ public class Hotel extends DatabaseModel {
     /**
      * Nom
      */
-    private String NAME;
+    private String HOTEL_NAME;
 
     /**
      * Adresse
@@ -52,14 +52,14 @@ public class Hotel extends DatabaseModel {
 
     /**
      * Constructeur surchargé
-     * @param NAME nom
+     * @param HOTEL_NAME nom
      * @param STREET adresse
      * @param CITY ville
      * @param STAR_RATING nombre d'étoiles
      */
-    public Hotel(String NAME, String STREET, String CITY, int STAR_RATING) {
+    public Hotel(String HOTEL_NAME, String STREET, String CITY, int STAR_RATING) {
         super(Tables.HOTELS);
-        this.NAME = NAME;
+        this.HOTEL_NAME = HOTEL_NAME;
         this.STREET = STREET;
         this.CITY = CITY;
         this.STAR_RATING = STAR_RATING;
@@ -101,12 +101,12 @@ public class Hotel extends DatabaseModel {
         this.billingService = billingService;
     }
 
-    public String getNAME() {
-        return NAME;
+    public String getHOTEL_NAME() {
+        return HOTEL_NAME;
     }
 
-    public void setNAME(String NAME) {
-        this.NAME = NAME;
+    public void setHOTEL_NAME(String HOTEL_NAME) {
+        this.HOTEL_NAME = HOTEL_NAME;
     }
 
     public String getSTREET() {

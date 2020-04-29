@@ -4,6 +4,7 @@ import database.DatabaseData;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import models.Hotel;
 
 public class MainController {
     /**
@@ -24,7 +25,7 @@ public class MainController {
     /**
      * Controleur du panneau de sélection
      */
-    private SelectPanelController selectPanelController;
+    private SelectController selectController;
 
     /**
      * Controleur du panneau de sélection
@@ -55,7 +56,7 @@ public class MainController {
         //Initialisation de la fenêtre
         windowContent = new Pane();
         //Définition de la fenêtre sur le panneau de sélection
-        switchToSelectPanel();
+        switchToSelect();
         //Récupération des données de la base de données de manière asynchrone
         new Thread(DatabaseData::getInstance).start();
     }
@@ -64,7 +65,7 @@ public class MainController {
      * Initialisation des controleurs
      */
     private void initControllers() {
-        this.selectPanelController = new SelectPanelController();
+        this.selectController = new SelectController();
         this.administrationController = new AdministrationController();
         this.clientServiceController = new ClientServiceController();
         this.reservationServiceController = new ReservationServiceController();
@@ -91,7 +92,7 @@ public class MainController {
     /**
      * Changement de fenêtre sur la sélection
      */
-    public void switchToSelectPanel() { setWindow(selectPanelController.getPanel()); }
+    public void switchToSelect() { setWindow(selectController.getPanel()); }
 
     /**
      * Changement de fenêtre sur le panneau d'administration
@@ -110,14 +111,16 @@ public class MainController {
     /**
      * Changement de fenêtre sur le panneau d'administration
      */
-    public void switchToReservationService() {
+    public void switchToReservationService(Hotel hotel) {
+        reservationServiceController.setHotel(hotel);
         setWindow(reservationServiceController.getPanel());
     }
 
     /**
      * Changement de fenêtre sur le panneau d'administration
      */
-    public void switchToBillingService() {
+    public void switchToBillingService(Hotel hotel) {
+        billingServiceController.setHotel(hotel);
         setWindow(billingServiceController.getPanel());
     }
 
@@ -125,7 +128,7 @@ public class MainController {
      * Afficher une fenêtre à l'écran
      * @param window fenêtre
      */
-    private void setWindow(BorderPane window) {
+    public void setWindow(BorderPane window) {
         //Suppression des enfants de la fenêtre globale
         windowContent.getChildren().clear();
         //Ajout de la fenêtre dans la fenêtre globale

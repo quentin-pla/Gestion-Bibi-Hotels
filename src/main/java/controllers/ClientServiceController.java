@@ -14,14 +14,14 @@ public class ClientServiceController {
     public ClientServiceController() {
         panel = new ClientServicePanel();
         //Initialisation des boutons
-        initPanelButtons();
+        initPanel();
     }
 
     /**
      * Initialiser les boutons de la fenêtre
      */
-    private void initPanelButtons() {
-        panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelectPanel());
+    private void initPanel() {
+        panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
     }
 
     //************* GETTERS & SETTERS ***************//

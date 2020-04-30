@@ -91,7 +91,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on("update_user", function (data) {
         Client.update({
-            mail: data.mail,
+            mail:       data.mail,
             firstname:  data.firstname,
             lastname:   data.lastname,
             street:     data.street,
@@ -203,7 +203,7 @@ io.sockets.on('connection', function (socket) {
             }).then((reservation) => {
                 socket.emit('reservation_res', true);
             }).catch((err) => {
-                socket.emit('reservation_res', false, 'Erreur');
+                socket.emit('reservation_res', false, 'Erreur verifiée que les champs ont été remplis correctement');
             })
         })
     });
@@ -214,6 +214,51 @@ io.sockets.on('connection', function (socket) {
 
     });
 
+    socket.on('user_reservation',function(mail){
+        Client.findOne({
+            where : {
+                MAIL : mail
+            }
+        }).then((client) => {
+            Reservation.findAll({
+                where : {
+                    CLIENT_ID : client.id
+                }
+            }).then((reservation) => {
+                Hotel.findAll({
+                }).then((hotel)=> {
+                    RoomType.findAll({
+                    }).then((roomtype) => {
+                        socket.emit("user_reservation_res", reservation, hotel, roomtype);
+                    })
+                })
+            })
+        })
+    });
+
+    socket.on("pay_reservation", function (id){
+        console.log("pay");
+        Reservation.update({
+            is_payed : true
+        }, {where : {ID : id}}).catch((err) => {
+            console.log(err)
+        })
+    });
+
+    socket.on("confirm_reservation", function(id){
+        Reservation.update({
+            is_comfirmed : true
+        }, {where : {ID : id}})
+    });
+
+    socket.on("cancel_reservation", function(id){
+        console.log("canc");
+        console.log(id);
+
+        Reservation.update({
+            is_cancelled : true
+        }, {where : {ID : id}})
+    });
 
     /**
      * Lorsque le client se déconnecte

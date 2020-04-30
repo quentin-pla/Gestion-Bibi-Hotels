@@ -4,6 +4,7 @@ import database.DatabaseData;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import models.Hotel;
 
 public class MainController {
@@ -141,6 +142,6 @@ public class MainController {
      */
     public Scene getScene() {
         //Retour de la scène
-        return new Scene(windowContent, width, height);
+        return new Scene(windowContent, width, height, Color.BLUE);
     }
 }

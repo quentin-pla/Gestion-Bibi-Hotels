@@ -125,6 +125,8 @@ public class ReservationService {
     public void confirmArrival(Reservation reservation) {
         //Confirmation de l'arrivée du client
         ClientService.getInstance().confirmClientPresence(reservation);
+        //Confirmation de la réservation
+        confirmReservation(reservation);
     }
 
     /**

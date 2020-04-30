@@ -11,6 +11,8 @@ import AuthButton from './components/auth/AuthButton';
 import {AuthContext} from "./context/AuthContext";
 import Hotels from "./components/Hotels";
 import HotelView from "./components/HotelView";
+import Reservation from "./components/Reservation";
+import Facture from "./components/Facture";
 
 class App extends Component {
     /**
@@ -56,6 +58,12 @@ class App extends Component {
                     <PrivateRoute path="/profil">
                         <Profil/>
                     </PrivateRoute>
+                    <PrivateRoute path="/reservation">
+                        <Reservation/>
+                    </PrivateRoute>
+                    <PrivateRoute path="/facture">
+                        <Facture />
+                    </PrivateRoute>
                     <Redirect to="/"/>
                 </Switch>
             </Router>
@@ -72,6 +80,7 @@ function NavLinks(props) {
         <Nav className="mr-auto">
             <Link className="nav-link text-white" to="/profil">Profil</Link>
             <Link className="nav-link text-white" to="/reservation">Mes Reservations</Link>
+            <Link className="nav-link text-white" to="/facture">Mes factures</Link>
         </Nav>
     ) : (
         <Nav className="mr-auto"/>

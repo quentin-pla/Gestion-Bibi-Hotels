@@ -45,6 +45,7 @@ class HotelView extends Component {
     isValid(text) {
         //Si le texte n'est pas définit
         if (text === null) return false;
+        return text;
     }
 
     formatDate(date){
@@ -53,24 +54,34 @@ class HotelView extends Component {
         return newDate
     }
 
+    calculateNbDays(date1,date2){
+        date1 = date1.substr(0,10);
+        date2 = date2.substr(0,10);
+
+        let newDate1 = new Date(date1);
+        let newDate2 = new Date(date2);
+
+        const utc1 = Date.UTC(newDate1.getFullYear(), newDate1.getMonth(), newDate1.getDate());
+        const utc2 = Date.UTC(newDate2.getFullYear(), newDate2.getMonth(), newDate2.getDate());
+        const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+        return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    }
+
     reserver() {
-/*
+
         let fieldsCheck = (
             this.isValid(this.state.nbchambres) &&
             this.isValid(this.state.nbpersonnes) &&
             this.isValid(this.state.dateA) &&
             this.isValid(this.state.dateD)
         );
-        console.log(fieldsCheck);
 
         if (!fieldsCheck) {
             this.setState({isError: true, errorMessage: "Veuillez remplir tous les champs"});
             return false;
         }else
             this.setState({isError: false, errorMessage: ""});
-*/
-        let date = this.state.dateA;
-        let aa = date.replace("T", " ");
+
 
         let data = {
             mail: this.context.mail,
@@ -80,10 +91,17 @@ class HotelView extends Component {
             nbpersonnes: this.state.nbpersonnes,
             dateA: this.formatDate(this.state.dateA),
             dateD: this.formatDate(this.state.dateD),
-            duree : 2
+            duree : this.calculateNbDays(this.formatDate(this.state.dateA),this.formatDate(this.state.dateD))
         };
+
         socket.emit('reserver',data);
-        socket.on('reservation_res');
+        socket.on('reservation_res',(success, msg) =>{
+            if (success === false){
+                this.state.isError = true;
+                this.state.errorMessage = msg;
+            }else
+                alert('Réservation effectuée avec succès');
+        });
         console.log(data)
     }
 

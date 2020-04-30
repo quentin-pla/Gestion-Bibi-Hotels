@@ -78,6 +78,11 @@ public class ClientService {
         return history;
     }
 
+    /**
+     * Récupérer la liste des occupations pour une réservation
+     * @param reservation_id id de la réservation
+     * @return liste des occupations
+     */
     public ArrayList<Occupation> getReservationOccupations(int reservation_id) {
         //Liste des occupations liées
         ArrayList<Occupation> linkedOccupations = new ArrayList<>();
@@ -181,6 +186,10 @@ public class ClientService {
         archives.add(occupation);
         //Suppression de l'occupation
         occupations.remove(occupation);
+        //Passage du booléen archivée à vrai
+        occupation.setIS_ARCHIVED(true);
+        //Mise à jour dans la base de données
+        occupation.updateColumn(Occupation.Columns.IS_ARCHIVED);
     }
 
     //*************** GETTERS & SETTERS ***************//

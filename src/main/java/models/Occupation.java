@@ -65,8 +65,16 @@ public class Occupation extends DatabaseModel {
      * Ajouter un occupant dans la chambre
      * @param occupant occupant
      */
-    public void addOccupant(Occupant occupant) {
-        this.occupants.add(occupant);
+    public boolean addOccupant(Occupant occupant) {
+        //Si le nombre d'occupants est inférieur au nombre de lits dans la chambre (un lit = deux personnes)
+        if (this.occupants.size() < (this.getRoom().getRoomType().getBED_CAPACITY()*2)) {
+            //Ajout de l'occupant dans l'occupation
+            this.occupants.add(occupant);
+            //Retourne vrai
+            return true;
+        }
+        //Retourne faux
+        return false;
     }
 
     /**

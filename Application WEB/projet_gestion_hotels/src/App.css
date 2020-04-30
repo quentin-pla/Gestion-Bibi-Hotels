@@ -1,0 +1,82 @@
+html, body, #root {
+    height:100%;
+}
+
+*:focus, *:active {
+    outline: none;
+    box-shadow: none !important;
+}
+
+input:focus {
+    border-color: darkgray !important;
+}
+
+svg {
+    padding-bottom: .25rem;
+}
+
+.full-height {
+    height: calc(100% - 70px);
+}
+
+.User_info{
+    padding-top: 4%;
+    padding-right: 10%;
+}
+
+.media-object{
+    width: 160px;
+}
+
+.label{
+    color: black;
+}
+
+.ul{
+    padding-left: 0px;
+}
+
+.hotel-view{
+    margin-top: 5%;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    border-style: solid;
+    border-width: 10px;
+    background-color: gainsboro;
+}
+
+.media-body{
+    padding-left: 13px;
+}
+
+p {
+    margin: 0;
+}
+
+.error-message {
+    min-height: 24px;
+}
+
+.flex-center {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.position-ref {
+    position: relative;
+}
+
+.no-border {
+    border: none;
+}
+
+.navbar-top {
+    z-index: 1;
+}
+
+.card {
+    border: none;
+}

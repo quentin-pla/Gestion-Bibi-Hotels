@@ -38,7 +38,7 @@ public class Hotel extends DatabaseModel {
      * Liste des colonnes
      */
     public enum Columns implements DatabaseColumns {
-        NAME,STREET,CITY,STAR_RATING
+        HOTEL_NAME,STREET,CITY,STAR_RATING
     }
 
     /**
@@ -73,9 +73,9 @@ public class Hotel extends DatabaseModel {
      */
     public void initServices() {
         //Initialisation des réservations
-        getReservationService().initReservations();
+        reservationService.initReservations();
         //Initialisation des factures
-        getBillingService().initBills();
+        billingService.initBills();
     }
 
     //************* GETTERS & SETTERS ***************//

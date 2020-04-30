@@ -188,9 +188,7 @@ public class Reservation extends DatabaseModel {
         this.ARRIVAL_DATE = ARRIVAL_DATE;
     }
 
-    public Date getEXIT_DATE() {
-        return EXIT_DATE;
-    }
+    public Date getEXIT_DATE() { return EXIT_DATE; }
 
     public void setEXIT_DATE(Date EXIT_DATE) {
         this.EXIT_DATE = EXIT_DATE;

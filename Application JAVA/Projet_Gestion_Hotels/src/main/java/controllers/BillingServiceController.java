@@ -19,23 +19,16 @@ public class BillingServiceController {
      */
     public BillingServiceController() {
         panel = new BillingServicePanel();
-        //Initialisation des boutons
-        initPanel();
     }
 
     /**
      * Initialiser les boutons de la fenêtre
      */
     private void initPanel() {
+        //Définition du titre de la fenêtre
+        panel.setPanelTitle("Service Facturation - " + hotel.getHOTEL_NAME());
         //Définition de l'action du bouton retour
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
-    }
-
-    /**
-     * //Définition du titre de la fenêtre
-     */
-    private void setPanelTitle() {
-        panel.setPanelTitle("Service Facturation - " + hotel.getHOTEL_NAME());
     }
 
     //************* GETTERS & SETTERS ***************//
@@ -48,6 +41,6 @@ public class BillingServiceController {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
-        setPanelTitle();
+        initPanel();
     }
 }

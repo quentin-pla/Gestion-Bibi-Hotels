@@ -80,6 +80,21 @@ public class ReservationService {
     }
 
     /**
+     * Archiver une réservation
+     * @param reservation reservation
+     */
+    public void archiveReservation(Reservation reservation) {
+        //Archivage de la reservation
+        archives.add(reservation);
+        //Suppression de la reservation
+        reservations.remove(reservation);
+        //Passage du booléen archivée à vrai
+        reservation.setIS_ARCHIVED(true);
+        //Mise à jour dans la base de données
+        reservation.updateColumn(Reservation.Columns.IS_ARCHIVED);
+    }
+
+    /**
      * Annuler une réservation
      * @param reservation réservation
      */

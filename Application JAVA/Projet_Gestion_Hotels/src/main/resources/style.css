@@ -1,6 +1,12 @@
-.root {
-    -fx-background-color: darkred;
+* {
+    -fx-global-color: #0059ff;
 }
+
+.root {
+    -fx-background-color: -fx-global-color;
+}
+
+/************ Titres **************/
 
 .h1 {
     -fx-font-size: 40px;
@@ -18,6 +24,8 @@
     -fx-text-fill: white;
 }
 
+/************ Boutons **************/
+
 .button {
     -fx-text-fill: white;
     -fx-background-color: transparent;
@@ -25,12 +33,15 @@
     -fx-background-radius: 5px;
     -fx-border-color: white;
     -fx-text-alignment: center;
+    -fx-cursor: hand;
 }
 
 .button:hover {
     -fx-background-color: white;
-    -fx-text-fill: darkred;
+    -fx-text-fill: -fx-global-color;
 }
+
+/************ Boutons de sélection **************/
 
 .select-button {
     -fx-min-height: 180px;
@@ -39,6 +50,8 @@
     -fx-background-radius: 15px;
     -fx-border-radius: 15px;
 }
+
+/************ Bouton retour **************/
 
 .back {
     -fx-border-width: 0;
@@ -53,6 +66,22 @@
     -fx-text-fill: white;
 }
 
+/************ Bouton référence **************/
+
+.ref-button {
+    -fx-background-color: white;
+    -fx-text-fill: #363636;
+    -fx-border-width: 0;
+}
+
+.ref-button:hover {
+    -fx-background-color: #ebebeb;
+    -fx-text-fill: #363636;
+    -fx-border-width: 0;
+}
+
+/************ Combo box **************/
+
 .combo-box {
     -fx-border-color: white;
     -fx-background-color: transparent;
@@ -61,7 +90,7 @@
 }
 
 .combo-box .arrow {
-    -fx-background-color: darkred;
+    -fx-background-color: -fx-global-color;
 }
 
 .combo-box .list-cell, .combo-box .arrow-button {
@@ -75,4 +104,29 @@
 
 .combo-box-popup .list-cell:hover {
     -fx-background-color: lightgrey;
+}
+
+/************ Tableaux **************/
+
+.table-view:focused, .table-row-cell:focused {
+    -fx-border-color: white;
+    -fx-background-insets: 0 0 0 0;
+    -fx-border-width: 0;
+    -fx-text-fill: white;
+}
+
+.table-row-cell:focused {
+    -fx-table-cell-border-color: lightgrey;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: #363636;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #a8a8a8;
+}
+
+.table-column {
+    -fx-alignment: CENTER;
 }

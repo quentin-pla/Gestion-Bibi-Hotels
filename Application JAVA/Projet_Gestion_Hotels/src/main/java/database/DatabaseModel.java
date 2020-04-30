@@ -70,6 +70,38 @@ public abstract class DatabaseModel {
      */
     public void save() {
         insertQuery(this);
+        //Ajout de l'objet dans les données locales
+        switch (this.getTable()) {
+            case BILLS:
+                DatabaseData.getInstance().getBills().put(ID,(Bill) this);
+                break;
+            case CLIENTS:
+                DatabaseData.getInstance().getClients().put(ID,(Client) this);
+                break;
+            case HOTELS:
+                DatabaseData.getInstance().getHotels().put(ID,(Hotel) this);
+                break;
+            case OCCUPANTS:
+                DatabaseData.getInstance().getOccupants().put(ID,(Occupant) this);
+                break;
+            case OCCUPATIONS:
+                DatabaseData.getInstance().getOccupations().put(ID,(Occupation) this);
+                break;
+            case RESERVATIONS:
+                DatabaseData.getInstance().getReservations().put(ID,(Reservation) this);
+                break;
+            case ROOMS:
+                DatabaseData.getInstance().getRooms().put(ID,(Room) this);
+                break;
+            case ROOMTYPES:
+                DatabaseData.getInstance().getRoomTypes().put(ID,(RoomType) this);
+                break;
+            case SERVICES:
+                DatabaseData.getInstance().getServices().put(ID,(Service) this);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -91,7 +123,7 @@ public abstract class DatabaseModel {
             Method setColumn = getClass().getMethod("set" + columnItem, parameterType);
             switch (parameterType.getSimpleName()) {
                 case "boolean":
-                    setColumn.invoke(this, Boolean.parseBoolean(parseBooleanFromString(value)));
+                    setColumn.invoke(this, value.equals("1"));
                     break;
                 case "int":
                     setColumn.invoke(this, Integer.parseInt(value));
@@ -144,12 +176,12 @@ public abstract class DatabaseModel {
                     if (getColumn.getReturnType() == Date.class)
                         //Formattage de la date
                         value = new SimpleDateFormat("yyyy-MM-dd").format(getColumn.invoke(this));
+                    //Si le type de retour est un booléen
+                    else if (getColumn.getReturnType() == boolean.class)
+                        //Formattage du booléen
+                        value = (Boolean) getColumn.invoke(this) ? "1" : "0";
                     //Appel de la méthode et récupération du résultat
                     else value = getColumn.invoke(this).toString();
-                    //Si la colonne est un booléen
-                    if (getColumn.getAnnotatedReturnType().toString().equals("boolean"))
-                        //Conversion du booléen en entier
-                        value = parseBooleanFromString(value);
                     //Ajout de la colonne et de la valeur dans la map
                     data.put(column.toString(), value);
                 }
@@ -165,30 +197,6 @@ public abstract class DatabaseModel {
             return getClass().getMethod("get" + column).getReturnType();
         } catch (NoSuchMethodException e) { e.printStackTrace(); }
         return null;
-    }
-
-    private String parseBooleanFromString(String string) {
-        //En fonction du string
-        switch (string) {
-            //Booléen à faux
-            case "false":
-                //Valeur vaut 0
-                return "0";
-            //Booléen à vrai
-            case "true":
-                //Valeur vaut 1
-                return "1";
-            //Entier à 0
-            case "0":
-                //Valeur vaut faux
-                return "false";
-            //Entier à 1
-            case "1":
-                //Valeur vaut vrai
-                return "true";
-            default:
-                return null;
-        }
     }
 
     //************* GETTERS & SETTERS ***************//

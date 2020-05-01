@@ -69,6 +69,7 @@ public abstract class DatabaseModel {
      * Sauvegarder l'objet dans la base de données
      */
     public void save() {
+        //Insertion de l'objet dans la base de données
         insertQuery(this);
         //Ajout de l'objet dans les données locales
         switch (this.getTable()) {

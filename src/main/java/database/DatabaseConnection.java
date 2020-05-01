@@ -145,7 +145,13 @@ public class DatabaseConnection {
             //Creation d'une instruction SQL
             Statement instruction = databaseConnection.connection.createStatement();
             //Execution de la requête
-            instruction.executeUpdate(query);
+            instruction.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+            //Récupération de l'ID généré lors de l'insertion
+            ResultSet backId = instruction.getGeneratedKeys();
+            //Si un id a été retourné
+            if (backId.next())
+                //Assignation de l'ID à l'objet
+                model.setID(backId.getInt(1));
             //Fermeture de l'instruction (liberation des ressources)
             instruction.close();
         } catch (SQLException e) {

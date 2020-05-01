@@ -157,6 +157,8 @@ public class ReservationService {
 
     public ArrayList<Reservation> getReservations() { return reservations; }
 
+    public Hotel getHotel() { return hotel; }
+
     public void setReservations(ArrayList<Reservation> reservations) { this.reservations = reservations; }
 
     public void setArchives(ArrayList<Reservation> archives) { this.archives = archives; }

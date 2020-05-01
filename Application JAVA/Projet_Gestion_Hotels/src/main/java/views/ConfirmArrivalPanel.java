@@ -5,13 +5,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +74,6 @@ public class ConfirmArrivalPanel extends BorderPane {
             TextField lastname = (TextField) links.get(1);
             data.add(new String[]{firstname.getText(),lastname.getText()});
         }
-        System.out.println(Arrays.toString(data.get(0)));
         return data;
     }
 

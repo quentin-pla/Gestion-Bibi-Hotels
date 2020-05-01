@@ -39,8 +39,10 @@ public class ReservationService {
         //Pour chaque réservation
         for (Reservation reservation : data)
             //Si l'id de l'hotel est égal à celui du service réservation
-            if (reservation.getHOTEL_ID() == hotel.getID())
-                //Si la réservation est archivée on l'ajoute aux archives
+            if (reservation.getHOTEL_ID() == hotel.getID()) {
+                //Archivage de la réservation si la date de sortie est supérieure à la date actuelle
+                if (getCurrentDate(0).after(reservation.getEXIT_DATE())) archiveReservation(reservation);
+                //Si la réservation est archivée où que la date de soritie est supérieure à aujourd'hui, on l'ajoute aux archives
                 if (reservation.getIS_ARCHIVED()) archives.add(reservation);
                 //Sinon on l'ajoute dans les réservations
                 else reservations.add(reservation);

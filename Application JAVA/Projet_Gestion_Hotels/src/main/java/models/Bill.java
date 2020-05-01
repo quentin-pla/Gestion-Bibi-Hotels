@@ -21,6 +21,11 @@ public class Bill extends DatabaseModel {
     private double AMOUNT;
 
     /**
+     * Facture payée ou pas
+     */
+    private boolean IS_PAYED;
+
+    /**
      * Facture archivée
      */
     private boolean IS_ARCHIVED;
@@ -29,7 +34,7 @@ public class Bill extends DatabaseModel {
      * Liste des colonnes
      */
     public enum Columns implements DatabaseColumns {
-        RESERVATION_ID,CLIENT_ID,AMOUNT,IS_ARCHIVED
+        RESERVATION_ID,CLIENT_ID,AMOUNT,IS_PAYED,IS_ARCHIVED
     }
 
     /**
@@ -40,11 +45,12 @@ public class Bill extends DatabaseModel {
     }
 
     //Constructeur surchargé
-    public Bill(int RESERVATION_ID, int CLIENT_ID, double AMOUNT, boolean IS_ARCHIVED) {
+    public Bill(int RESERVATION_ID, int CLIENT_ID, double AMOUNT,boolean IS_PAYED, boolean IS_ARCHIVED) {
         super(Tables.BILLS);
         this.RESERVATION_ID = RESERVATION_ID;
         this.CLIENT_ID = CLIENT_ID;
         this.AMOUNT = AMOUNT;
+        this.IS_PAYED = IS_PAYED;
         this.IS_ARCHIVED = IS_ARCHIVED;
         this.save();
     }
@@ -96,6 +102,14 @@ public class Bill extends DatabaseModel {
 
     public void setAMOUNT(double AMOUNT) {
         this.AMOUNT = AMOUNT;
+    }
+
+    public boolean getIS_PAYED() {
+        return IS_PAYED;
+    }
+
+    public void setIS_PAYED(boolean IS_PAYED) {
+        this.IS_PAYED = IS_PAYED;
     }
 
     public boolean getIS_ARCHIVED() {

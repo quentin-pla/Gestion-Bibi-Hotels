@@ -47,14 +47,50 @@ public class BillingService {
     public void initBills() {
         //Récupération des factures depuis les données de la base de données
         Collection<Bill> data = DatabaseData.getInstance().getBills().values();
+        //Liste des réservations déjà facturées
+        ArrayList<Integer> billedReservations = new ArrayList<>();
         //Pour chaque facture
-        for (Bill bill : data)
+        for (Bill bill : data) {
+            //Ajout de l'id de la réservation dans les réservations déjà facturées
+            billedReservations.add(bill.getRESERVATION_ID());
             //Si la facture appartient bien à l'hotel
             if (bill.getReservation().getHOTEL_ID() == hotel.getID())
                 //Si elle est archivée on l'ajoute aux archives
                 if (bill.getIS_ARCHIVED()) archives.add(bill);
-                    //Sinon on l'ajoute dans les factures en attente
+                //Sinon on l'ajoute dans les factures en attente
                 else pending_bills.add(bill);
+        }
+        //Récupération des réservations archivées du service réservation
+        ArrayList<Reservation> reservations = hotel.getReservationService().getArchives();
+        //Pour chaque réservation
+        for (Reservation reservation : reservations)
+            //Si la réservation n'est pas contenue dans celles facturées
+            if (!billedReservations.contains(reservation.getID()))
+                //Création d'une facture pour la réservation
+                createBill(reservation);
+    }
+
+    /**
+     * Rafraichir la liste des factures et archives
+     */
+    public void refreshBills() {
+        //Suppression de la liste des factures
+        pending_bills.clear();
+        //Suppression de la liste des archives
+        archives.clear();
+        //Ajout des factures et archives
+        initBills();
+    }
+
+    /**
+     * Confirmer le paiement de la facture
+     * @param bill facture
+     */
+    public void confirmPayment(Bill bill) {
+        //Passage du booléen confirmée à vrai
+        bill.setIS_PAYED(true);
+        //Mise à jour dans la base de données
+        bill.updateColumn(Bill.Columns.IS_PAYED);
     }
 
     /**
@@ -62,16 +98,8 @@ public class BillingService {
      * @param reservation reservation
      */
     public void createBill(Reservation reservation) {
-        //Récupération des occupations liées à la réservation
-        ArrayList<Occupation> occupations = ClientService.getInstance().getReservationOccupations(reservation.getID());
-        //Montant total de la facture
-        double total_amount = 0.0;
-        //Pour chaque occupation
-        for (Occupation occupation : occupations)
-            //Incrémentation du montant total
-            total_amount += getTotalBillAmount(occupation);
         //Création d'une nouvelle facture
-        pending_bills.add(new Bill(reservation.getID(), reservation.getCLIENT_ID(), total_amount, false));
+        pending_bills.add(new Bill(reservation.getID(), reservation.getCLIENT_ID(), 0.0, false, false));
     }
 
     /**
@@ -87,32 +115,42 @@ public class BillingService {
 
     /**
      * Récupérer le montant total de la facture
-     * @param occupation occupation
-     * @return montant total
+     * @param bill facture
      */
-    public double getTotalBillAmount(Occupation occupation) {
-        //Montant total
+    public void calculateTotalBillAmount(Bill bill) {
+        //Récupération des occupations liées à la réservation
+        ArrayList<Occupation> occupations = ClientService.getInstance().getReservationOccupations(bill.getRESERVATION_ID());
+        //Montant total de la facture
         double total_amount = 0.0;
-        //Récupération du type de la chambre
-        RoomType roomType = occupation.getRoom().getRoomType();
-        //Ajout du montant du type de chambre au montant total pour le nombre de nuits passé
-        total_amount += roomType.getPRICE() * occupation.getReservation().getDURATION();
-        //Ajout du montant des services facturés
-        for (Service service : occupation.getBilledServices())
-            total_amount += service.getPRICE();
-        //Réduction en fonction du nombre de personnes (isolé/groupe)
-        if (occupation.getReservation().getPEOPLE_COUNT() > 1) total_amount -= (total_amount * groupDiscount)/100;
-        //Réduction en fonction du status du client (régulier ou pas)
-        if (occupation.getReservation().getClient().getIS_REGULAR())
-            total_amount -= (total_amount * regularClientDiscount)/100;
-        //Retour du montant total
-        return total_amount;
+        //Pour chaque occupation
+        for (Occupation occupation : occupations) {
+            //Récupération du type de la chambre
+            RoomType roomType = occupation.getRoom().getRoomType();
+            //Ajout du montant du type de chambre au montant total pour le nombre de nuits passé
+            total_amount += roomType.getPRICE() * occupation.getReservation().getDURATION();
+            //Ajout du montant des services facturés
+            for (Service service : occupation.getBilledServices())
+                total_amount += service.getPRICE();
+            //Réduction en fonction du nombre de personnes (isolé/groupe)
+            if (occupation.getReservation().getPEOPLE_COUNT() > 1) total_amount -= (total_amount * groupDiscount)/100;
+            //Réduction en fonction du status du client (régulier ou pas)
+            if (occupation.getReservation().getClient().getIS_REGULAR())
+                total_amount -= (total_amount * regularClientDiscount)/100;
+        }
+        //Mise à jour du montant de la facture
+        bill.setAMOUNT(total_amount);
+        //Mise à jour dans la base de données
+        bill.updateColumn(Bill.Columns.AMOUNT);
     }
 
     //************* GETTERS & SETTERS ***************//
 
     public ArrayList<Bill> getPending_bills() {
         return pending_bills;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
     }
 
     public ArrayList<Bill> getArchives() {

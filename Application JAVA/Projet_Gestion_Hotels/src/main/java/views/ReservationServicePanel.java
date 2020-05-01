@@ -30,9 +30,9 @@ public class ReservationServicePanel extends BorderPane {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
         title.getStyleClass().add("h3");
-        confirmArrival.getStyleClass().add("ref-button");
-        archive.getStyleClass().add("ref-button");
-        makePayment.getStyleClass().add("ref-button");
+        confirmArrival.getStyleClass().addAll("ref-button","green-text");
+        archive.getStyleClass().addAll("ref-button","red-text");
+        makePayment.getStyleClass().addAll("ref-button","green-text");
         initReservationsTable();
         BorderPane topContent = new BorderPane();
         topContent.setLeft(back);
@@ -49,7 +49,7 @@ public class ReservationServicePanel extends BorderPane {
 
     private void initReservationsTable() {
         //Taille maximale
-        reservations.setMinSize(MainController.width-100, MainController.height-120);
+        reservations.setMinSize(MainController.width-100, MainController.height-140);
         //Interdire la modification
         reservations.setEditable(false);
         //Colonne ID
@@ -85,17 +85,19 @@ public class ReservationServicePanel extends BorderPane {
         //Colonne est payée
         TableColumn<Reservation, String> is_payed_col = new TableColumn<>("Versement Arrhes");
         is_payed_col.setCellValueFactory(
-                param -> new SimpleStringProperty(
-                        param.getValue().getIS_PAYED() ? "Effectué":"En attente"));
-        //Coloration colonne paiement
-        colorColumn(is_payed_col,"Effectué",Color.GREEN,Color.RED);
+            param -> {
+                boolean condition = param.getValue().getIS_PAYED();
+                colorColumn(is_payed_col, condition ? Color.GREEN : Color.RED);
+                return new SimpleStringProperty(condition ? "Effectué":"En attente");
+            });
         //Colonne est confirmée
         TableColumn<Reservation, String> status_col = new TableColumn<>("État actuel");
         status_col.setCellValueFactory(
-                param -> new SimpleStringProperty(
-                        param.getValue().getIS_COMFIRMED() ? "Confirmée":"Enregistrée"));
-        //Coloration colonne confirmation
-        colorColumn(status_col,"Confirmée",Color.GREEN,Color.ORANGE);
+            param -> {
+                boolean condition = param.getValue().getIS_COMFIRMED();
+                colorColumn(status_col,condition ? Color.GREEN : Color.ORANGE);
+                return new SimpleStringProperty(condition ? "Confirmée":"Enregistrée");
+            });
         //Ajout et dimensionnement des colonnes
         id_col.setMinWidth(10);
         reservations.getColumns().add(id_col);
@@ -112,11 +114,9 @@ public class ReservationServicePanel extends BorderPane {
     /**
      * Colorer une colonne en fonction de la valeur booléenne
      * @param column colonne
-     * @param trueWord mot vrai
-     * @param trueColor couleur vrai
-     * @param falseColor couleur faux
+     * @param color couleur
      */
-    private void colorColumn(TableColumn<Reservation, String> column, String trueWord, Color trueColor, Color falseColor) {
+    private void colorColumn(TableColumn<Reservation, String> column, Color color) {
         column.setCellFactory(new Callback<TableColumn<Reservation,String>, TableCell<Reservation,String>>() {
             public TableCell<Reservation,String> call(TableColumn param) {
                 return new TableCell<Reservation, String>() {
@@ -124,7 +124,7 @@ public class ReservationServicePanel extends BorderPane {
                     public void updateItem(String item, boolean value) {
                         super.updateItem(item, value);
                         if (!isEmpty()) {
-                            this.setTextFill(item.equals(trueWord) ? trueColor : falseColor);
+                            this.setTextFill(color);
                             setText(item);
                         }
                     }

@@ -113,7 +113,7 @@ public class MainController {
      * Changement de fenêtre sur le panneau d'administration
      */
     public void switchToReservationService(Hotel hotel) {
-        reservationServiceController.setHotel(hotel);
+        reservationServiceController.setReservationService(hotel.getReservationService());
         setWindow(reservationServiceController.getPanel());
     }
 
@@ -121,7 +121,7 @@ public class MainController {
      * Changement de fenêtre sur le panneau d'administration
      */
     public void switchToBillingService(Hotel hotel) {
-        billingServiceController.setHotel(hotel);
+        billingServiceController.setBillingService(hotel.getBillingService());
         setWindow(billingServiceController.getPanel());
     }
 

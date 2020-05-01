@@ -44,6 +44,19 @@ public class ReservationService {
                 if (reservation.getIS_ARCHIVED()) archives.add(reservation);
                 //Sinon on l'ajoute dans les réservations
                 else reservations.add(reservation);
+            }
+    }
+
+    /**
+     * Rafraichir la liste des réservations et archives
+     */
+    public void refreshReservations() {
+        //Suppression de la liste des réservations
+        reservations.clear();
+        //Suppression de la liste des archives
+        archives.clear();
+        //Ajout des réservations et archives
+        initReservations();
     }
 
     /**

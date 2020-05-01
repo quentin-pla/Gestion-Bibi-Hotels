@@ -6,6 +6,14 @@
     -fx-background-color: -fx-global-color;
 }
 
+.red-text {
+    -fx-text-fill: red !important;
+}
+
+.green-text {
+    -fx-text-fill: green !important;
+}
+
 /************ Titres **************/
 
 .h1 {
@@ -34,6 +42,7 @@
     -fx-border-color: white;
     -fx-text-alignment: center;
     -fx-cursor: hand;
+    -fx-font-size: 15px;
 }
 
 .button:hover {
@@ -70,14 +79,14 @@
 
 .ref-button {
     -fx-background-color: white;
-    -fx-text-fill: #363636;
     -fx-border-width: 0;
+    -fx-text-fill: #363636;
 }
 
 .ref-button:hover {
     -fx-background-color: #ebebeb;
-    -fx-text-fill: #363636;
     -fx-border-width: 0;
+    -fx-text-fill: #363636;
 }
 
 /************ Combo box **************/

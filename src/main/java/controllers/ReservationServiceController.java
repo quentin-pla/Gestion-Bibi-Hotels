@@ -20,9 +20,9 @@ public class ReservationServiceController {
     private ConfirmArrivalPanel confirmArrivalPanel;
 
     /**
-     * Hotel lié
+     * Service réservation lié
      */
-    private Hotel hotel;
+    private ReservationService reservationService;
 
     /**
      * Constructeur
@@ -37,7 +37,7 @@ public class ReservationServiceController {
      */
     private void initPanel() {
         //Définition du titre de la fenêtre
-        panel.setPanelTitle("Service Réservation - " + hotel.getHOTEL_NAME());
+        panel.setPanelTitle("Service Réservation - " + reservationService.getHotel().getHOTEL_NAME());
         //Définition de l'action du bouton retour
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
         //Affichage des boutons liés à une réservation sélectionnée
@@ -49,7 +49,7 @@ public class ReservationServiceController {
             //Si la réservation existe
             if (reservation != null)
                 //Archivage de la réservation
-                hotel.getReservationService().archiveReservation(reservation);
+                reservationService.archiveReservation(reservation);
             //Suppression du focus sur la réservation
             panel.getReservations().getSelectionModel().clearSelection();
             //Suppression de la réservation du tableau
@@ -76,16 +76,19 @@ public class ReservationServiceController {
             //Si la réservation existe
             if (reservation != null)
                 //Confirmation du paiement des arrhes
-                hotel.getReservationService().confirmPayment(reservation);
+                reservationService.confirmPayment(reservation);
             //Rafraichissement
             refreshTableItems();
         });
         //Liste des réservations
-        ObservableList<Reservation> items = FXCollections.observableArrayList(hotel.getReservationService().getReservations());
+        ObservableList<Reservation> items = FXCollections.observableArrayList(reservationService.getReservations());
         //Ajout des réservations à la table
         panel.getReservations().setItems(items);
     }
 
+    /**
+     * Rafraichir les éléments du tableau
+     */
     public void refreshTableItems() {
         //Rafraichissement des éléments du tableau
         panel.getReservations().refresh();
@@ -113,7 +116,6 @@ public class ReservationServiceController {
         }
         //Masquage de la liste contenant les boutons
         else panel.getRefButtons().setVisible(false);
-
     }
 
     public void initConfirmArrivalPanel(Reservation reservation) {
@@ -136,7 +138,7 @@ public class ReservationServiceController {
                         break;
                 }
             //Confirmation de l'arrivée du client dans l'hotel
-            hotel.getReservationService().confirmArrival(reservation);
+            reservationService.confirmArrival(reservation);
             //Rafraichissement des éléments dans la table
             refreshTableItems();
             //Affichage de la liste des réservations
@@ -148,12 +150,12 @@ public class ReservationServiceController {
 
     public ReservationServicePanel getPanel() { return panel; }
 
-    public Hotel getHotel() {
-        return hotel;
+    public ReservationService getReservationService() {
+        return reservationService;
     }
 
-    public void setHotel(Hotel hotel) {
-        this.hotel = hotel;
+    public void setReservationService(ReservationService reservationService) {
+        this.reservationService = reservationService;
         initPanel();
     }
 }

@@ -70,11 +70,15 @@ public class SelectController {
             switch (service) {
                 //Facturation
                 case BILLING:
+                    //Rafraichissement du contenu
+                    selectedHotel.getBillingService().refreshBills();
                     //Affichage de la fenêtre service facturation
                     MainController.getInstance().switchToBillingService(selectedHotel);
                     break;
                 //Réservation
                 case RESERVATION:
+                    //Rafraichissement du contenu
+                    selectedHotel.getReservationService().initReservations();
                     //Affichage de la fenêtre service réservation
                     MainController.getInstance().switchToReservationService(selectedHotel);
                     break;

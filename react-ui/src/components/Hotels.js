@@ -1,9 +1,12 @@
 import React, {Component} from "react";
 import {AuthContext} from "../context/AuthContext";
 import socket from "../context/SocketIOInstance";
-import image from "./213502135.png"
+import luxe from "./img/luxe.png"
+import stand from "./img/stand.png"
+import tourism from "./img/tourism.png"
+import comfort from "./img/comfort.png"
 import {Link} from "react-router-dom";
-import {Button, Form} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 
 class Hotels extends Component {
     /**
@@ -22,8 +25,9 @@ class Hotels extends Component {
             hotels: [],
             roomtype: [],
             ville : "",
-            confort : "",
             nblits: 0,
+            dateA: "",
+            dateD : "",
             merged: []
         };
 
@@ -33,23 +37,32 @@ class Hotels extends Component {
 
     componentDidMount() {
         socket.emit("rooms");
-        socket.on('rooms_res', (item1,item2,item3) => {
-            this.setState({'rooms': item1});
-            this.setState({'hotels': item2});
-            this.setState({'roomtype': item3});
+        socket.on('rooms_res', (rooms,hotels,roomtype) => {
+            this.setState({'rooms': rooms ,'hotels': hotels,'roomtype': roomtype});
             this.mergeArrayObjects(this.state.rooms, this.state.roomtype, this.state.hotels);
         });
+    }
+
+    formatDate(date){
+        let newDate = date.replace("T", " ");
+        newDate += ":00";
+        return newDate
     }
 
     applyFilter(){
         let data = {
             ville : this.state.ville,
-            confort: this.state.confort,
-            nblits: this.state.nblits
+            nblits: this.state.nblits,
+            dateA : this.formatDate(this.state.dateA),
+            dateD : this.formatDate(this.state.dateD)
         };
+        console.log(data);
         socket.emit("apply_filter",data);
         socket.on("filter_res", (item) => {
             this.setState({"rooms" : item});
+            console.log(this.state.rooms)
+            this.mergeArrayObjects(this.state.rooms, this.state.roomtype, this.state.hotels);
+
         })
     }
 
@@ -83,52 +96,52 @@ class Hotels extends Component {
             <div>
                 <nav>
                     <form className="form-inline">
-                        <select name="type de chambre" onChange={e => {
-                            this.setState({"confort": e.target.value});
-                        }}>
-                            <option value="business">Business</option>
-                            <option value="classic">Classic</option>
-                            <option value="luxe">Luxe</option>
-                        </select>
                         <input placeholder="nombre de lits" type="number" onChange={e => {
                             this.setState({"nblits": e.target.value});
                         }}/>
                         <input placeholder="ville" type="text" onChange={e => {
                             this.setState({"ville": e.target.value});
                         }}/>
+
                         <label className="label">Date d'arrivée:</label>
-                        <input type="datetime-local" />
+                        <input type="datetime-local" onChange={e => {
+                            this.setState({"dateA": e.target.value});
+                        }} />
                         <label className="label">Date de départ:</label>
-                        <input type="datetime-local"/>
+                        <input type="datetime-local" onChange={e => {
+                            this.setState({"dateD": e.target.value});
+                        }}/>
                         <Button variant="dark" onClick={(e) => this.applyFilter()}>
                             Valider
                         </Button>
                     </form>
                 </nav>
                 <div className="justify-content-md-center row">
-                    <ul className="ul">
-                        {this.state.merged.map(function (item, index) {
-                            let link = "room/" + item.id;
-                            return (
-                                <Link key={item.id} className="nav-link text-black" to={link}>
-                                    <div className="hotel-view">
-                                        <div className="media">
-                                            <div className="media-left media-middle">
-                                                <img src={image} alt="image" className="media-object"/>
-                                            </div>
-                                            <div className="media-body">
-                                                <h4 className="media-heading">{item.hotel_name}</h4>
-                                                <h6>Nombre de lit : {item.bed_capacity}</h6>
-                                                <h6>Ville : {item.city}</h6>
-                                                <h6>Prix : {item.price}</h6>
-                                                <h6>Note : {item.stars}/5</h6>
+                    {this.state.merged.length === 0 ? <h3>..Aucun resultat..</h3> :
+                        <ul className="ul">
+                            {this.state.merged.map(function (item, index) {
+                                let link = "room/" + item.id;
+                                return (
+                                    <Link key={item.id} className="nav-link text-black" to={link}>
+                                        <div className="hotel-view">
+                                            <div className="media">
+                                                <div className="media-left media-middle">
+                                                    <img src={item.name === "STANDARD" ? stand : item.name === "LUXURY" ? luxe : item.name === "TOURISM" ? tourism : comfort } alt="image" className="media-object"/>
+                                                </div>
+                                                <div className="media-body">
+                                                    <h4 className="media-heading">{item.hotel_name}</h4>
+                                                    <h6>Nombre de lit : {item.bed_capacity}</h6>
+                                                    <h6>Ville : {item.city}</h6>
+                                                    <h6>Prix : {item.price}</h6>
+                                                    <h6>Note : {item.stars}/5</h6>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            )
-                        })}
-                    </ul>
+                                    </Link>
+                                )
+                            })}
+                        </ul>
+                    }
                 </div>
             </div>
         );

@@ -173,7 +173,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     /**
-     * Recuperation d'une chambre para rapport a son identifiant
+     * Recuperation d'une chambre par rapport a son identifiant
      */
     socket.on('room_id', function (id) {
         Room.findOne({

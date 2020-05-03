@@ -34,14 +34,26 @@ const io = require('socket.io')(app);
  * Modèle Client de la base de données
  */
 const Client = require(path.join(__dirname, "../react-ui/src/database/models/Client"));
-
-const Hotel = require(path.join(__dirname,"../react-ui/src/database/models/Hotel"));
-
-const Room = require(path.join(__dirname,"../react-ui/src/database/models/Room"));
-
-const Reservation = require(path.join(__dirname,"../react-ui/src/database/models/Reservation"));
-
-const RoomType = require(path.join(__dirname,"../react-ui/src/database/models/RoomType"));
+/**
+ * Modèle Hotel de la base de données
+ */
+const Hotel = require(path.join(__dirname, "../react-ui/src/database/models/Hotel"));
+/**
+ * Modèle Room de la base de données
+ */
+const Room = require(path.join(__dirname, "../react-ui/src/database/models/Room"));
+/**
+ * Modèle Reservation de la base de données
+ */
+const Reservation = require(path.join(__dirname, "../react-ui/src/database/models/Reservation"));
+/**
+ * Modèle RoomType de la base de données
+ */
+const RoomType = require(path.join(__dirname, "../react-ui/src/database/models/RoomType"));
+/**
+ * Modèle Bill de la base de données
+ */
+const Bill = require(path.join(__dirname, "../react-ui/src/database/models/Bill"));
 /**
  * Connexion à la base de données
  */
@@ -67,17 +79,17 @@ io.sockets.on('connection', function (socket) {
         //On essaye de trouver un client dans la base de données
         Client.findOne({
             //Sélection de l'adresse mail et du mot de passe
-            attributes: ['MAIL','PASSWORD'],
+            attributes: ['MAIL', 'PASSWORD'],
             //L'adresse mail du client doit être égale à celle passée en paramètres
             where: {
                 MAIL: mail
             }
-        //Une fois le tuple trouvé dans la BDD
+            //Une fois le tuple trouvé dans la BDD
         }).then((item) => {
             //Vérification que le client a bien été trouvé dans la base de données
             if (item !== null) {
                 //Comparaison du mot de passe avec celui passé en paramètre
-                if (item.dataValues.PASSWORD === password){
+                if (item.dataValues.PASSWORD === password) {
                     //Renvoi d'un message de validation de l'authentification vers la classe Login
                     socket.emit('auth_info', true);
                 }
@@ -89,19 +101,22 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
+    /**
+     * Mise a jour du profil
+     */
     socket.on("update_user", function (data) {
         Client.update({
-            mail:       data.mail,
-            firstname:  data.firstname,
-            lastname:   data.lastname,
-            street:     data.street,
-            city:       data.city,
-            password:   data.password
+            mail: data.mail,
+            firstname: data.firstname,
+            lastname: data.lastname,
+            street: data.street,
+            city: data.city,
+            password: data.password
 
         }, {where: {MAIL: data.mail}}).then((item) => {
-            if (item !== null){
-                socket.emit('update_result',true);
-            }else socket.emit('update_result',false);
+            if (item !== null) {
+                socket.emit('update_result', true);
+            } else socket.emit('update_result', false);
         });
     });
 
@@ -112,12 +127,12 @@ io.sockets.on('connection', function (socket) {
     socket.on('signup', function (data) {
         //Création d'un nouveau client dans la base de données
         Client.create({
-            mail:       data.mail,
-            firstname:  data.firstname,
-            lastname:   data.lastname,
-            street:     data.street,
-            city:       data.city,
-            password:   data.password
+            mail: data.mail,
+            firstname: data.firstname,
+            lastname: data.lastname,
+            street: data.street,
+            city: data.city,
+            password: data.password
         }).then(() => {
             //Émission d'un message de succès à la classe Signup
             socket.emit('auth_info', true, '');
@@ -130,47 +145,50 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
-    socket.on('profil', function(mail){
-       Client.findOne({
-           where: {
-               MAIL : mail
-           }
-       }).then((item) => {
-           if (item !== null)
-               socket.emit('profil_info', item);
-       })
+    /**
+     * Recuperation des infos de l'utilisateur
+     */
+    socket.on('profil', function (mail) {
+        Client.findOne({
+            where: {
+                MAIL: mail
+            }
+        }).then((item) => {
+            if (item !== null)
+                socket.emit('profil_info', item);
+        })
     });
 
-    //SELECT * from ROOMS JOIN ROOMTYPES on ROOMS.ROOMTYPE_ID = ROOMTYPES.ID JOIN HOTELS ON ROOMS.HOTEL_ID = HOTELS.ID
-
-    socket.on('rooms', function(){
-        Room.findAll({
-        }).then((rooms) => {
-            RoomType.findAll({
-            }).then((roomTypes) =>{
-                Hotel.findAll({
-                }).then((hotels) => {
-                    socket.emit('rooms_res',rooms,hotels,roomTypes);
+    /**
+     * Recupereation de toutes les chambres, types de chambre et hotels
+     */
+    socket.on('rooms', function () {
+        Room.findAll({}).then((rooms) => {
+            RoomType.findAll({}).then((roomTypes) => {
+                Hotel.findAll({}).then((hotels) => {
+                    socket.emit('rooms_res', rooms, hotels, roomTypes);
                 })
             })
         })
     });
 
-
-    socket.on('room_id',function (id) {
+    /**
+     * Recuperation d'une chambre par rapport a son identifiant
+     */
+    socket.on('room_id', function (id) {
         Room.findOne({
-            where : {
-                ID : id
+            where: {
+                ID: id
             }
         }).then((room) => {
             RoomType.findOne({
-                where : {
-                    ID : room.roomtype_id
+                where: {
+                    ID: room.roomtype_id
                 }
             }).then((roomtype) => {
                 Hotel.findOne({
-                    where : {
-                        ID : room.hotel_id
+                    where: {
+                        ID: room.hotel_id
                     }
                 }).then((hotel) => {
                     socket.emit("roomId_res", room, roomtype, hotel);
@@ -179,7 +197,9 @@ io.sockets.on('connection', function (socket) {
         })
     });
 
-
+    /**
+     * Ajoute une nouvelle reservation dans la BD
+     */
     socket.on('reserver', function (data) {
         Client.findOne({
             where: {
@@ -208,27 +228,89 @@ io.sockets.on('connection', function (socket) {
         })
     });
 
-
-    //SELECT * from ROOMS JOIN ROOMTYPES on ROOMS.ROOMTYPE_ID = ROOMTYPES.ID JOIN HOTELS ON ROOMS.HOTEL_ID = HOTELS.ID WHERE ROOMTYPES.NAME ="LUXURY" AND HOTELS.CITY = "Nice" AND ROOMTYPES.BED_CAPACITY >= 1
+    /**
+     * Renvoie les chambres correspondant aux criteres choisis par l'utilisateur
+     */
     socket.on('apply_filter', function (data) {
-
+        console.log(data);
+        if (data.nblits !== 0) {
+            RoomType.findAll({
+                where: {
+                    BED_CAPACITY: data.nblits
+                }
+            }).then((roomtype) => {
+                let type_id = [];
+                roomtype.map(function (item, index) {
+                    type_id.push(roomtype[index].id)
+                });
+                if (data.ville !== "") {
+                    Hotel.findAll({
+                        where: {
+                            CITY: data.ville
+                        }
+                    }).then((hotels) => {
+                        let hotel_id = [];
+                        hotels.map(function (item, index) {
+                            hotel_id.push(hotels[index].id)
+                        });
+                        Room.findAll({
+                            where: {
+                                ROOMTYPE_ID: [type_id],
+                                HOTEL_ID: [hotel_id]
+                            }
+                        }).then((rooms) => {
+                            socket.emit('filter_res', rooms)
+                        })
+                    })
+                } else {
+                    Room.findAll({
+                        where: {
+                            ROOMTYPE_ID: [type_id],
+                        }
+                    }).then((rooms) => {
+                        socket.emit('filter_res', rooms)
+                    })
+                }
+            })
+        } else if (data.ville !== "") {
+            Hotel.findAll({
+                where: {
+                    CITY: data.ville
+                }
+            }).then((hotel) => {
+                let hotel_id = [];
+                hotel.map(function (item, index) {
+                    hotel_id.push(hotel[index].id)
+                });
+                console.log(hotel_id);
+                Room.findAll({
+                    where: {
+                        HOTEL_ID: [hotel_id]
+                    }
+                }).then((rooms) => {
+                    socket.emit('filter_res', rooms)
+                })
+            })
+        }else
+            socket.emit('filter_res',[])
     });
 
-    socket.on('user_reservation',function(mail){
+    /**
+     * Recupere les réservations de l'utilisateur
+     */
+    socket.on('user_reservation', function (mail) {
         Client.findOne({
-            where : {
-                MAIL : mail
+            where: {
+                MAIL: mail
             }
         }).then((client) => {
             Reservation.findAll({
-                where : {
-                    CLIENT_ID : client.id
+                where: {
+                    CLIENT_ID: client.id
                 }
             }).then((reservation) => {
-                Hotel.findAll({
-                }).then((hotel)=> {
-                    RoomType.findAll({
-                    }).then((roomtype) => {
+                Hotel.findAll({}).then((hotel) => {
+                    RoomType.findAll({}).then((roomtype) => {
                         socket.emit("user_reservation_res", reservation, hotel, roomtype);
                     })
                 })
@@ -236,28 +318,60 @@ io.sockets.on('connection', function (socket) {
         })
     });
 
-    socket.on("pay_reservation", function (id){
-        console.log("pay");
+    /**
+     * Permet de payer une reservation
+     */
+    socket.on("pay_reservation", function (id) {
         Reservation.update({
-            is_payed : true
-        }, {where : {ID : id}}).catch((err) => {
+            is_payed: true
+        }, {where: {ID: id}}).catch((err) => {
             console.log(err)
         })
     });
-
-    socket.on("confirm_reservation", function(id){
+    /**
+     * Permet de confirmer une reservation
+     */
+    socket.on("confirm_reservation", function (id) {
         Reservation.update({
-            is_comfirmed : true
-        }, {where : {ID : id}})
+            is_comfirmed: true
+        }, {where: {ID: id}})
     });
 
-    socket.on("cancel_reservation", function(id){
-        console.log("canc");
-        console.log(id);
-
+    /**
+     * Permet d'annuler une reservation
+     */
+    socket.on("cancel_reservation", function (id) {
         Reservation.update({
-            is_cancelled : true
-        }, {where : {ID : id}})
+            is_cancelled: true
+        }, {where: {ID: id}})
+    });
+
+    /**
+     * Recupere les factures de l'utilisateur
+     */
+    socket.on("bills", function (mail) {
+        Client.findOne({
+            where: {
+                MAIL: mail
+            }
+        }).then((client) => {
+            Bill.findAll({
+                where: {
+                    CLIENT_ID: client.id
+                }
+            }).then((bill) => {
+                if (bill !== null) {
+                    Reservation.findAll({}).then((reservation) => {
+                        Hotel.findAll({}).then((hotel) => {
+                            socket.emit('bills_res', true, bill, reservation, hotel);
+                        })
+                    })
+                } else {
+                    socket.emit('bills_res', false);
+                    return false
+                }
+            })
+        })
     });
 
     /**

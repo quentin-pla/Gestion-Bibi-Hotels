@@ -11,6 +11,10 @@ class Reservation extends Component {
 
     constructor(props, context) {
         super(props, context);
+
+        /**
+         * Initialisation de l'état
+         */
         this.state = {
             mail: this.context.mail,
             reservations: [],
@@ -21,6 +25,12 @@ class Reservation extends Component {
         this.mergeArrayObjects = this.mergeArrayObjects.bind(this);
     }
 
+    /**
+     * Cette fonction réunit chaque array en un seul pour faciliter le traitement
+     * @param reservations : liste des reservations
+     * @param hotels : liste des hotels
+     * @param roomtypes : lise des types de chambres
+     */
     mergeArrayObjects(reservations, hotels, roomtypes) {
         let merged = [];
         let mergedF = [];
@@ -46,6 +56,9 @@ class Reservation extends Component {
         this.setState({"merged": mergedF});
     }
 
+    /**
+     * Fonction s'activant a l'initialisation du composant
+     */
     componentDidMount() {
         socket.emit("user_reservation", this.state.mail);
         socket.on('user_reservation_res', (reservations, hotels, roomtypes) => {
@@ -55,10 +68,10 @@ class Reservation extends Component {
     }
 
 
-
     render() {
         return (
             <div>
+                {this.state.reservations.length > 0 ? <h3>Vos Reservations :</h3> : <h3>Vous n'avez aucune réservation</h3>}
                 <ul className="ul">
                     {this.state.merged.map(function (item, index) {
                         return (
@@ -72,9 +85,15 @@ class Reservation extends Component {
                                     <h6>{item.duration} Jours</h6>
                                     <h6>{item.price}€</h6>
                                 </div>
-                                {item.is_comfirmed === true || item.is_cancelled === true ? " " : <button type="button" className="btn btn-outline-success" onClick={() => confirmReservation(item.id)}>Confimer</button>}
-                                {item.is_cancelled === true ? "Reservation Annulé" : <button type="button" className="btn btn-outline-danger" onClick={() => cancelReservation(item.id)}>Annuler</button>}
-                                {item.is_payed === true || item.is_cancelled === true ? " " : <button type="button" className="btn btn-outline-warning" onClick={() => payReservation(item.id)}>Payer</button>}
+                                {item.is_comfirmed === true || item.is_cancelled === true ? " " :
+                                    <button type="button" className="btn btn-outline-success"
+                                            onClick={() => confirmReservation(item.id)}>Confimer</button>}
+                                {item.is_cancelled === true ? "Reservation Annulé" :
+                                    <button type="button" className="btn btn-outline-danger"
+                                            onClick={() => cancelReservation(item.id)}>Annuler</button>}
+                                {item.is_payed === true || item.is_cancelled === true ? " " :
+                                    <button type="button" className="btn btn-outline-warning"
+                                            onClick={() => payReservation(item.id)}>Payer</button>}
                             </div>
                         )
                     })}
@@ -85,16 +104,34 @@ class Reservation extends Component {
     }
 }
 
+/**
+ * Permet de payer une reservation
+ * @param id : identifiant de la reservation
+ */
 function payReservation(id) {
     socket.emit("pay_reservation", id);
+    alert("Règlement effectué");
+    window.location.reload();
 }
 
+/**
+ * Permet de confirmer une reservation
+ * @param id : identifiant de la reservation
+ */
 function confirmReservation(id) {
     socket.emit("confirm_reservation", id);
+    alert('Reservation confirmée');
+    window.location.reload();
 }
 
+/**
+ * Permet d'annuler une reservation
+ * @param id : identifiant de la reservation
+ */
 function cancelReservation(id) {
     socket.emit("cancel_reservation", id);
+    alert('Reservation annulée');
+    window.location.reload();
 }
 
 export default Reservation;

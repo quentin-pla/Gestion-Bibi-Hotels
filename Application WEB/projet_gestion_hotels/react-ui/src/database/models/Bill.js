@@ -1,40 +1,36 @@
 const {Model, DataTypes} = require('sequelize');
 const connection = require("../dbconnection");
 
-class RoomType extends Model {}
-RoomType.init({
+class Bill extends Model {}
+Bill.init({
     id: {
         type: DataTypes.INTEGER,
         field: 'ID',
         primaryKey: true
     },
-    name: {
-        type: DataTypes.STRING,
-        field: 'NAME'
-    },
-    price: {
+    reservation_id: {
         type: DataTypes.INTEGER,
-        field: 'PRICE'
+        field: 'RESERVATION_ID'
     },
-    bed_capacity: {
+    client_id: {
         type: DataTypes.INTEGER,
-        field: 'BED_CAPACITY'
+        field: 'CLIENT_ID'
     },
-    has_phone: {
-        type: DataTypes.BOOLEAN,
-        field: 'HAS_PHONE'
+    amount: {
+        type: DataTypes.INTEGER,
+        field: 'AMOUNT'
     },
-    has_tv: {
+    is_archived: {
         type: DataTypes.BOOLEAN,
-        field: 'HAS_TV'
+        field: 'IS_ARCHIVED'
     }
 }, {
-    modelName: 'roomtypes',
-    tableName: 'ROOMTYPES',
+    modelName: 'bills',
+    tableName: 'BILLS',
     sequelize: connection,
     timestamps: false
 });
 
 //Exportation du modèle
-module.exports = RoomType;
+module.exports = Bill;
 

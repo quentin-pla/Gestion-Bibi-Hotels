@@ -37,7 +37,7 @@ public class SelectController {
     /**
      * Initialiser les boutons de la fenêtre
      */
-    private void initPanel() {
+    public SelectPanel initPanel() {
         //Lorsque l'utilisateur clique sur le bouton service client
         panel.getService_client().setOnAction(e -> MainController.getInstance().switchToClientService());
         //Lorsque l'utilisateur clique sur le bouton service réservation
@@ -46,6 +46,8 @@ public class SelectController {
         panel.getService_facturation().setOnAction(e -> initHotelSelection(Services.BILLING));
         //Lorsque l'utilisateur clique sur le bouton administration
         panel.getAdministration().setOnAction(e -> MainController.getInstance().switchToAdministration());
+        //Retour de la fenêtre
+        return panel;
     }
 
     /**
@@ -66,31 +68,28 @@ public class SelectController {
         hotelSelection.getValidate().setOnAction(e -> {
             //Hotel sélectionné
             Hotel selectedHotel = hotels.get(hotelSelection.getHotels().getSelectionModel().getSelectedIndex());
-            //Selon le service
-            switch (service) {
-                //Facturation
-                case BILLING:
-                    //Rafraichissement du contenu
-                    selectedHotel.getBillingService().refreshBills();
-                    //Affichage de la fenêtre service facturation
-                    MainController.getInstance().switchToBillingService(selectedHotel);
-                    break;
-                //Réservation
-                case RESERVATION:
-                    //Rafraichissement du contenu
-                    selectedHotel.getReservationService().initReservations();
-                    //Affichage de la fenêtre service réservation
-                    MainController.getInstance().switchToReservationService(selectedHotel);
-                    break;
-                default:
-                    break;
+            //Si l'hotel n'est pas null
+            if (selectedHotel != null) {
+                //Définition de l'hotel sélectionné
+                MainController.getInstance().setSelected_hotel(selectedHotel);
+                //Selon le service
+                switch (service) {
+                    //Facturation
+                    case BILLING:
+                        //Affichage de la fenêtre service facturation
+                        MainController.getInstance().switchToBillingService();
+                        break;
+                    //Réservation
+                    case RESERVATION:
+                        //Affichage de la fenêtre service réservation
+                        MainController.getInstance().switchToReservationService();
+                        break;
+                    default:
+                        break;
+                }
             }
         });
         //Lorsque l'utilisateur appuie sur le bouton retour, affichage fenêtre sélection
         hotelSelection.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
     }
-
-    //************* GETTERS & SETTERS ***************//
-
-    public SelectPanel getPanel() { return panel; }
 }

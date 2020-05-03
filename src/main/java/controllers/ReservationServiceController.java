@@ -1,6 +1,6 @@
 package controllers;
 
-import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import models.*;
 import views.ConfirmArrivalPanel;
@@ -20,9 +20,9 @@ public class ReservationServiceController {
     private ConfirmArrivalPanel confirmArrivalPanel;
 
     /**
-     * Service réservation lié
+     * Hotel lié
      */
-    private ReservationService reservationService;
+    private Hotel hotel;
 
     /**
      * Constructeur
@@ -35,30 +35,32 @@ public class ReservationServiceController {
     /**
      * Initialiser la fenêtre
      */
-    private void initPanel() {
+    public ReservationServicePanel initPanel() {
+        //Récupération de l'hotel sélectionné
+        hotel = MainController.getInstance().getSelected_hotel();
         //Définition du titre de la fenêtre
-        panel.setPanelTitle("Service Réservation - " + reservationService.getHotel().getHOTEL_NAME());
+        panel.setPanelTitle("Service Réservation - " + hotel.getHOTEL_NAME());
         //Définition de l'action du bouton retour
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
         //Affichage des boutons liés à une réservation sélectionnée
-        panel.getReservations().setOnMouseClicked(e -> refreshTableItems());
+        panel.getReservations().setOnMouseClicked(e -> refreshPanel());
         //Définition de l'action du bouton de confirmation de l'arrivée
-        panel.getArchive().setOnAction(e -> {
+        panel.getArchiveButton().setOnAction(e -> {
             //Récupération de la réservation sélctionnée
             Reservation reservation = panel.getReservations().getSelectionModel().getSelectedItem();
             //Si la réservation existe
             if (reservation != null)
                 //Archivage de la réservation
-                reservationService.archiveReservation(reservation);
+                ReservationService.getInstance(hotel).archiveReservation(reservation);
             //Suppression du focus sur la réservation
             panel.getReservations().getSelectionModel().clearSelection();
             //Suppression de la réservation du tableau
             panel.getReservations().getItems().remove(reservation);
             //Rafraichissement
-            refreshTableItems();
+            refreshPanel();
         });
         //Définition de l'action du bouton de confirmation de l'arrivée du client
-        panel.getConfirmArrival().setOnAction(e -> {
+        panel.getConfirmArrivalButton().setOnAction(e -> {
             //Récupération de la réservation sélctionnée
             Reservation reservation = panel.getReservations().getSelectionModel().getSelectedItem();
             //Si la réservation existe
@@ -70,32 +72,49 @@ public class ReservationServiceController {
             }
         });
         //Définition de l'action du bouton de paiement des arrhes
-        panel.getMakePayment().setOnAction(e -> {
+        panel.getMakePaymentButton().setOnAction(e -> {
             //Récupération de la réservation sélctionnée
             Reservation reservation = panel.getReservations().getSelectionModel().getSelectedItem();
             //Si la réservation existe
             if (reservation != null)
                 //Confirmation du paiement des arrhes
-                reservationService.confirmPayment(reservation);
+                ReservationService.getInstance(hotel).confirmPayment(reservation);
             //Rafraichissement
-            refreshTableItems();
+            refreshPanel();
         });
-        //Liste des réservations
-        ObservableList<Reservation> items = FXCollections.observableArrayList(reservationService.getReservations());
+        //Récupération des réservations
+        ObservableList<Reservation> items = ReservationService.getInstance(hotel).getReservations();
+        //Ajout d'un listener pour mettre à jour automatiquement le tableau
+        items.addListener((ListChangeListener<Reservation>) change -> {
+            //Définition d'une variable contenant la position de l'élément sélectionné
+            int selected = -1;
+            //Si un élément est sélectionné
+            if (!panel.getReservations().getSelectionModel().isEmpty())
+                //Récupération de l'index de l'élément sélectionné
+                selected = panel.getReservations().getSelectionModel().getFocusedIndex();
+            //Ajout des réservations à la table
+            refreshPanel();
+            //Si l'index a été définit
+            if (selected != -1)
+                //Positionnement sur l'index
+                panel.getReservations().getSelectionModel().select(selected);
+        });
         //Ajout des réservations à la table
-        panel.getReservations().setItems(items);
+        panel.getReservations().getItems().setAll(items);
+        //Retour de la fenêtre
+        return panel;
     }
 
     /**
-     * Rafraichir les éléments du tableau
+     * Rafraichir les éléments du tableau et les boutons
      */
-    public void refreshTableItems() {
+    public void refreshPanel() {
         //Rafraichissement des éléments du tableau
         panel.getReservations().refresh();
         //Récupération de la réservation sélctionnée
         Reservation reservation = panel.getReservations().getSelectionModel().getSelectedItem();
-        //Si la réservation existe
-        if (reservation != null) {
+        //Si la réservation existe et que le nombre d'éléments du tableau est supérieur à zéro
+        if (reservation != null && panel.getReservations().getItems().size() > 0) {
             //Réservation non confirmée
             boolean notConfirmed = !reservation.getIS_COMFIRMED() && reservation.getIS_PAYED();
             //Réservation impayée
@@ -103,14 +122,14 @@ public class ReservationServiceController {
             //Réservation pas archivée
             boolean notArchived = !reservation.getIS_ARCHIVED() && reservation.getIS_COMFIRMED() && reservation.getIS_PAYED();
             //Définition visibilité bouton confirmation arrivée
-            panel.getConfirmArrival().setManaged(notConfirmed);
-            panel.getConfirmArrival().setVisible(notConfirmed);
+            panel.getConfirmArrivalButton().setManaged(notConfirmed);
+            panel.getConfirmArrivalButton().setVisible(notConfirmed);
             //Définition visibilité bouton confirmation paiement
-            panel.getMakePayment().setManaged(notPayed);
-            panel.getMakePayment().setVisible(notPayed);
+            panel.getMakePaymentButton().setManaged(notPayed);
+            panel.getMakePaymentButton().setVisible(notPayed);
             //Définition visibilité bouton archivage
-            panel.getArchive().setManaged(notArchived);
-            panel.getArchive().setVisible(notArchived);
+            panel.getArchiveButton().setManaged(notArchived);
+            panel.getArchiveButton().setVisible(notArchived);
             //Affichage de la liste contenant les boutons
             panel.getRefButtons().setVisible(true);
         }
@@ -128,7 +147,7 @@ public class ReservationServiceController {
         //Définition de l'action du bouton valider
         confirmArrivalPanel.getValidate().setOnAction(e -> {
             //Récupération des occupations liées à la réservation
-            ArrayList<Occupation> occupations = ClientService.getInstance().getReservationOccupations(reservation.getID());
+            ArrayList<Occupation> occupations = ReservationService.getInstance(hotel).getReservationOccupations(reservation.getID());
             //Pour chaque occupation
             for (Occupation occupation : occupations)
                 //Pour chaque occupant
@@ -138,24 +157,11 @@ public class ReservationServiceController {
                         break;
                 }
             //Confirmation de l'arrivée du client dans l'hotel
-            reservationService.confirmArrival(reservation);
+            ReservationService.getInstance(hotel).confirmArrival(reservation);
             //Rafraichissement des éléments dans la table
-            refreshTableItems();
+            refreshPanel();
             //Affichage de la liste des réservations
             MainController.getInstance().setWindow(panel);
         });
-    }
-
-    //************* GETTERS & SETTERS ***************//
-
-    public ReservationServicePanel getPanel() { return panel; }
-
-    public ReservationService getReservationService() {
-        return reservationService;
-    }
-
-    public void setReservationService(ReservationService reservationService) {
-        this.reservationService = reservationService;
-        initPanel();
     }
 }

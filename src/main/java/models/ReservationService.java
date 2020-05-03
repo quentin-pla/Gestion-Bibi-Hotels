@@ -1,6 +1,9 @@
 package models;
 
 import database.DatabaseData;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 
 import java.util.*;
 
@@ -13,7 +16,7 @@ public class ReservationService {
     /**
      * Réservations de l'hotel
      */
-    private ArrayList<Reservation> reservations;
+    private ObservableList<Reservation> reservations;
 
     /**
      * Réservations archivées
@@ -21,44 +24,74 @@ public class ReservationService {
     private ArrayList<Reservation> archives;
 
     /**
-     * Constructeur
-     * @param hotel hotel lié
+     * Instance unique
      */
-    public ReservationService(Hotel hotel) {
-        this.hotel = hotel;
-        this.reservations = new ArrayList<>();
-        this.archives = new ArrayList<>();
+    private static ReservationService instance = null;
+
+    /**
+     * Récupérer l'instance unique
+     */
+    public static ReservationService getInstance(Hotel hotel) {
+        //Si l'instance n'est pas initialisée
+        if (instance == null)
+            //Initialisation de l'instance
+            instance = new ReservationService(hotel);
+       else {
+            //Définition de l'hotel
+            if (!instance.hotel.equals(hotel)) instance.hotel = hotel;
+            //Initialisation des réservations
+            instance.initReservations();
+        }
+        //Retour de l'instance
+        return instance;
     }
 
     /**
-     * Récupérer les réservations depuis les données locales
+     * Constructeur
      */
-    public void initReservations() {
-        //Récupération des réservations depuis les données de la base de données
-        Collection<Reservation> data = DatabaseData.getInstance().getReservations().values();
+    private ReservationService(Hotel hotel) {
+        this.hotel = hotel;
+        this.archives = new ArrayList<>();
+        this.reservations = FXCollections.observableArrayList();
+        //Initialisation des réservations
+        initReservations();
+        //Ajout d'un listener sur la liste des réservations des données locales afin d'être toujours à jour
+        DatabaseData.getInstance().getReservations().addListener((MapChangeListener<Integer, Reservation>) change -> {
+            //Si des éléments ont été ajoutés
+            if (change.wasAdded() && !change.getMap().isEmpty())
+                //Si la taille de la map du listener est égale à la taille totale des réservations mises à jour
+                if (DatabaseData.getInstance().getReservations_update_size() == change.getMap().values().size())
+                    //Initialisation des réservations
+                    filterReservations(new ArrayList<>(change.getMap().values()));
+        });
+    }
+
+    /**
+     * Initialiser les réservations pour l'hotel spécifié
+     */
+    private void initReservations() {
+        //Initialisation des réservations
+        filterReservations(DatabaseData.getInstance().getReservations().values());
+    }
+
+    /**
+     * Filtrer les réservations depuis les données locales
+     */
+    public void filterReservations(Collection<Reservation> items) {
+        //Suppression des éléments contenus dans les archives
+        archives.clear();
+        //Réservations filtrées
+        ArrayList<Reservation> filtered = new ArrayList<>();
         //Pour chaque réservation
-        for (Reservation reservation : data)
+        for (Reservation reservation : items)
             //Si l'id de l'hotel est égal à celui du service réservation
-            if (reservation.getHOTEL_ID() == hotel.getID()) {
-                //Archivage de la réservation si la date de sortie est supérieure à la date actuelle
-                if (getCurrentDate(0).after(reservation.getEXIT_DATE())) archiveReservation(reservation);
+            if (reservation.getHOTEL_ID() == hotel.getID())
                 //Si la réservation est archivée où que la date de soritie est supérieure à aujourd'hui, on l'ajoute aux archives
                 if (reservation.getIS_ARCHIVED()) archives.add(reservation);
-                //Sinon on l'ajoute dans les réservations
-                else reservations.add(reservation);
-            }
-    }
-
-    /**
-     * Rafraichir la liste des réservations et archives
-     */
-    public void refreshReservations() {
-        //Suppression de la liste des réservations
-        reservations.clear();
-        //Suppression de la liste des archives
-        archives.clear();
-        //Ajout des réservations et archives
-        initReservations();
+                //Ajout de la réservation à la liste filtrée
+                else filtered.add(reservation);
+        //Définition des réservations
+        reservations.setAll(filtered);
     }
 
     /**
@@ -107,6 +140,24 @@ public class ReservationService {
         reservation.setIS_ARCHIVED(true);
         //Mise à jour dans la base de données
         reservation.updateColumn(Reservation.Columns.IS_ARCHIVED);
+    }
+
+    /**
+     * Récupérer la liste des occupations pour une réservation
+     * @param reservation_id id réservation
+     * @return liste des occupations
+     */
+    public ArrayList<Occupation> getReservationOccupations(int reservation_id) {
+        //Liste des occupations liées
+        ArrayList<Occupation> linkedOccupations = new ArrayList<>();
+        //Pour chaque occupation
+        for (Occupation occupation : DatabaseData.getInstance().getOccupations().values())
+            //Si l'id de réservation correspond
+            if (occupation.getRESERVATION_ID() == reservation_id)
+                //Ajout de l'occupation dans les résultats
+                linkedOccupations.add(occupation);
+        //Retour des résultats
+        return linkedOccupations;
     }
 
     /**
@@ -170,11 +221,9 @@ public class ReservationService {
 
     public ArrayList<Reservation> getArchives() { return archives; }
 
-    public ArrayList<Reservation> getReservations() { return reservations; }
+    public ObservableList<Reservation> getReservations() { return reservations; }
 
     public Hotel getHotel() { return hotel; }
 
-    public void setReservations(ArrayList<Reservation> reservations) { this.reservations = reservations; }
-
-    public void setArchives(ArrayList<Reservation> archives) { this.archives = archives; }
+    public void setHotel(Hotel hotel) { this.hotel = hotel; }
 }

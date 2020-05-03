@@ -5,16 +5,6 @@ import database.DatabaseModel;
 
 public class Hotel extends DatabaseModel {
     /**
-     * Service réservation de l'hotel
-     */
-    private ReservationService reservationService;
-
-    /**
-     * Service facturation de l'hotel
-     */
-    private BillingService billingService;
-
-    /**
      * Nom
      */
     private String HOTEL_NAME;
@@ -46,8 +36,6 @@ public class Hotel extends DatabaseModel {
      */
     public Hotel() {
         super(Tables.HOTELS);
-        this.reservationService = new ReservationService(this);
-        this.billingService = new BillingService(this);
     }
 
     /**
@@ -63,19 +51,7 @@ public class Hotel extends DatabaseModel {
         this.STREET = STREET;
         this.CITY = CITY;
         this.STAR_RATING = STAR_RATING;
-        this.reservationService = new ReservationService(this);
-        this.billingService = new BillingService(this);
         this.save();
-    }
-
-    /**
-     * Initialisation des données nécessaires pour les services
-     */
-    public void initServices() {
-        //Initialisation des réservations
-        reservationService.initReservations();
-        //Initialisation des factures
-        billingService.initBills();
     }
 
     //************* GETTERS & SETTERS ***************//
@@ -83,22 +59,6 @@ public class Hotel extends DatabaseModel {
     @Override
     public DatabaseColumns[] getColumns() {
         return Columns.values();
-    }
-
-    public ReservationService getReservationService() {
-        return reservationService;
-    }
-
-    public void setReservationService(ReservationService reservationService) {
-        this.reservationService = reservationService;
-    }
-
-    public BillingService getBillingService() {
-        return billingService;
-    }
-
-    public void setBillingService(BillingService billingService) {
-        this.billingService = billingService;
     }
 
     public String getHOTEL_NAME() {

@@ -4,9 +4,7 @@ import models.Reservation;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Liaison avec la base de données
@@ -58,6 +56,24 @@ public class DatabaseConnection {
      */
     private static DatabaseConnection getInstance() {
         return DatabaseConnectionHolder.instance;
+    }
+
+    /**
+     * Exécuter une requête SQL SELECT COUNT(*) sur une table
+     * @param table table
+     * @return nombre d'éléments
+     */
+    public static int selectCountQuery(DatabaseModel.Tables table) {
+        try {
+            //Exécution de la requête
+            ResultSet rs = getInstance().connection.prepareStatement("SELECT COUNT(*) FROM " + table).executeQuery();
+            //Retour du résultat
+            return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //Retour 0 en cas d'erreur
+        return 0;
     }
 
     /**

@@ -49,6 +49,23 @@ public class MainController {
     private BillingServiceController billingServiceController;
 
     /**
+     * Hotel sélectionné
+     */
+    private Hotel selected_hotel;
+
+    /**
+     * Service sélectionné
+     */
+    private ServicePanel selected_service;
+
+    /**
+     * Liste des services disponibles
+     */
+    public enum ServicePanel {
+        RESERVATION,BILLING,CLIENT,ADMINISTRATION
+    }
+
+    /**
      * Constructeur
      */
     public MainController() {
@@ -58,8 +75,6 @@ public class MainController {
         windowContent = new Pane();
         //Définition de la fenêtre sur le panneau de sélection
         switchToSelect();
-        //Récupération des données de la base de données de manière asynchrone
-        new Thread(DatabaseData::getInstance).start();
     }
 
     /**
@@ -78,9 +93,12 @@ public class MainController {
      */
     public static MainController getInstance() {
         //Si l'instance n'est pas initialisée
-        if (instance == null)
+        if (instance == null) {
             //Initialisation de l'instance
             instance = new MainController();
+            //Récupération des données de la base de données
+            DatabaseData.getInstance();
+        }
         //Retour de l'instance
         return instance;
     }
@@ -93,36 +111,49 @@ public class MainController {
     /**
      * Changement de fenêtre sur la sélection
      */
-    public void switchToSelect() { setWindow(selectController.getPanel()); }
+    public void switchToSelect() {
+        //Affichage du panneau de sélection
+        setWindow(selectController.initPanel());
+    }
 
     /**
      * Changement de fenêtre sur le panneau d'administration
      */
     public void switchToAdministration() {
+        //Service sélectionné Administration
+        selected_service = ServicePanel.ADMINISTRATION;
+        //Affichage du panneau d'administration
         setWindow(administrationController.getPanel());
     }
 
     /**
-     * Changement de fenêtre sur le panneau d'administration
+     * Changement de fenêtre sur le service client
      */
     public void switchToClientService() {
-        setWindow(clientServiceController.getPanel());
+        //Service sélectionné Client
+        selected_service = ServicePanel.CLIENT;
+        //Affichage du service client
+        setWindow(clientServiceController.initPanel());
     }
 
     /**
-     * Changement de fenêtre sur le panneau d'administration
+     * Changement de fenêtre sur le service réservation
      */
-    public void switchToReservationService(Hotel hotel) {
-        reservationServiceController.setReservationService(hotel.getReservationService());
-        setWindow(reservationServiceController.getPanel());
+    public void switchToReservationService() {
+        //Service sélectionné Réservation
+        selected_service = ServicePanel.RESERVATION;
+        //Affichage du service réservation
+        setWindow(reservationServiceController.initPanel());
     }
 
     /**
-     * Changement de fenêtre sur le panneau d'administration
+     * Changement de fenêtre sur le service facturation
      */
-    public void switchToBillingService(Hotel hotel) {
-        billingServiceController.setBillingService(hotel.getBillingService());
-        setWindow(billingServiceController.getPanel());
+    public void switchToBillingService() {
+        //Service sélectionné Facturation
+        selected_service = ServicePanel.BILLING;
+        //Affichage de la fenêtre
+        setWindow(billingServiceController.initPanel());
     }
 
     /**
@@ -143,5 +174,17 @@ public class MainController {
     public Scene getScene() {
         //Retour de la scène
         return new Scene(windowContent, width, height, Color.BLUE);
+    }
+
+    public Hotel getSelected_hotel() {
+        return selected_hotel;
+    }
+
+    public void setSelected_hotel(Hotel selected_hotel) {
+        this.selected_hotel = selected_hotel;
+    }
+
+    public ServicePanel getSelected_service() {
+        return selected_service;
     }
 }

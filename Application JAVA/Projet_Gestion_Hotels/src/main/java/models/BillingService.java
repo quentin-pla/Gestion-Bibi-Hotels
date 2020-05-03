@@ -1,6 +1,9 @@
 package models;
 
 import database.DatabaseData;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +22,7 @@ public class BillingService {
     /**
      * Liste des factures en attente de paiement
      */
-    private ArrayList<Bill> pending_bills;
+    private ObservableList<Bill> pending_bills;
 
     /**
      * Archives des factures
@@ -32,54 +35,74 @@ public class BillingService {
     private Hotel hotel;
 
     /**
-     * Constructeur
-     * @param hotel hotel lié
+     * Instance unique
      */
-    public BillingService(Hotel hotel) {
-        this.hotel = hotel;
-        this.pending_bills = new ArrayList<>();
-        this.archives = new ArrayList<>();
+    private static BillingService instance = null;
+
+    /**
+     * Récupérer l'instance unique
+     */
+    public static BillingService getInstance(Hotel hotel) {
+        //Si l'instance n'est pas initialisée
+        if (instance == null)
+            //Initialisation de l'instance
+            instance = new BillingService(hotel);
+        else {
+            //Définition de l'hotel
+            if (!instance.hotel.equals(hotel)) instance.hotel = hotel;
+            //Initialisation des factures
+            instance.initBills();
+        }
+        //Retour de l'instance
+        return instance;
     }
 
     /**
-     * Récupérer les factures depuis les données locales
+     * Constructeur
      */
-    public void initBills() {
-        //Récupération des factures depuis les données de la base de données
-        Collection<Bill> data = DatabaseData.getInstance().getBills().values();
-        //Liste des réservations déjà facturées
-        ArrayList<Integer> billedReservations = new ArrayList<>();
+    private BillingService(Hotel hotel) {
+        this.hotel = hotel;
+        this.archives = new ArrayList<>();
+        this.pending_bills = FXCollections.observableArrayList();
+        //Initialisation des factures
+        initBills();
+        //Ajout d'un listener sur la liste des factures des données locales afin d'être toujours à jour
+        DatabaseData.getInstance().getBills().addListener((MapChangeListener<Integer, Bill>) change -> {
+            //Si des éléments ont été ajoutés
+            if (change.wasAdded() && !change.getMap().isEmpty())
+                //Si la taille de la map du listener est égale à la taille totale des factures mises à jour
+                if (DatabaseData.getInstance().getBills_update_size() == change.getMap().values().size())
+                    //Initialisation des factures
+                    filterBills(new ArrayList<>(change.getMap().values()));
+        });
+    }
+
+    /**
+     * Initialiser les factures pour l'hotel spécifié
+     */
+    private void initBills() {
+        //Initialisation des factures
+        filterBills(DatabaseData.getInstance().getBills().values());
+    }
+
+    /**
+     * Filtrer les factures depuis les données locales
+     */
+    public void filterBills(Collection<Bill> items) {
+        //Suppression de la liste des archives
+        archives.clear();
+        //Réservations filtrées
+        ArrayList<Bill> filtered = new ArrayList<>();
         //Pour chaque facture
-        for (Bill bill : data) {
-            //Ajout de l'id de la réservation dans les réservations déjà facturées
-            billedReservations.add(bill.getRESERVATION_ID());
+        for (Bill bill : items)
             //Si la facture appartient bien à l'hotel
             if (bill.getReservation().getHOTEL_ID() == hotel.getID())
                 //Si elle est archivée on l'ajoute aux archives
                 if (bill.getIS_ARCHIVED()) archives.add(bill);
-                //Sinon on l'ajoute dans les factures en attente
-                else pending_bills.add(bill);
-        }
-        //Récupération des réservations archivées du service réservation
-        ArrayList<Reservation> reservations = hotel.getReservationService().getArchives();
-        //Pour chaque réservation
-        for (Reservation reservation : reservations)
-            //Si la réservation n'est pas contenue dans celles facturées
-            if (!billedReservations.contains(reservation.getID()))
-                //Création d'une facture pour la réservation
-                createBill(reservation);
-    }
-
-    /**
-     * Rafraichir la liste des factures et archives
-     */
-    public void refreshBills() {
-        //Suppression de la liste des factures
-        pending_bills.clear();
-        //Suppression de la liste des archives
-        archives.clear();
-        //Ajout des factures et archives
-        initBills();
+                //Ajout de la facture à la liste filtrée
+                else filtered.add(bill);
+        //Définition des factures
+        pending_bills.setAll(filtered);
     }
 
     /**
@@ -94,15 +117,6 @@ public class BillingService {
     }
 
     /**
-     * Créer une facture
-     * @param reservation reservation
-     */
-    public void createBill(Reservation reservation) {
-        //Création d'une nouvelle facture
-        pending_bills.add(new Bill(reservation.getID(), reservation.getCLIENT_ID(), 0.0, false, false));
-    }
-
-    /**
      * Archiver une facture
      * @param bill facture
      */
@@ -111,6 +125,10 @@ public class BillingService {
         archives.add(bill);
         //Suppression de la facture dans les factures en attente
         pending_bills.remove(bill);
+        //Passage du booléen archivée à vrai
+        bill.setIS_ARCHIVED(true);
+        //Mise à jour dans la base de données
+        bill.updateColumn(Bill.Columns.IS_ARCHIVED);
     }
 
     /**
@@ -119,7 +137,7 @@ public class BillingService {
      */
     public void calculateTotalBillAmount(Bill bill) {
         //Récupération des occupations liées à la réservation
-        ArrayList<Occupation> occupations = ClientService.getInstance().getReservationOccupations(bill.getRESERVATION_ID());
+        ArrayList<Occupation> occupations = ReservationService.getInstance(hotel).getReservationOccupations(bill.getRESERVATION_ID());
         //Montant total de la facture
         double total_amount = 0.0;
         //Pour chaque occupation
@@ -145,9 +163,7 @@ public class BillingService {
 
     //************* GETTERS & SETTERS ***************//
 
-    public ArrayList<Bill> getPending_bills() {
-        return pending_bills;
-    }
+    public ObservableList<Bill> getPending_bills() { return pending_bills; }
 
     public Hotel getHotel() {
         return hotel;
@@ -156,4 +172,6 @@ public class BillingService {
     public ArrayList<Bill> getArchives() {
         return archives;
     }
+
+
 }

@@ -1,10 +1,13 @@
 package database;
 
+import controllers.MainController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import models.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static database.DatabaseConnection.selectQuery;
 
@@ -12,63 +15,75 @@ public class DatabaseData {
     /**
      * Factures
      */
-    private Map<Integer,Bill> bills;
+    private ObservableMap<Integer,Bill> bills;
 
     /**
      * Clients
      */
-    private Map<Integer,Client> clients;
+    private ObservableMap<Integer,Client> clients;
 
     /**
      * Hotels
      */
-    private Map<Integer,Hotel> hotels;
+    private ObservableMap<Integer,Hotel> hotels;
 
     /**
      * Occupants
      */
-    private Map<Integer,Occupant> occupants;
+    private ObservableMap<Integer,Occupant> occupants;
 
     /**
      * Occupations
      */
-    private Map<Integer,Occupation> occupations;
+    private ObservableMap<Integer,Occupation> occupations;
 
     /**
      * Réservations
      */
-    private Map<Integer,Reservation> reservations;
+    private ObservableMap<Integer,Reservation> reservations;
 
     /**
      * Chambres
      */
-    private Map<Integer,Room> rooms;
+    private ObservableMap<Integer,Room> rooms;
 
     /**
      * Types de chambre
      */
-    private Map<Integer,RoomType> roomTypes;
+    private ObservableMap<Integer,RoomType> roomTypes;
 
     /**
      * Services
      */
-    private Map<Integer,Service> services;
+    private ObservableMap<Integer,Service> services;
+
+    /**
+     * Nombre de réservations à mettre à jour
+     */
+    private int reservations_update_size;
+
+    /**
+     * Nombre de factures à mettre à jour
+     */
+    private int bills_update_size;
 
     /**
      * Constructeur
      */
     private DatabaseData() {
-        this.bills = new HashMap<>();
-        this.clients = new HashMap<>();
-        this.hotels = new HashMap<>();
-        this.occupants = new HashMap<>();
-        this.occupations = new HashMap<>();
-        this.reservations = new HashMap<>();
-        this.rooms = new HashMap<>();
-        this.roomTypes = new HashMap<>();
-        this.services = new HashMap<>();
+        this.bills = FXCollections.observableHashMap();
+        this.clients = FXCollections.observableHashMap();
+        this.hotels = FXCollections.observableHashMap();
+        this.occupants = FXCollections.observableHashMap();
+        this.occupations = FXCollections.observableHashMap();
+        this.reservations = FXCollections.observableHashMap();
+        this.rooms = FXCollections.observableHashMap();
+        this.roomTypes = FXCollections.observableHashMap();
+        this.services = FXCollections.observableHashMap();
         //Récupération des données de la base de données
         retrieveDatabase();
+        //Actualisation automatique
+        initRefresh();
     }
 
     /**
@@ -84,21 +99,9 @@ public class DatabaseData {
         if (instance == null) {
             //Initialisation de l'instance
             instance = new DatabaseData();
-            //Initialisation des services
-            instance.initServices();
         }
         //Retour de l'instance
         return instance;
-    }
-
-    /**
-     * Rafraichir les données locales
-     */
-    public void refreshData() {
-        //Instance null pour initialiser à nouveau la classe
-        instance = null;
-        //Initialisation avec une nouvelle instance
-        getInstance();
     }
 
     /**
@@ -126,24 +129,48 @@ public class DatabaseData {
     }
 
     /**
-     * Initialisation des services de la chaine d'hotels
+     * Rafraichir les éléments d'une table depuis la base de données
      */
-    public void initServices() {
-        //Pour chaque hotel
-        for (Hotel hotel : hotels.values())
-            //Initialisation du service réservation et facturation
-            hotel.initServices();
-        //Initialisation des hotels pour l'administration
-        Administration.getInstance().initHotels();
-        //Initialisation des occupations pour le service client
-        ClientService.getInstance().initOccupations();
+    public void initRefresh() {
+        //Initialisation d'un nouveau timer
+        Timer timer = new Timer(true);
+        //Récupération des données de la base de données toutes les 10s
+        timer.schedule(new TimerTask() {
+            public void run() {
+                //service sélectionné
+                MainController.ServicePanel actual_service = MainController.getInstance().getSelected_service();
+                //Si le service ne vaut pas null
+                if (actual_service != null) {
+                    //Selon le service
+                    switch (actual_service) {
+                        case RESERVATION:
+                            //Récupération des réservations
+                            retrieveDatabaseReservations();
+                            break;
+                        case BILLING:
+                            //Récupération des factures
+                            retrieveDatabaseBills();
+                            break;
+                        case CLIENT:
+                            //Récupération des occupations
+                            retrieveDatabaseOccupations();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                System.out.println("refresh");
+            }
+        } ,0,5000);
     }
 
     /**
      * Récupérer toutes les factures de la base de données
      */
     public void retrieveDatabaseBills() {
+        bills.clear();
         ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.BILLS);
+        bills_update_size = results.size();
         for (DatabaseModel bill : results) bills.put(bill.getID(), (Bill) bill);
     }
 
@@ -151,6 +178,7 @@ public class DatabaseData {
      * Récupérer toutes les factures de la base de données
      */
     public void retrieveDatabaseClients() {
+        clients.clear();
         ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.CLIENTS);
         for (DatabaseModel client : results) clients.put(client.getID(), (Client) client);
     }
@@ -159,6 +187,7 @@ public class DatabaseData {
      * Récupérer toutes les factures de la base de données
      */
     public void retrieveDatabaseHotels() {
+        hotels.clear();
         ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.HOTELS);
         for (DatabaseModel hotel : results) hotels.put(hotel.getID(), (Hotel) hotel);
     }
@@ -167,6 +196,7 @@ public class DatabaseData {
      * Récupérer toutes les factures de la base de données
      */
     public void retrieveDatabaseOccupants() {
+        occupants.clear();
         ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.OCCUPANTS);
         for (DatabaseModel occupant : results) occupants.put(occupant.getID(), (Occupant) occupant);
     }
@@ -175,6 +205,7 @@ public class DatabaseData {
      * Récupérer toutes les factures de la base de données
      */
     public void retrieveDatabaseOccupations() {
+        occupations.clear();
         ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.OCCUPATIONS);
         for (DatabaseModel occupation : results) occupations.put(occupation.getID(), (Occupation) occupation);
     }
@@ -183,7 +214,9 @@ public class DatabaseData {
      * Récupérer toutes les factures de la base de données
      */
     public void retrieveDatabaseReservations() {
+        reservations.clear();
         ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.RESERVATIONS);
+        reservations_update_size = results.size();
         for (DatabaseModel reservation : results) reservations.put(reservation.getID(), (Reservation) reservation);
     }
 
@@ -191,6 +224,7 @@ public class DatabaseData {
      * Récupérer toutes les factures de la base de données
      */
     public void retrieveDatabaseRooms() {
+        rooms.clear();
         ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.ROOMS);
         for (DatabaseModel room : results) rooms.put(room.getID(), (Room) room);
     }
@@ -199,6 +233,7 @@ public class DatabaseData {
      * Récupérer toutes les factures de la base de données
      */
     public void retrieveDatabaseRoomTypes() {
+        roomTypes.clear();
         ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.ROOMTYPES);
         for (DatabaseModel room_type : results) roomTypes.put(room_type.getID(), (RoomType) room_type);
     }
@@ -207,6 +242,7 @@ public class DatabaseData {
      * Récupérer toutes les factures de la base de données
      */
     public void retrieveDatabaseServices() {
+        services.clear();
         ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.SERVICES);
         for (DatabaseModel service : results) services.put(service.getID(), (Service) service);
     }
@@ -257,37 +293,41 @@ public class DatabaseData {
 
     //*************** GETTERS REFERENCES ***************//
 
-    public Map<Integer, Bill> getBills() {
+    public ObservableMap<Integer, Bill> getBills() {
         return bills;
     }
 
-    public Map<Integer, Client> getClients() { return clients; }
+    public ObservableMap<Integer, Client> getClients() { return clients; }
 
-    public Map<Integer, Hotel> getHotels() {
+    public ObservableMap<Integer, Hotel> getHotels() {
         return hotels;
     }
 
-    public Map<Integer, Occupant> getOccupants() {
-        return occupants;
-    }
+    public ObservableMap<Integer, Occupant> getOccupants() { return occupants; }
 
-    public Map<Integer, Occupation> getOccupations() {
-        return occupations;
-    }
+    public ObservableMap<Integer, Occupation> getOccupations() { return occupations; }
 
-    public Map<Integer, Reservation> getReservations() {
+    public ObservableMap<Integer, Reservation> getReservations() {
         return reservations;
     }
 
-    public Map<Integer, Room> getRooms() {
+    public ObservableMap<Integer, Room> getRooms() {
         return rooms;
     }
 
-    public Map<Integer, RoomType> getRoomTypes() {
+    public ObservableMap<Integer, RoomType> getRoomTypes() {
         return roomTypes;
     }
 
-    public Map<Integer, Service> getServices() {
+    public ObservableMap<Integer, Service> getServices() {
         return services;
+    }
+
+    public int getReservations_update_size() {
+        return reservations_update_size;
+    }
+
+    public int getBills_update_size() {
+        return bills_update_size;
     }
 }

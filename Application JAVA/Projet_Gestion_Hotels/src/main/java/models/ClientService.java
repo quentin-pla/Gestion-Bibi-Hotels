@@ -33,13 +33,17 @@ public class ClientService {
      * Récupérer les occupations depuis les données locales
      */
     public void initOccupations() {
+        //Suppression des occupations
+        occupations.clear();
+        //Suppression des archives
+        archives.clear();
         //Récupération des occupations depuis les données de la base de données
         Collection<Occupation> data = DatabaseData.getInstance().getOccupations().values();
         //Pour chaque occupation
         for (Occupation occupation : data)
             //Si elle est archivée on l'ajoute aux archives
             if (occupation.getIS_ARCHIVED()) archives.add(occupation);
-                //Sinon on l'ajoute dans les occupations
+            //Sinon on l'ajoute dans les occupations
             else occupations.add(occupation);
     }
 
@@ -79,21 +83,23 @@ public class ClientService {
     }
 
     /**
-     * Récupérer la liste des occupations pour une réservation
-     * @param reservation_id id de la réservation
-     * @return liste des occupations
+     * Récupérer la liste des services disponibles pour l'occupation
+     * @param occupation occupation
+     * @return liste de services
      */
-    public ArrayList<Occupation> getReservationOccupations(int reservation_id) {
-        //Liste des occupations liées
-        ArrayList<Occupation> linkedOccupations = new ArrayList<>();
-        //Pour chaque occupation
-        for (Occupation occupation : occupations)
-            //Si l'id de réservation correspond
-            if (occupation.getRESERVATION_ID() == reservation_id)
-                //Ajout de l'occupation dans les résultats
-                linkedOccupations.add(occupation);
+    public ArrayList<Service> getOccupationServices(Occupation occupation) {
+        //Liste des services disponibles
+        ArrayList<Service> availableServices = new ArrayList<>();
+        //Pour chaque service
+        for (Service service : DatabaseData.getInstance().getServices().values())
+            //Si l'id du service correspond à l'hotel de la chambre occupée
+            if (service.getHOTEL_ID() == occupation.getRoom().getHOTEL_ID())
+                //Si le service n'est pas unique ou que le service est unique mais pas encore facturé pour l'occupation
+                if (!service.getUNIQUE_ORDER() || (service.getUNIQUE_ORDER() && !occupation.getBilledServices().contains(service)))
+                    //Ajout du service dans les résultats
+                    availableServices.add(service);
         //Retour des résultats
-        return linkedOccupations;
+        return availableServices;
     }
 
     /**
@@ -190,13 +196,15 @@ public class ClientService {
         occupation.setIS_ARCHIVED(true);
         //Mise à jour dans la base de données
         occupation.updateColumn(Occupation.Columns.IS_ARCHIVED);
+        //Client non présent
+        occupation.setIS_CLIENT_PRESENT(false);
+        //Mise à jour dans la base de données
+        occupation.updateColumn(Occupation.Columns.IS_CLIENT_PRESENT);
     }
 
     //*************** GETTERS & SETTERS ***************//
 
-    public ArrayList<Occupation> getOccupations() {
-        return occupations;
-    }
+    public ArrayList<Occupation> getOccupations() { return occupations; }
 
     public ArrayList<Occupation> getArchives() {
         return archives;

@@ -21,18 +21,18 @@ public class ReservationServicePanel extends BorderPane {
     private Button back = new Button("←");
     private Label title = new Label();
     private TableView<Reservation> reservations = new TableView<>();
-    private Button confirmArrival = new Button("Confirmer arrivée");
-    private Button archive = new Button("Archiver");
-    private Button makePayment = new Button("Encaisser Arrhes");
-    private HBox refButtons = new HBox(confirmArrival,archive,makePayment);
+    private Button confirmArrivalButton = new Button("Confirmer arrivée");
+    private Button archiveButton = new Button("Archiver");
+    private Button makePaymentButton = new Button("Encaisser Arrhes");
+    private HBox refButtons = new HBox(confirmArrivalButton, archiveButton, makePaymentButton);
 
     public ReservationServicePanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
         title.getStyleClass().add("h3");
-        confirmArrival.getStyleClass().addAll("ref-button","green-text");
-        archive.getStyleClass().addAll("ref-button","red-text");
-        makePayment.getStyleClass().addAll("ref-button","green-text");
+        confirmArrivalButton.getStyleClass().addAll("ref-button","green-text");
+        archiveButton.getStyleClass().addAll("ref-button","red-text");
+        makePaymentButton.getStyleClass().addAll("ref-button","green-text");
         initReservationsTable();
         BorderPane topContent = new BorderPane();
         topContent.setLeft(back);
@@ -137,11 +137,11 @@ public class ReservationServicePanel extends BorderPane {
 
     public Button getBack() { return back; }
 
-    public Button getConfirmArrival() { return confirmArrival; }
+    public Button getConfirmArrivalButton() { return confirmArrivalButton; }
 
-    public Button getArchive() { return archive; }
+    public Button getArchiveButton() { return archiveButton; }
 
-    public Button getMakePayment() { return makePayment; }
+    public Button getMakePaymentButton() { return makePaymentButton; }
 
     public HBox getRefButtons() { return refButtons; }
 

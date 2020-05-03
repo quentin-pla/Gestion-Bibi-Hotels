@@ -19,19 +19,19 @@ public class BillingServicePanel extends BorderPane {
     private Button back = new Button("←");
     private Label title = new Label();
     private TableView<Bill> bills = new TableView<>();
-    private Button archive = new Button("Archiver");
-    private Button calculate = new Button("Calculer montant");
-    private Button makePayment = new Button("Confirmer paiement");
-    private HBox refButtons = new HBox(archive,makePayment,calculate);
+    private Button archiveButton = new Button("Archiver");
+    private Button calculateButton = new Button("Calculer montant");
+    private Button makePaymentButton = new Button("Confirmer paiement");
+    private HBox refButtons = new HBox(archiveButton, makePaymentButton, calculateButton);
 
     public BillingServicePanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
         title.getStyleClass().add("h3");
-        calculate.getStyleClass().add("ref-button");
-        archive.getStyleClass().addAll("ref-button","red-text");
-        makePayment.getStyleClass().addAll("ref-button","green-text");
-        initReservationsTable();
+        calculateButton.getStyleClass().add("ref-button");
+        archiveButton.getStyleClass().addAll("ref-button","red-text");
+        makePaymentButton.getStyleClass().addAll("ref-button","green-text");
+        initBillsTable();
         BorderPane topContent = new BorderPane();
         topContent.setLeft(back);
         topContent.setCenter(title);
@@ -45,7 +45,7 @@ public class BillingServicePanel extends BorderPane {
         setCenter(centerContent);
     }
 
-    private void initReservationsTable() {
+    private void initBillsTable() {
         //Taille maximale
         bills.setMinSize(MainController.width-100, MainController.height-140);
         //Interdire la modification
@@ -115,11 +115,11 @@ public class BillingServicePanel extends BorderPane {
 
     public Button getBack() { return back; }
 
-    public Button getArchive() { return archive; }
+    public Button getArchiveButton() { return archiveButton; }
 
-    public Button getMakePayment() { return makePayment; }
+    public Button getMakePaymentButton() { return makePaymentButton; }
 
-    public Button getCalculate() { return calculate; }
+    public Button getCalculateButton() { return calculateButton; }
 
     public HBox getRefButtons() { return refButtons; }
 

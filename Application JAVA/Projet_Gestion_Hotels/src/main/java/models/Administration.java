@@ -68,7 +68,7 @@ public class Administration {
         //Pour chaque hotel
         for (Hotel hotel : hotels) {
             //Pour chaque facture archivée de l'hotel
-            for (Bill bill : hotel.getBillingService().getArchives()) {
+            for (Bill bill : BillingService.getInstance(hotel).getArchives()) {
                 //Nom du type de chambre
                 String room_type_name = bill.getReservation().getRoomType().getNAME();
                 //Incrémentation de 1 dans le ratio pour le type de chambre
@@ -90,7 +90,7 @@ public class Administration {
         //Pour chaque hotel
         for (Hotel hotel : hotels)
             //Ajout des factures
-            results.put(hotel, hotel.getBillingService().getArchives());
+            results.put(hotel, BillingService.getInstance(hotel).getArchives());
         //Retour des résultats
         return results;
     }

@@ -11,6 +11,10 @@ class Facture extends Component {
 
     constructor(props, context) {
         super(props, context);
+
+        /**
+         * Initialisation de l'état
+         */
         this.state = {
             msg: "",
             mail: this.context.mail,
@@ -22,6 +26,12 @@ class Facture extends Component {
         this.mergeArrayObjects = this.mergeArrayObjects.bind(this);
     }
 
+    /**
+     * Cette fonction réunit chaque array en un seul pour faciliter le traitement
+     * @param bills : liste des factures
+     * @param reservations : liste des resercvations
+     * @param hotels : liste des hotels
+     */
     mergeArrayObjects(bills, reservations, hotels) {
         let merged = [];
         let mergedF = [];
@@ -48,6 +58,9 @@ class Facture extends Component {
         this.setState({"merged": mergedF});
     }
 
+    /**
+     * Fonction s'activant a l'initialisation du composant
+     */
     componentDidMount() {
         socket.emit("bills", this.state.mail);
         socket.on('bills_res', (res ,bills, reservations, hotels) => {
@@ -87,6 +100,10 @@ class Facture extends Component {
     }
 }
 
+/**
+ * Permet de payer une facture
+ * @param id : identifiant de la facture
+ */
 function payBill(id) {
     socket.emit("pay_bill", id);
 }

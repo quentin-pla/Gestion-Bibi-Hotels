@@ -37,6 +37,9 @@ class Profil extends Component {
         };
     }
 
+    /**
+     * Fonction s'activant a l'initialisation du composant
+     */
     componentDidMount() {
         const self = this;
         const auth = this.context;
@@ -66,12 +69,15 @@ class Profil extends Component {
         return text.match(syntax);
     }
 
+    /**
+     * Demande de modification du profile
+     */
     handleSubmit() {
         //Syntaxe alphanumérique avec espace
         const alphanumSyntax = /^[0-9a-zA-Z ]+$/;
         //Syntaxe seulement caractères de l'alphabet
         const streetSyntax = /^[a-zA-Z /']+$/;
-        //Vérification des champs nom, prénom, rue, ville
+        //Vérification des champs
         let fieldsCheck = (
             this.isValid(this.state.lastname, streetSyntax) &&
             this.isValid(this.state.firstname, streetSyntax) &&
@@ -82,7 +88,7 @@ class Profil extends Component {
         let passwordCheck = this.context.password.length >= 3;
         //Vérification de la confirmation du mot de passe
         let confirmCheck = this.context.password === this.state.password;
-        //Validation des champs nom, prénom, rue, ville
+        //Validation des champs
         if (!fieldsCheck) {
             this.setState({isError: true, errorMessage: "Utilisation de caractères invalides"});
             return false;
@@ -106,10 +112,7 @@ class Profil extends Component {
             city: this.state.city,
             password: this.context.password
         };
-        //Émission d'une demande d'inscription
-        //socket.emit("signup", data);
         socket.emit("update_user",data);
-        // Récupération des informations d'inscription
         socket.on("update_result", (success, errorMessage) => {
             //Si c'est un succès
             if (success) {
@@ -224,6 +227,11 @@ class Profil extends Component {
     }
 }
 
+/**
+ * Renvoie les informations de l'utilisateur
+ * @param data
+ * @returns {*}
+ */
 function UserInfo(data){
         return(
             <div className="container">

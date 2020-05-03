@@ -12,6 +12,9 @@ class HotelView extends Component {
 
     constructor(props, context) {
         super(props, context);
+        /**
+         * Initialisation de l'état
+         */
         this.state = {
             id: "",
             nbchambres: 0,
@@ -28,6 +31,9 @@ class HotelView extends Component {
         this.reserver = this.reserver.bind(this);
     }
 
+    /**
+     * Fonction s'activant a l'initialisation du composant
+     */
     componentDidMount() {
         let id = window.location.href.substring(window.location.href.lastIndexOf("/") + 1);
         this.setState({"id": id});
@@ -41,18 +47,34 @@ class HotelView extends Component {
 
     }
 
+    /**
+     * Verifie que le text ne soit pas vide
+     * @param text
+     * @returns {boolean|*}
+     */
     isValid(text) {
         //Si le texte n'est pas définit
         if (text === null) return false;
         return text;
     }
 
+    /**
+     * Formate la date saisie par l'utilisateur afin qu'elle soit compatible avec la BD
+     * @param date : date a formater
+     * @returns {*} : la date formater
+     */
     formatDate(date){
         let newDate = date.replace("T", " ");
         newDate += ":00";
         return newDate
     }
 
+    /**
+     * Calcule l'intervalle de jours entre deux dates
+     * @param date1
+     * @param date2
+     * @returns {number} : nombres de jours
+     */
     calculateNbDays(date1,date2){
         date1 = date1.substr(0,10);
         date2 = date2.substr(0,10);
@@ -66,8 +88,11 @@ class HotelView extends Component {
         return Math.floor((utc2 - utc1) / _MS_PER_DAY);
     }
 
+    /**
+     * Lorsque l'utilisateur appuie sur le bouton réservé
+     * @returns {boolean}
+     */
     reserver() {
-
         let fieldsCheck = (
             this.isValid(this.state.nbchambres) &&
             this.isValid(this.state.nbpersonnes) &&

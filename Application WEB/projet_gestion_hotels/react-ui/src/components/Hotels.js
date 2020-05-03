@@ -35,6 +35,9 @@ class Hotels extends Component {
         this.applyFilter = this.applyFilter.bind(this);
     }
 
+    /**
+     * Fonction s'activant a l'initialisation du composant
+     */
     componentDidMount() {
         socket.emit("rooms");
         socket.on('rooms_res', (rooms,hotels,roomtype) => {
@@ -43,12 +46,20 @@ class Hotels extends Component {
         });
     }
 
+    /**
+     * Formate la date saisie par l'utilisateur afin qu'elle soit compatible avec la BD
+     * @param date : date a formater
+     * @returns {*} : la date formater
+     */
     formatDate(date){
         let newDate = date.replace("T", " ");
         newDate += ":00";
         return newDate
     }
 
+    /**
+     * Lorsque l'utilisateur appuie sur le boutton validé
+     */
     applyFilter(){
         let data = {
             ville : this.state.ville,
@@ -66,6 +77,12 @@ class Hotels extends Component {
         })
     }
 
+    /**
+     * Cette fonction réunit chaque array en un seul pour faciliter le traitement
+     * @param rooms : liste des chambres
+     * @param roomtypes : liste des types de chambres
+     * @param hotels ; liste des hotels
+     */
     mergeArrayObjects(rooms, roomtypes, hotels) {
         let merged = [];
         let mergedF = [];

@@ -1,24 +1,141 @@
 package views;
 
 import controllers.MainController;
-import javafx.scene.control.Button;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
+import models.Occupation;
 
 /**
  * Page du service client
  */
 public class ClientServicePanel extends BorderPane {
     private Button back = new Button("←");
+    private Label title = new Label("Service Client");
+    private TableView<Occupation> occupations = new TableView<>();
+    private Button archiveButton = new Button("Archiver");
+    private Button presenceButton = new Button("Client présent");
+    private Button billServiceButton = new Button("Facturer service");
+    private HBox refButtons = new HBox(archiveButton, billServiceButton, presenceButton);
 
     public ClientServicePanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
-        setTop(back);
+        title.getStyleClass().add("h3");
+        presenceButton.getStyleClass().add("ref-button");
+        archiveButton.getStyleClass().addAll("ref-button","red-text");
+        billServiceButton.getStyleClass().addAll("ref-button");
+        initOccupationsTable();
+        BorderPane topContent = new BorderPane();
+        topContent.setLeft(back);
+        topContent.setCenter(title);
+        BorderPane.setAlignment(title, Pos.CENTER);
+        refButtons.setVisible(false);
+        refButtons.setSpacing(10);
+        VBox centerContent = new VBox(occupations,refButtons);
+        centerContent.setSpacing(20);
+        BorderPane.setMargin(centerContent, new Insets(10,50,0,50));
+        setTop(topContent);
+        setCenter(centerContent);
+    }
+
+    /**
+     * Initialisation de la liste des occupations
+     */
+    private void initOccupationsTable() {
+        //Taille maximale
+        occupations.setMinSize(MainController.width-100, MainController.height-140);
+        //Interdire la modification
+        occupations.setEditable(false);
+        //Colonne ID
+        TableColumn<Occupation, String> id_col = new TableColumn<>("ID");
+        id_col.setCellValueFactory(
+                param -> new SimpleStringProperty(String.valueOf(param.getValue().getID())));
+        //Colonne Hotel
+        TableColumn<Occupation, String> hotel_col = new TableColumn<>("Hôtel");
+        hotel_col.setCellValueFactory(
+                param -> new SimpleStringProperty(String.valueOf(param.getValue().getRoom().getHotel().getHOTEL_NAME())));
+        //Colonne Réservation
+        TableColumn<Occupation, String> reservation_col = new TableColumn<>("Réservation");
+        reservation_col.setCellValueFactory(
+                param -> new SimpleStringProperty(String.valueOf(param.getValue().getRESERVATION_ID())));
+        //Colonne Chambre
+        TableColumn<Occupation, String> room_col = new TableColumn<>("Chambre");
+        room_col.setCellValueFactory(
+                param -> new SimpleStringProperty(String.valueOf(param.getValue().getROOM_ID())));
+        //Colonne Type de chambre
+        TableColumn<Occupation, String> room_type_col = new TableColumn<>("Type de chambre");
+        room_type_col.setCellValueFactory(
+                param -> new SimpleStringProperty(String.valueOf(param.getValue().getRoom().getRoomType().getNAME())));
+        //Colonne Client présent
+        TableColumn<Occupation, String> presence_col = new TableColumn<>("Présence client");
+        presence_col.setCellValueFactory(
+                param -> {
+                    boolean condition = param.getValue().getIS_CLIENT_PRESENT();
+                    colorColumn(presence_col, condition ? Color.GREEN : Color.RED);
+                    return new SimpleStringProperty(condition ? "Oui" : "Non");
+                });
+        //Ajout et dimensionnement des colonnes
+        id_col.setMinWidth(10);
+        occupations.getColumns().add(id_col);
+        occupations.getColumns().add(hotel_col);
+        occupations.getColumns().add(reservation_col);
+        occupations.getColumns().add(room_col);
+        occupations.getColumns().add(room_type_col);
+        occupations.getColumns().add(presence_col);
+    }
+
+    /**
+     * Colorer une colonne en fonction de la valeur booléenne
+     * @param column colonne
+     * @param color couleur
+     */
+    private void colorColumn(TableColumn<Occupation, String> column, Color color) {
+        column.setCellFactory(new Callback<TableColumn<Occupation, String>, TableCell<Occupation, String>>() {
+            public TableCell<Occupation, String> call(TableColumn<Occupation, String> param) {
+                return new TableCell<Occupation, String>() {
+                    @Override
+                    public void updateItem(String item, boolean value) {
+                        super.updateItem(item, value);
+                        if (!isEmpty()) {
+                            this.setTextFill(color);
+                            setText(item);
+                        }
+                    }
+                };
+            }
+        });
     }
 
     //************* GETTERS & SETTERS ***************//
 
     public Button getBack() {
         return back;
+    }
+
+    public TableView<Occupation> getOccupations() {
+        return occupations;
+    }
+
+    public Button getArchiveButton() {
+        return archiveButton;
+    }
+
+    public Button getPresenceButton() {
+        return presenceButton;
+    }
+
+    public Button getBillServiceButton() {
+        return billServiceButton;
+    }
+
+    public HBox getRefButtons() {
+        return refButtons;
     }
 }

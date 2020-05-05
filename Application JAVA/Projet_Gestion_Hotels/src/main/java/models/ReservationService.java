@@ -5,7 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 
 public class ReservationService {
     /**
@@ -32,15 +35,16 @@ public class ReservationService {
      * Récupérer l'instance unique
      */
     public static ReservationService getInstance(Hotel hotel) {
-        //Si l'instance n'est pas initialisée
-        if (instance == null)
-            //Initialisation de l'instance
-            instance = new ReservationService(hotel);
-       else {
-            //Définition de l'hotel
-            if (!instance.hotel.equals(hotel)) instance.hotel = hotel;
-            //Initialisation des réservations
-            instance.initReservations();
+        //Si l'instance n'est pas initialisée, initialisation
+        if (instance == null) instance = new ReservationService(hotel);
+        else {
+           //Si l'hotel de l'instance est différent
+            if (!instance.hotel.equals(hotel)) {
+                //Définition de l'hotel
+                instance.hotel = hotel;
+                //Initialisation des réservations
+                instance.initReservations();
+            }
         }
         //Retour de l'instance
         return instance;
@@ -58,11 +62,9 @@ public class ReservationService {
         //Ajout d'un listener sur la liste des réservations des données locales afin d'être toujours à jour
         DatabaseData.getInstance().getReservations().addListener((MapChangeListener<Integer, Reservation>) change -> {
             //Si des éléments ont été ajoutés
-            if (change.wasAdded() && !change.getMap().isEmpty())
-                //Si la taille de la map du listener est égale à la taille totale des réservations mises à jour
-                if (DatabaseData.getInstance().getReservations_update_size() == change.getMap().values().size())
-                    //Initialisation des réservations
-                    filterReservations(new ArrayList<>(change.getMap().values()));
+            if (change.wasAdded() && change.getMap().size() == DatabaseData.getInstance().getLastQueryResultSize())
+                //Initialisation des réservations
+                filterReservations(new ArrayList<>(change.getMap().values()));
         });
     }
 
@@ -70,28 +72,59 @@ public class ReservationService {
      * Initialiser les réservations pour l'hotel spécifié
      */
     private void initReservations() {
+        //Suppression des réservations
+        reservations.clear();
         //Initialisation des réservations
         filterReservations(DatabaseData.getInstance().getReservations().values());
     }
 
     /**
-     * Filtrer les réservations depuis les données locales
+     * Filtrer une liste de réservations
+     * @param items éléments
      */
     public void filterReservations(Collection<Reservation> items) {
-        //Suppression des éléments contenus dans les archives
+        //Suppression de la liste des archives
         archives.clear();
-        //Réservations filtrées
-        ArrayList<Reservation> filtered = new ArrayList<>();
-        //Pour chaque réservation
-        for (Reservation reservation : items)
+        //Pour chaque élément
+        for (Reservation reservation : items) {
             //Si l'id de l'hotel est égal à celui du service réservation
             if (reservation.getHOTEL_ID() == hotel.getID())
                 //Si la réservation est archivée où que la date de soritie est supérieure à aujourd'hui, on l'ajoute aux archives
                 if (reservation.getIS_ARCHIVED()) archives.add(reservation);
-                //Ajout de la réservation à la liste filtrée
-                else filtered.add(reservation);
-        //Définition des réservations
-        reservations.setAll(filtered);
+                //Ajout de la réservation si elle n'est pas déjà contenue
+                else if (!isAlreadyContained(reservation)) reservations.add(reservation);
+        }
+        //Suppression des réservations supprimées de la base de données
+        retainReservations();
+    }
+
+    /**
+     * Vérifier si une réservation est déjà contenue dans reservations
+     * @param reservation réservation à vérifier
+     * @return booléen
+     */
+    private boolean isAlreadyContained(Reservation reservation) {
+        //Pour chaque réservation
+        for (Reservation element : reservations)
+            //Comparaison de l'élément
+            if (element.compareTo(reservation)) return true;
+        return false;
+    }
+
+    /**
+     * Supprimer les réservations supprimées de la base de données
+     */
+    private void retainReservations() {
+        //Liste contenant les réservations à supprimer
+        ArrayList<Reservation> itemsToRemove = new ArrayList<>();
+        //Liste des IDs des réservations locales provenant de la base de données
+        ArrayList<Integer> localReservationsIDs = new ArrayList<>(DatabaseData.getInstance().getReservations().keySet());
+        //Pour chaque réservation
+        for (Reservation reservation : reservations)
+            //Si la réservation n'est pas contenue dans celles locales, on la supprime
+            if (!localReservationsIDs.contains(reservation.getID())) itemsToRemove.add(reservation);
+        //Suppression de toutes les réservations en trop
+        reservations.removeAll(itemsToRemove);
     }
 
     /**

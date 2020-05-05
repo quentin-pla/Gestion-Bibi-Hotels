@@ -1,6 +1,6 @@
 package controllers;
 
-import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import models.ClientService;
 import models.Occupation;
@@ -27,8 +27,6 @@ public class ClientServiceController {
     public ClientServiceController() {
         panel = new ClientServicePanel();
         serviceSelection = new SelectServicePanel();
-        //Initialisation des boutons
-        initPanel();
     }
 
     /**
@@ -75,8 +73,23 @@ public class ClientServiceController {
             //Rafraichissement
             refreshPanel();
         });
-        //Liste des occupations
-        ObservableList<Occupation> items = FXCollections.observableList(ClientService.getInstance().getOccupations());
+        //Récupération des occupations
+        ObservableList<Occupation> items = ClientService.getInstance().getOccupations();
+        //Ajout d'un listener pour mettre à jour automatiquement le tableau
+        items.addListener((ListChangeListener<Occupation>) change -> {
+            //Définition d'une variable contenant la position de l'élément sélectionné
+            int selected = -1;
+            //Si un élément est sélectionné
+            if (!panel.getOccupations().getItems().isEmpty() && !panel.getOccupations().getSelectionModel().isEmpty())
+                //Récupération de l'index de l'élément sélectionné
+                selected = panel.getOccupations().getSelectionModel().getFocusedIndex();
+            //Ajout des réservations à la table
+            refreshPanel();
+            //Si l'index a été définit
+            if (selected != -1)
+                //Positionnement sur l'index
+                panel.getOccupations().getSelectionModel().select(selected);
+        });
         //Ajout des occupations à la table
         panel.getOccupations().setItems(items);
         //Retour de la fenêtre

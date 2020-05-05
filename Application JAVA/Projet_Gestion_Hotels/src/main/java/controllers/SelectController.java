@@ -30,8 +30,6 @@ public class SelectController {
      */
     public SelectController() {
         panel = new SelectPanel();
-        //Initialisation des boutons
-        initPanel();
     }
 
     /**

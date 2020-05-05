@@ -48,10 +48,13 @@ public class BillingService {
             //Initialisation de l'instance
             instance = new BillingService(hotel);
         else {
-            //Définition de l'hotel
-            if (!instance.hotel.equals(hotel)) instance.hotel = hotel;
-            //Initialisation des factures
-            instance.initBills();
+            //Si l'hotel de l'instance est différent
+            if (!instance.hotel.equals(hotel)) {
+                //Définition de l'hotel
+                instance.hotel = hotel;
+                //Initialisation des factures
+                instance.initBills();
+            }
         }
         //Retour de l'instance
         return instance;
@@ -69,11 +72,9 @@ public class BillingService {
         //Ajout d'un listener sur la liste des factures des données locales afin d'être toujours à jour
         DatabaseData.getInstance().getBills().addListener((MapChangeListener<Integer, Bill>) change -> {
             //Si des éléments ont été ajoutés
-            if (change.wasAdded() && !change.getMap().isEmpty())
-                //Si la taille de la map du listener est égale à la taille totale des factures mises à jour
-                if (DatabaseData.getInstance().getBills_update_size() == change.getMap().values().size())
-                    //Initialisation des factures
-                    filterBills(new ArrayList<>(change.getMap().values()));
+            if (change.wasAdded() && change.getMap().size() == DatabaseData.getInstance().getLastQueryResultSize())
+                //Initialisation des factures
+                filterBills(new ArrayList<>(change.getMap().values()));
         });
     }
 
@@ -81,6 +82,8 @@ public class BillingService {
      * Initialiser les factures pour l'hotel spécifié
      */
     private void initBills() {
+        //Suppression des factures
+        pending_bills.clear();
         //Initialisation des factures
         filterBills(DatabaseData.getInstance().getBills().values());
     }
@@ -91,18 +94,46 @@ public class BillingService {
     public void filterBills(Collection<Bill> items) {
         //Suppression de la liste des archives
         archives.clear();
-        //Réservations filtrées
-        ArrayList<Bill> filtered = new ArrayList<>();
         //Pour chaque facture
-        for (Bill bill : items)
+        for (Bill bill : items) {
             //Si la facture appartient bien à l'hotel
             if (bill.getReservation().getHOTEL_ID() == hotel.getID())
                 //Si elle est archivée on l'ajoute aux archives
                 if (bill.getIS_ARCHIVED()) archives.add(bill);
-                //Ajout de la facture à la liste filtrée
-                else filtered.add(bill);
-        //Définition des factures
-        pending_bills.setAll(filtered);
+                //Ajout de la facture si elle n'est pas déjà contenue
+                else if (!isAlreadyContained(bill)) pending_bills.add(bill);
+        }
+        //Suppression des factures supprimées de la base de données
+        retainBills();
+    }
+
+    /**
+     * Vérifier si une facture est déjà contenue dans pending_bills
+     * @param bill facture à vérifier
+     * @return booléen
+     */
+    private boolean isAlreadyContained(Bill bill) {
+        //Pour chaque facture
+        for (Bill element : pending_bills)
+            //Comparaison de l'élément
+            if (element.compareTo(bill)) return true;
+        return false;
+    }
+
+    /**
+     * Supprimer les factures supprimées de la base de données
+     */
+    private void retainBills() {
+        //Liste contenant les réservations à supprimer
+        ArrayList<Bill> itemsToRemove = new ArrayList<>();
+        //Liste des IDs des réservations locales provenant de la base de données
+        ArrayList<Integer> localBillsIDs = new ArrayList<>(DatabaseData.getInstance().getBills().keySet());
+        //Pour chaque réservation
+        for (Bill bill : pending_bills)
+            //Si la réservation n'est pas contenue dans celles locales, on la supprime
+            if (!localBillsIDs.contains(bill.getID())) itemsToRemove.add(bill);
+        //Suppression de toutes les factures en trop
+        pending_bills.removeAll(itemsToRemove);
     }
 
     /**
@@ -156,7 +187,7 @@ public class BillingService {
                 total_amount -= (total_amount * regularClientDiscount)/100;
         }
         //Mise à jour du montant de la facture
-        bill.setAMOUNT(total_amount);
+        bill.setAMOUNT((double) Math.round(total_amount * 100) / 100);
         //Mise à jour dans la base de données
         bill.updateColumn(Bill.Columns.AMOUNT);
     }

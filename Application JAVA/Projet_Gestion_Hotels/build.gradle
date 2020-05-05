@@ -1,13 +1,7 @@
 plugins {
-    id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.8'
 }
-
-group 'org.example'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -16,7 +10,6 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation 'org.openjfx:javafx-controls:13'
-    implementation 'org.openjfx:javafx-fxml:13'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
 }
 
@@ -24,5 +17,5 @@ mainClassName = 'Main'
 
 javafx {
     version = "13"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = [ 'javafx.controls' ]
 }

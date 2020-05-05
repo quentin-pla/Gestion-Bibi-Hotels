@@ -78,7 +78,7 @@ public class BillingServiceController {
             //Définition d'une variable contenant la position de l'élément sélectionné
             int selected = -1;
             //Si un élément est sélectionné
-            if (!panel.getBills().getSelectionModel().isEmpty())
+            if (!panel.getBills().getItems().isEmpty() && !panel.getBills().getSelectionModel().isEmpty())
                 //Récupération de l'index de l'élément sélectionné
                 selected = panel.getBills().getSelectionModel().getFocusedIndex();
             //Ajout des factures à la table
@@ -89,7 +89,7 @@ public class BillingServiceController {
                 panel.getBills().getSelectionModel().select(selected);
         });
         //Ajout des factures à la table
-        panel.getBills().getItems().setAll(items);
+        panel.getBills().setItems(items);
         //Retour de la fenêtre
         return panel;
     }

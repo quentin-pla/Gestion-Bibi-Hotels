@@ -2,6 +2,9 @@ package models;
 
 import database.DatabaseData;
 import database.DatabaseModel;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,38 +17,12 @@ public class ClientService {
     /**
      * Liste des occupations
      */
-    private ArrayList<Occupation> occupations;
+    private ObservableList<Occupation> occupations;
 
     /**
      * Archives des occupations
      */
     private ArrayList<Occupation> archives;
-
-    /**
-     * Constructeur
-     */
-    private ClientService() {
-        this.occupations = new ArrayList<>();
-        this.archives = new ArrayList<>();
-    }
-
-    /**
-     * Récupérer les occupations depuis les données locales
-     */
-    public void initOccupations() {
-        //Suppression des occupations
-        occupations.clear();
-        //Suppression des archives
-        archives.clear();
-        //Récupération des occupations depuis les données de la base de données
-        Collection<Occupation> data = DatabaseData.getInstance().getOccupations().values();
-        //Pour chaque occupation
-        for (Occupation occupation : data)
-            //Si elle est archivée on l'ajoute aux archives
-            if (occupation.getIS_ARCHIVED()) archives.add(occupation);
-            //Sinon on l'ajoute dans les occupations
-            else occupations.add(occupation);
-    }
 
     /**
      * Instance unique
@@ -62,6 +39,80 @@ public class ClientService {
             instance = new ClientService();
         //Retour de l'instance
         return instance;
+    }
+
+    /**
+     * Constructeur
+     */
+    private ClientService() {
+        this.archives = new ArrayList<>();
+        this.occupations = FXCollections.observableArrayList();
+        //Initialisation des occupations
+        initOccupations();
+        //Ajout d'un listener sur la liste des occupations des données locales afin d'être toujours à jour
+        DatabaseData.getInstance().getOccupations().addListener((MapChangeListener<Integer, Occupation>) change -> {
+            //Si des éléments ont été ajoutés
+            if (change.wasAdded() && change.getMap().size() == DatabaseData.getInstance().getLastQueryResultSize())
+                //Initialisation des occupations
+                filterOccupations(new ArrayList<>(change.getMap().values()));
+        });
+    }
+
+    /**
+     * Récupérer les occupations depuis les données locales
+     */
+    public void initOccupations() {
+        //Suppression des occupations
+        occupations.clear();
+        //Initialisation des occupations
+        filterOccupations(DatabaseData.getInstance().getOccupations().values());
+    }
+
+    /**
+     * Filtrer une liste d'occupations
+     * @param items éléments
+     */
+    public void filterOccupations(Collection<Occupation> items) {
+        //Suppression des archives
+        archives.clear();
+        //Pour chaque occupation
+        for (Occupation occupation : items) {
+            //Si elle est archivée on l'ajoute aux archives
+            if (occupation.getIS_ARCHIVED()) archives.add(occupation);
+                //Sinon on l'ajoute dans les occupations si elle n'est pas déjà contenue
+            else if (!isAlreadyContained(occupation)) occupations.add(occupation);
+        }
+        //Suppression des occupations supprimées de la base de données
+        retainOccupations();
+    }
+
+    /**
+     * Vérifier si une occupation est déjà contenue dans occupations
+     * @param occupation occupation à vérifier
+     * @return booléen
+     */
+    private boolean isAlreadyContained(Occupation occupation) {
+        //Pour chaque occupation
+        for (Occupation element : occupations)
+            //Comparaison de l'élément
+            if (element.compareTo(occupation)) return true;
+        return false;
+    }
+
+    /**
+     * Supprimer les occupations supprimées de la base de données
+     */
+    private void retainOccupations() {
+        //Liste contenant les occupations à supprimer
+        ArrayList<Occupation> itemsToRemove = new ArrayList<>();
+        //Liste des IDs des occupations locales provenant de la base de données
+        ArrayList<Integer> localOccupationsIDs = new ArrayList<>(DatabaseData.getInstance().getOccupations().keySet());
+        //Pour chaque occupation
+        for (Occupation occupation : occupations)
+            //Si l'occupation n'est pas contenue dans celles locales, on la supprime
+            if (!localOccupationsIDs.contains(occupation.getID())) itemsToRemove.add(occupation);
+        //Suppression de toutes les occupations en trop
+        occupations.removeAll(itemsToRemove);
     }
 
     /**
@@ -204,17 +255,9 @@ public class ClientService {
 
     //*************** GETTERS & SETTERS ***************//
 
-    public ArrayList<Occupation> getOccupations() { return occupations; }
+    public ObservableList<Occupation> getOccupations() { return occupations; }
 
     public ArrayList<Occupation> getArchives() {
         return archives;
-    }
-
-    public void setOccupations(ArrayList<Occupation> occupations) {
-        this.occupations = occupations;
-    }
-
-    public void setArchives(ArrayList<Occupation> archives) {
-        this.archives = archives;
     }
 }

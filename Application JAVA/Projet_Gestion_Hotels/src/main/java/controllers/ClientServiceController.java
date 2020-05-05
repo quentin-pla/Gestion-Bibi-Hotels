@@ -26,18 +26,19 @@ public class ClientServiceController {
      */
     public ClientServiceController() {
         panel = new ClientServicePanel();
-        serviceSelection = new SelectServicePanel();
     }
 
     /**
      * Initialiser les boutons de la fenêtre
      */
     public ClientServicePanel initPanel() {
+        //Initialisation des occupations
+        ClientService.getInstance().initOccupations();
         //Définition de l'action du bouton retour
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
         //Affichage des boutons liés à une occupation sélectionnée
         panel.getOccupations().setOnMouseClicked(e -> refreshPanel());
-        //Définition de l'action du bouton de confirmation de l'arrivée
+        //Définition de l'action du bouton d'archivage
         panel.getArchiveButton().setOnAction(e -> {
             //Récupération de l'occupation sélectionnée
             Occupation occupation = panel.getOccupations().getSelectionModel().getSelectedItem();
@@ -52,15 +53,14 @@ public class ClientServiceController {
             //Rafraichissement
             refreshPanel();
         });
-        //Définition de l'action du bouton de paiement
+        //Définition de l'action du bouton pour facturer un service
         panel.getBillServiceButton().setOnAction(e -> {
             //Récupération de l'occupation sélctionnée
             Occupation occupation = panel.getOccupations().getSelectionModel().getSelectedItem();
-            //Si l'occupation existe
-            if (occupation != null)
-
-            //Rafraichissement
-            refreshPanel();
+            //Si l'occupation existe et qu'il reste des services disponibles à facturer
+            if (occupation != null && ClientService.getInstance().getAvailableServices(occupation).size() > 0)
+                //Initialisation du panneau pour sélectionner un service
+                initServiceSelection(occupation);
         });
         //Définition de l'action du bouton de calcul du montant total
         panel.getPresenceButton().setOnAction(e -> {
@@ -106,6 +106,13 @@ public class ClientServiceController {
         Occupation occupation = panel.getOccupations().getSelectionModel().getSelectedItem();
         //Si l'occupation existe et que le nombre d'éléments du tableau est supérieur à zéro
         if (occupation != null && panel.getOccupations().getItems().size() > 0) {
+            //Savoir s'il reste des services disponibles à facturer pour l'occupation
+            boolean isAvailableServices = !ClientService.getInstance().getAvailableServices(occupation).isEmpty();
+            //Client présent ou pas dans l'occupation
+            boolean isClientPresent = occupation.getIS_CLIENT_PRESENT();
+            //Affichage du bouton pour facturer un service s'il y en a de disponibles
+            panel.getBillServiceButton().setVisible(isAvailableServices && isClientPresent);
+            panel.getBillServiceButton().setManaged(isAvailableServices && isClientPresent);
             //Affichage de la liste contenant les boutons
             panel.getRefButtons().setVisible(true);
         }
@@ -120,7 +127,7 @@ public class ClientServiceController {
         //Initialisation de la fenêtre de sélection de l'hotel
         serviceSelection = new SelectServicePanel();
         //Récupération de la liste des services disponibles pour l'occupation
-        ArrayList<Service> services = ClientService.getInstance().getOccupationServices(occupation);
+        ArrayList<Service> services = ClientService.getInstance().getAvailableServices(occupation);
         //Récupération de la liste des services disponibles
         for (Service service : services)
             //Ajout du nom du service dans la comboBox
@@ -135,6 +142,8 @@ public class ClientServiceController {
             ClientService.getInstance().billService(occupation,selectedService);
             //Affichage de la liste des occupations
             MainController.getInstance().setWindow(panel);
+            //Rafraichissement
+            refreshPanel();
         });
         //Lorsque l'utilisateur appuie sur le bouton retour, affichage fenêtre service client
         serviceSelection.getBack().setOnAction(e -> MainController.getInstance().setWindow(panel));

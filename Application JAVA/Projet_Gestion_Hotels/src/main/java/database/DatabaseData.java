@@ -18,6 +18,11 @@ public class DatabaseData {
     private ObservableMap<Integer,Bill> bills;
 
     /**
+     * Services facturés
+     */
+    private ObservableMap<Integer,BilledService> billedServices;
+
+    /**
      * Clients
      */
     private ObservableMap<Integer,Client> clients;
@@ -67,6 +72,7 @@ public class DatabaseData {
      */
     private DatabaseData() {
         this.bills = FXCollections.observableHashMap();
+        this.billedServices = FXCollections.observableHashMap();
         this.clients = FXCollections.observableHashMap();
         this.hotels = FXCollections.observableHashMap();
         this.occupants = FXCollections.observableHashMap();
@@ -121,6 +127,8 @@ public class DatabaseData {
         retrieveDatabaseServices();
         //Factures
         retrieveDatabaseBills();
+        //Services facturés
+        retrieveDatabaseBilledServices();
     }
 
     /**
@@ -165,6 +173,15 @@ public class DatabaseData {
         bills.clear();
         queryResult = selectQuery(DatabaseModel.Tables.BILLS);
         for (DatabaseModel bill : queryResult) bills.put(bill.getID(), (Bill) bill);
+    }
+
+    /**
+     * Récupérer tous les services facturés de la base de données
+     */
+    public void retrieveDatabaseBilledServices() {
+        billedServices.clear();
+        queryResult = selectQuery(DatabaseModel.Tables.BILLEDSERVICES);
+        for (DatabaseModel billedService : queryResult) billedServices.put(billedService.getID(), (BilledService) billedService);
     }
 
     /**
@@ -288,6 +305,8 @@ public class DatabaseData {
     public ObservableMap<Integer, Bill> getBills() {
         return bills;
     }
+
+    public ObservableMap<Integer, BilledService> getBilledServices() { return billedServices; }
 
     public ObservableMap<Integer, Client> getClients() { return clients; }
 

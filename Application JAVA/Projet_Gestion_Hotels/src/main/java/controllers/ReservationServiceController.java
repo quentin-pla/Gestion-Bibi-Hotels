@@ -38,6 +38,8 @@ public class ReservationServiceController {
     public ReservationServicePanel initPanel() {
         //Récupération de l'hotel sélectionné
         hotel = MainController.getInstance().getSelected_hotel();
+        //Initialisation des réservations
+        ReservationService.getInstance(hotel).initReservations();
         //Définition du titre de la fenêtre
         panel.setPanelTitle("Service Réservation - " + hotel.getHOTEL_NAME());
         //Définition de l'action du bouton retour
@@ -152,9 +154,13 @@ public class ReservationServiceController {
             for (Occupation occupation : occupations)
                 //Pour chaque occupant
                 for (String[] occupantData : confirmArrivalPanel.retrieveFieldsData()) {
-                    //Ajout de l'occupant dans l'occupation si possible
-                    if (!occupation.addOccupant(new Occupant(occupation.getID(), occupantData[0], occupantData[1])))
-                        break;
+                    //S'il reste de la place pour un nouveau occupant dans l'occupation
+                    if (ClientService.getInstance().getRemainingSize(occupation) > 1)
+                        //Ajout d'un nouvel occupant dans l'occupation
+                        new Occupant(occupation.getID(), occupantData[0], occupantData[1]);
+                    //Passage à la chambre suivante
+                    else break;
+
                 }
             //Confirmation de l'arrivée du client dans l'hotel
             ReservationService.getInstance(hotel).confirmArrival(reservation);

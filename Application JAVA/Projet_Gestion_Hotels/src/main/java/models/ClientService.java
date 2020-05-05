@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static database.DatabaseConnection.getAvailableRoomsQuery;
-import static database.DatabaseConnection.selectQuery;
+import static database.DatabaseConnection.*;
 
 public class ClientService {
     /**
@@ -79,7 +78,7 @@ public class ClientService {
         for (Occupation occupation : items) {
             //Si elle est archivée on l'ajoute aux archives
             if (occupation.getIS_ARCHIVED()) archives.add(occupation);
-                //Sinon on l'ajoute dans les occupations si elle n'est pas déjà contenue
+            //Sinon on l'ajoute dans les occupations si elle n'est pas déjà contenue
             else if (!isAlreadyContained(occupation)) occupations.add(occupation);
         }
         //Suppression des occupations supprimées de la base de données
@@ -95,7 +94,11 @@ public class ClientService {
         //Pour chaque occupation
         for (Occupation element : occupations)
             //Comparaison de l'élément
-            if (element.compareTo(occupation)) return true;
+            if (element.getID() == occupation.getID()) {
+                //Mise à jour de l'élément
+                element.updateFromModel(occupation);
+                return true;
+            }
         return false;
     }
 
@@ -105,12 +108,18 @@ public class ClientService {
     private void retainOccupations() {
         //Liste contenant les occupations à supprimer
         ArrayList<Occupation> itemsToRemove = new ArrayList<>();
+        //Liste des IDs des occupations contenues dans les archives
+        ArrayList<Integer> archivesIDs = new ArrayList<>();
+        //Ajout de l'ID de chaque occupation contenue
+        archives.forEach(occupation -> archivesIDs.add(occupation.getID()));
         //Liste des IDs des occupations locales provenant de la base de données
         ArrayList<Integer> localOccupationsIDs = new ArrayList<>(DatabaseData.getInstance().getOccupations().keySet());
         //Pour chaque occupation
         for (Occupation occupation : occupations)
-            //Si l'occupation n'est pas contenue dans celles locales, on la supprime
-            if (!localOccupationsIDs.contains(occupation.getID())) itemsToRemove.add(occupation);
+            //Si l'occupation n'est pas contenue dans celles locales
+            if (!localOccupationsIDs.contains(occupation.getID()) || archivesIDs.contains(occupation.getID()))
+                //Suppression de l'occupation
+                itemsToRemove.add(occupation);
         //Suppression de toutes les occupations en trop
         occupations.removeAll(itemsToRemove);
     }
@@ -138,17 +147,18 @@ public class ClientService {
      * @param occupation occupation
      * @return liste de services
      */
-    public ArrayList<Service> getOccupationServices(Occupation occupation) {
+    public ArrayList<Service> getAvailableServices(Occupation occupation) {
         //Liste des services disponibles
         ArrayList<Service> availableServices = new ArrayList<>();
         //Pour chaque service
         for (Service service : DatabaseData.getInstance().getServices().values())
             //Si l'id du service correspond à l'hotel de la chambre occupée
-            if (service.getHOTEL_ID() == occupation.getRoom().getHOTEL_ID())
+            if (service.getHOTEL_ID() == occupation.getRoom().getHOTEL_ID()) {
                 //Si le service n'est pas unique ou que le service est unique mais pas encore facturé pour l'occupation
-                if (!service.getUNIQUE_ORDER() || (service.getUNIQUE_ORDER() && !occupation.getBilledServices().contains(service)))
+                if (!service.getUNIQUE_ORDER() || (service.getUNIQUE_ORDER() && !isServiceFactured(occupation, service)))
                     //Ajout du service dans les résultats
                     availableServices.add(service);
+            }
         //Retour des résultats
         return availableServices;
     }
@@ -180,6 +190,15 @@ public class ClientService {
             occupations.add(new Occupation(reservation.getID(), room_id, false));
         //Retourne vrai
         return true;
+    }
+
+    /**
+     * Récupérer l'espace restant dans l'occupation
+     * @param occupation occupation
+     */
+    public int getRemainingSize(Occupation occupation) {
+        //Si le nombre d'occupants est inférieur au nombre de lits dans la chambre (un lit = deux personnes)
+        return (occupation.getRoom().getRoomType().getBED_CAPACITY() * 2) - getOccupants(occupation).size();
     }
 
     /**
@@ -218,7 +237,7 @@ public class ClientService {
      */
     public void billService(Occupation occupation, Service service) {
         //Facturer le service au client occupant la chambre
-        occupation.billService(service);
+        new BilledService(occupation.getID(), service.getID(),false);
     }
 
     /**
@@ -251,6 +270,49 @@ public class ClientService {
         occupation.setIS_CLIENT_PRESENT(false);
         //Mise à jour dans la base de données
         occupation.updateColumn(Occupation.Columns.IS_CLIENT_PRESENT);
+    }
+
+    /**
+     * Récupérer les occupants liés à une occupation
+     * @param occupation occupation
+     * @return liste d'occupants
+     */
+    public ArrayList<Occupant> getOccupants(Occupation occupation) {
+        //Résultats
+        ArrayList<Occupant> results = new ArrayList<>();
+        //Pour chaque occupant de la base de données
+        for (Occupant occupant : DatabaseData.getInstance().getOccupants().values())
+            //Si l'id de l'occupation correspond avec celui de l'occupation passée en paramètre
+            if (occupant.getOCCUPATION_ID() == occupation.getID()) results.add(occupant);
+        //Retour des résultats
+        return results;
+    }
+
+    /**
+     * Récupérer les services facturés à une occupation
+     * @param occupation occupation
+     * @return liste des services facturés
+     */
+    public ArrayList<BilledService> getBilledServices(Occupation occupation) {
+        //Résultats
+        ArrayList<BilledService> results = new ArrayList<>();
+        //Pour chaque service facturé de la base de données
+        for (BilledService billedservice : DatabaseData.getInstance().getBilledServices().values())
+            //Si l'id de l'occupation correspond avec celui de l'occupation passée en paramètre
+            if (billedservice.getOCCUPATION_ID() == occupation.getID()) results.add(billedservice);
+        //Retour des résultats
+        return results;
+    }
+
+    public boolean isServiceFactured(Occupation occupation, Service service) {
+        //Récupération des services facturés pour l'occupation
+        ArrayList<BilledService> billedServices = getBilledServices(occupation);
+        //Pour chaque service facturé
+        for (BilledService billedService : billedServices)
+            //Si l'id du service dans le service facturé correspond avec celui passé en paramètre, retourne vrai
+            if (billedService.getSERVICE_ID() == service.getID()) return true;
+        //Retourne faux
+        return false;
     }
 
     //*************** GETTERS & SETTERS ***************//

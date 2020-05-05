@@ -4,19 +4,7 @@ import database.DatabaseColumns;
 import database.DatabaseData;
 import database.DatabaseModel;
 
-import java.util.ArrayList;
-
 public class Occupation extends DatabaseModel {
-    /**
-     * Services facturés
-     */
-    private ArrayList<Service> billedServices;
-
-    /**
-     * Occupants
-     */
-    private ArrayList<Occupant> occupants;
-
     /**
      * ID de la réservation liée
      */
@@ -49,32 +37,6 @@ public class Occupation extends DatabaseModel {
      */
     public Occupation() {
         super(Tables.OCCUPATIONS);
-        this.billedServices = new ArrayList<>();
-        this.occupants = new ArrayList<>();
-    }
-
-    /**
-     * Ajouter un service à facturer
-     * @param service service
-     */
-    public void billService(Service service) {
-        this.billedServices.add(service);
-    }
-
-    /**
-     * Ajouter un occupant dans la chambre
-     * @param occupant occupant
-     */
-    public boolean addOccupant(Occupant occupant) {
-        //Si le nombre d'occupants est inférieur au nombre de lits dans la chambre (un lit = deux personnes)
-        if (this.occupants.size() < (this.getRoom().getRoomType().getBED_CAPACITY()*2)) {
-            //Ajout de l'occupant dans l'occupation
-            this.occupants.add(occupant);
-            //Retourne vrai
-            return true;
-        }
-        //Retourne faux
-        return false;
     }
 
     /**
@@ -85,8 +47,6 @@ public class Occupation extends DatabaseModel {
      */
     public Occupation(int RESERVATION_ID, int ROOM_ID, boolean IS_CLIENT_PRESENT) {
         super(Tables.OCCUPATIONS);
-        this.billedServices = new ArrayList<>();
-        this.occupants = new ArrayList<>();
         this.RESERVATION_ID = RESERVATION_ID;
         this.ROOM_ID = ROOM_ID;
         this.IS_CLIENT_PRESENT = IS_CLIENT_PRESENT;
@@ -115,22 +75,6 @@ public class Occupation extends DatabaseModel {
 
     @Override
     public DatabaseColumns[] getColumns() { return Columns.values(); }
-
-    public ArrayList<Service> getBilledServices() {
-        return billedServices;
-    }
-
-    public void setBilledServices(ArrayList<Service> billedServices) {
-        this.billedServices = billedServices;
-    }
-
-    public ArrayList<Occupant> getOccupants() {
-        return occupants;
-    }
-
-    public void setOccupants(ArrayList<Occupant> occupants) {
-        this.occupants = occupants;
-    }
 
     public int getRESERVATION_ID() {
         return RESERVATION_ID;

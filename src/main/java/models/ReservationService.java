@@ -71,7 +71,7 @@ public class ReservationService {
     /**
      * Initialiser les réservations pour l'hotel spécifié
      */
-    private void initReservations() {
+    public void initReservations() {
         //Suppression des réservations
         reservations.clear();
         //Initialisation des réservations
@@ -107,7 +107,11 @@ public class ReservationService {
         //Pour chaque réservation
         for (Reservation element : reservations)
             //Comparaison de l'élément
-            if (element.compareTo(reservation)) return true;
+            if (element.getID() == reservation.getID()) {
+                //Mise à jour de l'élément
+                element.updateFromModel(reservation);
+                return true;
+            }
         return false;
     }
 
@@ -117,12 +121,18 @@ public class ReservationService {
     private void retainReservations() {
         //Liste contenant les réservations à supprimer
         ArrayList<Reservation> itemsToRemove = new ArrayList<>();
+        //Liste des IDs des réservations contenues dans les archives
+        ArrayList<Integer> archivesIDs = new ArrayList<>();
+        //Ajout de l'ID de chaque réservation contenue
+        archives.forEach(reservation -> archivesIDs.add(reservation.getID()));
         //Liste des IDs des réservations locales provenant de la base de données
         ArrayList<Integer> localReservationsIDs = new ArrayList<>(DatabaseData.getInstance().getReservations().keySet());
         //Pour chaque réservation
         for (Reservation reservation : reservations)
-            //Si la réservation n'est pas contenue dans celles locales, on la supprime
-            if (!localReservationsIDs.contains(reservation.getID())) itemsToRemove.add(reservation);
+            //Si la réservation n'est pas contenue dans celles locales
+            if (!localReservationsIDs.contains(reservation.getID()) || archivesIDs.contains(reservation.getID()))
+                //Suppression de la réservation
+                itemsToRemove.add(reservation);
         //Suppression de toutes les réservations en trop
         reservations.removeAll(itemsToRemove);
     }

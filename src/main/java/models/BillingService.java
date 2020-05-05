@@ -81,7 +81,7 @@ public class BillingService {
     /**
      * Initialiser les factures pour l'hotel spécifié
      */
-    private void initBills() {
+    public void initBills() {
         //Suppression des factures
         pending_bills.clear();
         //Initialisation des factures
@@ -116,7 +116,11 @@ public class BillingService {
         //Pour chaque facture
         for (Bill element : pending_bills)
             //Comparaison de l'élément
-            if (element.compareTo(bill)) return true;
+            if (element.getID() == bill.getID()) {
+                //Mise à jour de l'élément
+                element.updateFromModel(bill);
+                return true;
+            }
         return false;
     }
 
@@ -126,12 +130,18 @@ public class BillingService {
     private void retainBills() {
         //Liste contenant les réservations à supprimer
         ArrayList<Bill> itemsToRemove = new ArrayList<>();
+        //Liste des IDs des factures contenues dans les archives
+        ArrayList<Integer> archivesIDs = new ArrayList<>();
+        //Ajout de l'ID de chaque facture contenue
+        archives.forEach(bill -> archivesIDs.add(bill.getID()));
         //Liste des IDs des réservations locales provenant de la base de données
         ArrayList<Integer> localBillsIDs = new ArrayList<>(DatabaseData.getInstance().getBills().keySet());
         //Pour chaque réservation
         for (Bill bill : pending_bills)
-            //Si la réservation n'est pas contenue dans celles locales, on la supprime
-            if (!localBillsIDs.contains(bill.getID())) itemsToRemove.add(bill);
+            //Si la réservation n'est pas contenue dans celles locales
+            if (!localBillsIDs.contains(bill.getID()) || archivesIDs.contains(bill.getID()))
+                //Suppression de la facture
+                itemsToRemove.add(bill);
         //Suppression de toutes les factures en trop
         pending_bills.removeAll(itemsToRemove);
     }
@@ -178,8 +188,8 @@ public class BillingService {
             //Ajout du montant du type de chambre au montant total pour le nombre de nuits passé
             total_amount += roomType.getPRICE() * occupation.getReservation().getDURATION();
             //Ajout du montant des services facturés
-            for (Service service : occupation.getBilledServices())
-                total_amount += service.getPRICE();
+            for (BilledService billedService : ClientService.getInstance().getBilledServices(occupation))
+                total_amount += billedService.getService().getPRICE();
             //Réduction en fonction du nombre de personnes (isolé/groupe)
             if (occupation.getReservation().getPEOPLE_COUNT() > 1) total_amount -= (total_amount * groupDiscount)/100;
             //Réduction en fonction du status du client (régulier ou pas)

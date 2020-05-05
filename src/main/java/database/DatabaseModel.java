@@ -28,7 +28,7 @@ public abstract class DatabaseModel {
      * Liste des tables de la base de données
      */
     public enum Tables {
-        BILLS,CLIENTS,HOTELS,OCCUPANTS,OCCUPATIONS,RESERVATIONS,ROOMS,ROOMTYPES,SERVICES
+        BILLS,BILLEDSERVICES,CLIENTS,HOTELS,OCCUPANTS,OCCUPATIONS,RESERVATIONS,ROOMS,ROOMTYPES,SERVICES
     }
 
     /**
@@ -44,16 +44,17 @@ public abstract class DatabaseModel {
      */
     public static DatabaseModel newModelInstance(Tables table) {
         switch (table) {
-            case BILLS:         return new Bill();
-            case CLIENTS:       return new Client();
-            case HOTELS:        return new Hotel();
-            case OCCUPANTS:     return new Occupant();
-            case OCCUPATIONS:   return new Occupation();
-            case RESERVATIONS:  return new Reservation();
-            case ROOMS:         return new Room();
-            case ROOMTYPES:     return new RoomType();
-            case SERVICES:      return new Service();
-            default:            return null;
+            case BILLS:             return new Bill();
+            case BILLEDSERVICES:    return new BilledService();
+            case CLIENTS:           return new Client();
+            case HOTELS:            return new Hotel();
+            case OCCUPANTS:         return new Occupant();
+            case OCCUPATIONS:       return new Occupation();
+            case RESERVATIONS:      return new Reservation();
+            case ROOMS:             return new Room();
+            case ROOMTYPES:         return new RoomType();
+            case SERVICES:          return new Service();
+            default:                return null;
         }
     }
 
@@ -75,6 +76,9 @@ public abstract class DatabaseModel {
         switch (this.getTable()) {
             case BILLS:
                 DatabaseData.getInstance().getBills().put(ID,(Bill) this);
+                break;
+            case BILLEDSERVICES:
+                DatabaseData.getInstance().getBilledServices().put(ID,(BilledService) this);
                 break;
             case CLIENTS:
                 DatabaseData.getInstance().getClients().put(ID,(Client) this);
@@ -198,6 +202,23 @@ public abstract class DatabaseModel {
             return getClass().getMethod("get" + column).getReturnType();
         } catch (NoSuchMethodException e) { e.printStackTrace(); }
         return null;
+    }
+
+    /**
+     * Mettre à jour les attributs d'un modèle à partir d'un second modèle
+     * @param updatedModel second modèle
+     */
+    public void updateFromModel(DatabaseModel updatedModel) {
+        //Récupération des attributs du modèle
+        Map<String,String> attributes = this.getAttributesData();
+        //Récupération des attributs du modèle
+        Map<String,String> updateAttributes = updatedModel.getAttributesData();
+        //Pour chaque attribut du modèle
+        for (Map.Entry<String,String> attribute : attributes.entrySet())
+            //Si la valeur de l'attribut du modèle à jour est différente de celle actuelle
+            if (!attribute.getValue().equals(updateAttributes.get(attribute.getKey())))
+                //Mise à jour de l'attribut du modèle
+                this.setColumnAttribute(attribute.getKey(),updateAttributes.get(attribute.getKey()));
     }
 
     public boolean compareTo(DatabaseModel model) {

@@ -97,7 +97,7 @@ public class MainController {
             //Initialisation de l'instance
             instance = new MainController();
             //Récupération des données de la base de données
-            DatabaseData.getInstance();
+            new Thread(DatabaseData::getInstance).start();
         }
         //Retour de l'instance
         return instance;

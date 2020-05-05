@@ -4,47 +4,46 @@ import database.DatabaseColumns;
 import database.DatabaseData;
 import database.DatabaseModel;
 
-public class Occupant extends DatabaseModel {
+public class BilledService extends DatabaseModel {
     /**
      * ID de l'occupation liée
      */
     private int OCCUPATION_ID;
 
     /**
-     * Nom
+     * ID du service lié
      */
-    private String FIRSTNAME;
+    private int SERVICE_ID;
 
     /**
-     * Prénom
+     * Archivage
      */
-    private String LASTNAME;
+    private boolean IS_ARCHIVED;
 
     /**
      * Liste des colonnes
      */
     public enum Columns implements DatabaseColumns {
-        OCCUPATION_ID,FIRSTNAME,LASTNAME
+        OCCUPATION_ID,SERVICE_ID,IS_ARCHIVED
     }
 
     /**
      * Constructeur
      */
-    public Occupant() {
-        super(Tables.OCCUPANTS);
+    public BilledService() {
+        super(Tables.BILLEDSERVICES);
     }
 
     /**
      * Constructeur surchargé
      * @param OCCUPATION_ID id de l'occupation liée
-     * @param FIRSTNAME nom
-     * @param LASTNAME prénom
+     * @param SERVICE_ID id du service lié
      */
-    public Occupant(int OCCUPATION_ID, String FIRSTNAME, String LASTNAME) {
-        super(Tables.OCCUPANTS);
+    public BilledService(int OCCUPATION_ID, int SERVICE_ID, boolean IS_ARCHIVED) {
+        super(Tables.BILLEDSERVICES);
         this.OCCUPATION_ID = OCCUPATION_ID;
-        this.FIRSTNAME = FIRSTNAME;
-        this.LASTNAME = LASTNAME;
+        this.SERVICE_ID = SERVICE_ID;
+        this.IS_ARCHIVED = IS_ARCHIVED;
         this.save();
     }
 
@@ -56,6 +55,14 @@ public class Occupant extends DatabaseModel {
      */
     public Occupation getOccupation() {
         return (Occupation) DatabaseData.getInstance().getReferenceFromID(Tables.OCCUPATIONS,OCCUPATION_ID);
+    }
+
+    /**
+     * Service lié
+     * @return service
+     */
+    public Service getService() {
+        return (Service) DatabaseData.getInstance().getReferenceFromID(Tables.SERVICES,SERVICE_ID);
     }
 
     //************* GETTERS & SETTERS ***************//
@@ -73,19 +80,11 @@ public class Occupant extends DatabaseModel {
         this.OCCUPATION_ID = OCCUPATION_ID;
     }
 
-    public String getFIRSTNAME() {
-        return FIRSTNAME;
-    }
+    public int getSERVICE_ID() { return SERVICE_ID; }
 
-    public void setFIRSTNAME(String FIRSTNAME) {
-        this.FIRSTNAME = FIRSTNAME;
-    }
+    public void setSERVICE_ID(int SERVICE_ID) { this.SERVICE_ID = SERVICE_ID;}
 
-    public String getLASTNAME() {
-        return LASTNAME;
-    }
+    public boolean getIS_ARCHIVED() { return IS_ARCHIVED; }
 
-    public void setLASTNAME(String LASTNAME) {
-        this.LASTNAME = LASTNAME;
-    }
+    public void setIS_ARCHIVED(boolean IS_ARCHIVED) { this.IS_ARCHIVED = IS_ARCHIVED; }
 }

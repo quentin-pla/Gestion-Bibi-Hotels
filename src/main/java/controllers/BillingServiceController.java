@@ -28,6 +28,8 @@ public class BillingServiceController {
     public BillingServicePanel initPanel() {
         //Récupération de l'hotel sélectionné
         hotel = MainController.getInstance().getSelected_hotel();
+        //Initialisation des factures
+        BillingService.getInstance(hotel).initBills();
         //Définition du titre de la fenêtre
         panel.setPanelTitle("Service Facturation - " + hotel.getHOTEL_NAME());
         //Définition de l'action du bouton retour

@@ -58,14 +58,9 @@ public class DatabaseData {
     private ObservableMap<Integer,Service> services;
 
     /**
-     * Nombre de réservations à mettre à jour
+     * Éléments obtenus depuis la requête
      */
-    private int reservations_update_size;
-
-    /**
-     * Nombre de factures à mettre à jour
-     */
-    private int bills_update_size;
+    private ArrayList<DatabaseModel> queryResult;
 
     /**
      * Constructeur
@@ -82,7 +77,7 @@ public class DatabaseData {
         this.services = FXCollections.observableHashMap();
         //Récupération des données de la base de données
         retrieveDatabase();
-        //Actualisation automatique
+        //Initialisation du rafraichissement
         initRefresh();
     }
 
@@ -159,7 +154,6 @@ public class DatabaseData {
                             break;
                     }
                 }
-                System.out.println("refresh");
             }
         } ,0,5000);
     }
@@ -169,9 +163,8 @@ public class DatabaseData {
      */
     public void retrieveDatabaseBills() {
         bills.clear();
-        ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.BILLS);
-        bills_update_size = results.size();
-        for (DatabaseModel bill : results) bills.put(bill.getID(), (Bill) bill);
+        queryResult = selectQuery(DatabaseModel.Tables.BILLS);
+        for (DatabaseModel bill : queryResult) bills.put(bill.getID(), (Bill) bill);
     }
 
     /**
@@ -179,8 +172,8 @@ public class DatabaseData {
      */
     public void retrieveDatabaseClients() {
         clients.clear();
-        ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.CLIENTS);
-        for (DatabaseModel client : results) clients.put(client.getID(), (Client) client);
+        queryResult = selectQuery(DatabaseModel.Tables.CLIENTS);
+        for (DatabaseModel client : queryResult) clients.put(client.getID(), (Client) client);
     }
 
     /**
@@ -188,8 +181,8 @@ public class DatabaseData {
      */
     public void retrieveDatabaseHotels() {
         hotels.clear();
-        ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.HOTELS);
-        for (DatabaseModel hotel : results) hotels.put(hotel.getID(), (Hotel) hotel);
+        queryResult = selectQuery(DatabaseModel.Tables.HOTELS);
+        for (DatabaseModel hotel : queryResult) hotels.put(hotel.getID(), (Hotel) hotel);
     }
 
     /**
@@ -197,8 +190,8 @@ public class DatabaseData {
      */
     public void retrieveDatabaseOccupants() {
         occupants.clear();
-        ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.OCCUPANTS);
-        for (DatabaseModel occupant : results) occupants.put(occupant.getID(), (Occupant) occupant);
+        queryResult = selectQuery(DatabaseModel.Tables.OCCUPANTS);
+        for (DatabaseModel occupant : queryResult) occupants.put(occupant.getID(), (Occupant) occupant);
     }
 
     /**
@@ -206,8 +199,8 @@ public class DatabaseData {
      */
     public void retrieveDatabaseOccupations() {
         occupations.clear();
-        ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.OCCUPATIONS);
-        for (DatabaseModel occupation : results) occupations.put(occupation.getID(), (Occupation) occupation);
+        queryResult = selectQuery(DatabaseModel.Tables.OCCUPATIONS);
+        for (DatabaseModel occupation : queryResult) occupations.put(occupation.getID(), (Occupation) occupation);
     }
 
     /**
@@ -215,9 +208,8 @@ public class DatabaseData {
      */
     public void retrieveDatabaseReservations() {
         reservations.clear();
-        ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.RESERVATIONS);
-        reservations_update_size = results.size();
-        for (DatabaseModel reservation : results) reservations.put(reservation.getID(), (Reservation) reservation);
+        queryResult = selectQuery(DatabaseModel.Tables.RESERVATIONS);
+        for (DatabaseModel reservation : queryResult) reservations.put(reservation.getID(), (Reservation) reservation);
     }
 
     /**
@@ -225,8 +217,8 @@ public class DatabaseData {
      */
     public void retrieveDatabaseRooms() {
         rooms.clear();
-        ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.ROOMS);
-        for (DatabaseModel room : results) rooms.put(room.getID(), (Room) room);
+        queryResult = selectQuery(DatabaseModel.Tables.ROOMS);
+        for (DatabaseModel room : queryResult) rooms.put(room.getID(), (Room) room);
     }
 
     /**
@@ -234,8 +226,8 @@ public class DatabaseData {
      */
     public void retrieveDatabaseRoomTypes() {
         roomTypes.clear();
-        ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.ROOMTYPES);
-        for (DatabaseModel room_type : results) roomTypes.put(room_type.getID(), (RoomType) room_type);
+        queryResult = selectQuery(DatabaseModel.Tables.ROOMTYPES);
+        for (DatabaseModel room_type : queryResult) roomTypes.put(room_type.getID(), (RoomType) room_type);
     }
 
     /**
@@ -243,8 +235,8 @@ public class DatabaseData {
      */
     public void retrieveDatabaseServices() {
         services.clear();
-        ArrayList<DatabaseModel> results = selectQuery(DatabaseModel.Tables.SERVICES);
-        for (DatabaseModel service : results) services.put(service.getID(), (Service) service);
+        queryResult = selectQuery(DatabaseModel.Tables.SERVICES);
+        for (DatabaseModel service : queryResult) services.put(service.getID(), (Service) service);
     }
 
     /**
@@ -323,11 +315,5 @@ public class DatabaseData {
         return services;
     }
 
-    public int getReservations_update_size() {
-        return reservations_update_size;
-    }
-
-    public int getBills_update_size() {
-        return bills_update_size;
-    }
+    public int getLastQueryResultSize() { return this.queryResult.size(); }
 }

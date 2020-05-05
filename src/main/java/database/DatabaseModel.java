@@ -200,6 +200,10 @@ public abstract class DatabaseModel {
         return null;
     }
 
+    public boolean compareTo(DatabaseModel model) {
+        return this.getAttributesData().equals(model.getAttributesData());
+    }
+
     //************* GETTERS & SETTERS ***************//
 
     public int getID() { return ID; }

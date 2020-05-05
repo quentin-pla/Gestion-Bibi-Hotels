@@ -13,8 +13,6 @@ public class AdministrationController {
      */
     public AdministrationController() {
         panel = new AdministrationPanel();
-        //Initialisation des boutons
-        initPanelButtons();
     }
 
     /**

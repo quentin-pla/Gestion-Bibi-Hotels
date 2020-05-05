@@ -89,7 +89,7 @@ public class ReservationServiceController {
             //Définition d'une variable contenant la position de l'élément sélectionné
             int selected = -1;
             //Si un élément est sélectionné
-            if (!panel.getReservations().getSelectionModel().isEmpty())
+            if (!panel.getReservations().getItems().isEmpty() && !panel.getReservations().getSelectionModel().isEmpty())
                 //Récupération de l'index de l'élément sélectionné
                 selected = panel.getReservations().getSelectionModel().getFocusedIndex();
             //Ajout des réservations à la table
@@ -100,7 +100,7 @@ public class ReservationServiceController {
                 panel.getReservations().getSelectionModel().select(selected);
         });
         //Ajout des réservations à la table
-        panel.getReservations().getItems().setAll(items);
+        panel.getReservations().setItems(items);
         //Retour de la fenêtre
         return panel;
     }

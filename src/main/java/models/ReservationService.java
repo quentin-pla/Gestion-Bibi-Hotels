@@ -74,6 +74,8 @@ public class ReservationService {
     public void initReservations() {
         //Suppression des réservations
         reservations.clear();
+        //Récupération des réservations de la base de données
+        DatabaseData.getInstance().retrieveDatabaseReservations();
         //Initialisation des réservations
         filterReservations(DatabaseData.getInstance().getReservations().values());
     }
@@ -147,6 +149,8 @@ public class ReservationService {
         Calendar cal = Calendar.getInstance();
         //Heure à minuit
         cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
         //Ajout de deux jours à la date
         cal.add(Calendar.DATE,days_to_add);
         //Retour de la date

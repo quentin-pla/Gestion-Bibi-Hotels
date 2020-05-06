@@ -157,6 +157,8 @@ public class DatabaseData {
                         case CLIENT:
                             //Récupération des occupations
                             retrieveDatabaseOccupations();
+                            //Récupération des services facturés
+                            retrieveDatabaseBilledServices();
                             break;
                         default:
                             break;

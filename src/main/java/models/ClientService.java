@@ -6,11 +6,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-import static database.DatabaseConnection.*;
+import static database.DatabaseConnection.getAvailableRoomsQuery;
+import static database.DatabaseConnection.selectQuery;
+
+//TODO - page affichant l'historique des réservations d'un client
 
 public class ClientService {
     /**
@@ -63,6 +64,8 @@ public class ClientService {
     public void initOccupations() {
         //Suppression des occupations
         occupations.clear();
+        //Récupération des occupations de la base de données
+        DatabaseData.getInstance().retrieveDatabaseOccupations();
         //Initialisation des occupations
         filterOccupations(DatabaseData.getInstance().getOccupations().values());
     }

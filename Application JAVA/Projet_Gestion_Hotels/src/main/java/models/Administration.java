@@ -4,9 +4,12 @@ import database.DatabaseData;
 
 import java.util.*;
 
+/**
+ * Administration de la chaine d'hôtels
+ */
 public class Administration {
     /**
-     * Hotels disponibles
+     * Hotels de la chaine
      */
     private ArrayList<Hotel> hotels;
 
@@ -21,7 +24,6 @@ public class Administration {
      */
     private Administration() {
         this.hotels = new ArrayList<>();
-
     }
 
     /**
@@ -63,7 +65,7 @@ public class Administration {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         //Enlèvement de 3 mois à la date
-        cal.add(Calendar.DATE,-90);
+        cal.add(Calendar.DATE,-informationsFrequency);
         //Ratio pour chaque type de chambre
         Map<String,Double> roomTypesRatio = new HashMap<>();
         //Récupération de tous les types de chambres
@@ -129,4 +131,8 @@ public class Administration {
         //Retour des résultats
         return results;
     }
+
+    //************* GETTERS & SETTERS ***************//
+
+    public int getInformationsFrequency() { return informationsFrequency; }
 }

@@ -6,10 +6,11 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 
+/**
+ * Service réservation
+ */
 public class ReservationService {
     /**
      * Hôtel lié au service
@@ -91,7 +92,7 @@ public class ReservationService {
         for (Reservation reservation : items) {
             //Si l'id de l'hotel est égal à celui du service réservation
             if (reservation.getHOTEL_ID() == hotel.getID())
-                //Si la réservation est archivée où que la date de soritie est supérieure à aujourd'hui, on l'ajoute aux archives
+                //Si la réservation est archivée, on l'ajoute aux archives
                 if (reservation.getIS_ARCHIVED()) archives.add(reservation);
                 //Ajout de la réservation si elle n'est pas déjà contenue
                 else if (!isAlreadyContained(reservation)) reservations.add(reservation);
@@ -137,24 +138,6 @@ public class ReservationService {
                 itemsToRemove.add(reservation);
         //Suppression de toutes les réservations en trop
         reservations.removeAll(itemsToRemove);
-    }
-
-    /**
-     * Récupérer la date actuelle en ajoutant le nombre de jour souhaité
-     * @param days_to_add nombre de jours à ajouter
-     * @return date
-     */
-    private Date getCurrentDate(int days_to_add) {
-        //Récupération de l'instance du calendrier
-        Calendar cal = Calendar.getInstance();
-        //Heure à minuit
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        //Ajout de deux jours à la date
-        cal.add(Calendar.DATE,days_to_add);
-        //Retour de la date
-        return cal.getTime();
     }
 
     /**

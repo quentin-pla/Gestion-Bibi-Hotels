@@ -13,6 +13,9 @@ import views.SelectServicePanel;
 
 import java.util.ArrayList;
 
+/**
+ * Controleur gérant la fenêtre du service client
+ */
 public class ClientServiceController {
     /**
      * Fenêtre du service client
@@ -42,7 +45,7 @@ public class ClientServiceController {
     }
 
     /**
-     * Initialiser les boutons de la fenêtre
+     * Initialiser la fenêtre
      */
     public ClientServicePanel initPanel() {
         //Initialisation des occupations
@@ -51,18 +54,18 @@ public class ClientServiceController {
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
         //Affichage des boutons liés à une occupation sélectionnée
         panel.getOccupations().setOnMouseClicked(e -> refreshPanel());
-        //Définition de l'action du bouton pour facturer un service
+        //Définition de l'action du bouton pour facturer un service à une occupation
         panel.getBillServiceButton().setOnAction(e -> {
-            //Récupération de l'occupation sélctionnée
+            //Récupération de l'occupation sélectionnée
             Occupation occupation = panel.getOccupations().getSelectionModel().getSelectedItem();
             //Si l'occupation existe et qu'il reste des services disponibles à facturer
             if (occupation != null && ClientService.getInstance().getAvailableServices(occupation).size() > 0)
                 //Initialisation du panneau pour sélectionner un service
                 initServiceSelection(occupation);
         });
-        //Définition de l'action du bouton de calcul du montant total
+        //Définition de l'action du bouton pour définir la présence
         panel.getPresenceButton().setOnAction(e -> {
-            //Récupération de l'occupation sélctionnée
+            //Récupération de l'occupation sélectionnée
             Occupation occupation = panel.getOccupations().getSelectionModel().getSelectedItem();
             //Si l'occupation existe
             if (occupation != null)
@@ -86,7 +89,7 @@ public class ClientServiceController {
             if (!panel.getOccupations().getItems().isEmpty() && !panel.getOccupations().getSelectionModel().isEmpty())
                 //Récupération de l'index de l'élément sélectionné
                 selected = panel.getOccupations().getSelectionModel().getFocusedIndex();
-            //Ajout des réservations à la table
+            //Rafraichissement
             refreshPanel();
             //Si l'index a été définit
             if (selected != -1)
@@ -115,12 +118,14 @@ public class ClientServiceController {
             boolean isAvailableServices = !ClientService.getInstance().getAvailableServices(occupation).isEmpty();
             //Client présent ou pas dans l'occupation
             boolean isClientPresent = occupation.getIS_CLIENT_PRESENT();
-            //Affichage du bouton pour facturer un service s'il y en a de disponibles
+            //Définition de l'affichage du bouton pour facturer un service
             panel.getBillServiceButton().setVisible(isAvailableServices && isClientPresent);
             panel.getBillServiceButton().setManaged(isAvailableServices && isClientPresent);
+            //Définition de l'affichage du bouton pour définir la présence
             panel.getPresenceButton().setVisible(true);
             panel.getPresenceButton().setManaged(true);
         } else {
+            //Masquage des boutons
             panel.getPresenceButton().setVisible(false);
             panel.getPresenceButton().setManaged(false);
             panel.getBillServiceButton().setVisible(false);
@@ -129,20 +134,20 @@ public class ClientServiceController {
     }
 
     /**
-     * Initialiser la fenêtre de sélection de l'hotel
+     * Initialiser la fenêtre de sélection du service
      */
     private void initServiceSelection(Occupation occupation) {
-        //Initialisation de la fenêtre de sélection de l'hotel
+        //Initialisation de la fenêtre de sélection du service
         selectServicePanel = new SelectServicePanel();
         //Récupération de la liste des services disponibles pour l'occupation
         ArrayList<Service> services = ClientService.getInstance().getAvailableServices(occupation);
-        //Récupération de la liste des services disponibles
+        //Pour chaque service
         for (Service service : services)
             //Ajout du nom du service dans la comboBox
             selectServicePanel.getServices().getItems().add(service.getNAME());
         //Affichage de la fenêtre de sélection du service
         MainController.getInstance().setWindow(selectServicePanel);
-        //Afficher la fenêtre du service lorsque le service est sélectionné
+        //Définition de l'action du bouton de validation
         selectServicePanel.getValidate().setOnAction(e -> {
             //Service sélectionné
             Service selectedService = services.get(selectServicePanel.getServices().getSelectionModel().getSelectedIndex());
@@ -157,6 +162,9 @@ public class ClientServiceController {
         selectServicePanel.getBack().setOnAction(e -> MainController.getInstance().setWindow(panel));
     }
 
+    /**
+     * Initialiser la fenêtre de sélection du client
+     */
     private void initClientSelection() {
         //Initialisation de la fenêtre de sélection du client
         selectClientPanel = new SelectClientPanel();
@@ -181,6 +189,11 @@ public class ClientServiceController {
         selectClientPanel.getBack().setOnAction(e -> MainController.getInstance().setWindow(panel));
     }
 
+    /**
+     * Initialiser la fenêtre contenant l'historique du client
+     * @param client client
+     * @return fenêtre
+     */
     private BorderPane initClientHistoryPanel(Client client) {
         //Initialisation de la fenêtre
         clientHistoryPanel = new ClientHistoryPanel();
@@ -191,7 +204,7 @@ public class ClientServiceController {
         clientHistoryPanel.getBack().setOnAction(e -> MainController.getInstance().setWindow(panel));
         //Si le client n'est pas régulier
         if (!client.getIS_REGULAR()) {
-            //Définition de l'action du bouton pour mettre un client régulier
+            //Définition de l'action du bouton pour définir un client comme étant régulier
             clientHistoryPanel.getRegularClientButton().setOnAction(e -> {
                 //Définition du client comme étant régulier
                 ClientService.getInstance().setRegularClient(client);

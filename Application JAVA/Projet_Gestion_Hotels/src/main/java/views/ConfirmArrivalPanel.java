@@ -18,16 +18,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Page du service réservation
+ * Fenêtre de confirmation de l'arrivée d'un client
  */
 public class ConfirmArrivalPanel extends BorderPane {
     private Map<Integer,ObservableList<Control>> fieldsLinks = new HashMap<>();
-
     private Button back = new Button("←");
     private Label title = new Label();
     private Button validate = new Button("Valider");
     private VBox fields = new VBox();
 
+    /**
+     * Constructeur
+     */
     public ConfirmArrivalPanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
@@ -42,6 +44,12 @@ public class ConfirmArrivalPanel extends BorderPane {
         setCenter(fields);
     }
 
+    /**
+     * Initialiser les champs
+     * @param people_count nombre de personnes
+     * @param client_firstname nom du client
+     * @param client_lastname prénom du client
+     */
     public void initFields(int people_count, String client_firstname, String client_lastname) {
         fields.getChildren().clear();
         for (int index = 1; index <= people_count; index++) {
@@ -67,6 +75,10 @@ public class ConfirmArrivalPanel extends BorderPane {
         fields.getChildren().add(validate);
     }
 
+    /**
+     * Récupérer les données saisies dans les champs
+     * @return données saisies
+     */
     public ArrayList<String[]> retrieveFieldsData() {
         ArrayList<String[]> data = new ArrayList<>();
         for (ObservableList<Control> links : fieldsLinks.values()) {

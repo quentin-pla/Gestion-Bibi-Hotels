@@ -15,7 +15,7 @@ import models.Reservation;
 import java.text.SimpleDateFormat;
 
 /**
- * Page du service réservation
+ * Fenêtre du service réservation
  */
 public class ClientHistoryPanel extends BorderPane {
     private Button back = new Button("←");
@@ -23,6 +23,9 @@ public class ClientHistoryPanel extends BorderPane {
     private Button regularClientButton = new Button("Client régulier");
     private TableView<Reservation> reservations = new TableView<>();
 
+    /**
+     * Constructeur
+     */
     public ClientHistoryPanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
@@ -40,6 +43,9 @@ public class ClientHistoryPanel extends BorderPane {
         setCenter(centerContent);
     }
 
+    /**
+     * Initialiser la table contenant les données
+     */
     private void initReservationsTable() {
         //Taille maximale
         reservations.setMinSize(MainController.width-100, MainController.height-140);

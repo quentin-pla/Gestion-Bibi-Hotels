@@ -7,12 +7,18 @@ import models.BillingService;
 import models.Hotel;
 import views.BillingServicePanel;
 
+/**
+ * Controleur gérant la fenêtre du service facturation
+ */
 public class BillingServiceController {
     /**
      * Fenêtre du service facturation
      */
     private BillingServicePanel panel;
 
+    /**
+     * Hotel lié
+     */
     private Hotel hotel;
 
     /**
@@ -23,7 +29,7 @@ public class BillingServiceController {
     }
 
     /**
-     * Initialiser les boutons de la fenêtre
+     * Initialiser la fenêtre
      */
     public BillingServicePanel initPanel() {
         //Récupération de l'hotel sélectionné
@@ -34,9 +40,9 @@ public class BillingServiceController {
         panel.setPanelTitle("Liste des factures - Hôtel " + hotel.getHOTEL_NAME());
         //Définition de l'action du bouton retour
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
-        //Affichage des boutons liés à une facture sélectionnée
+        //Rafraichissement de la fenêtre lorsqu'un clic est effectué
         panel.getBills().setOnMouseClicked(e -> refreshPanel());
-        //Définition de l'action du bouton de confirmation de l'arrivée
+        //Définition de l'action du bouton d'archivage
         panel.getArchiveButton().setOnAction(e -> {
             //Récupération de la facture sélectionnée
             Bill bill = panel.getBills().getSelectionModel().getSelectedItem();
@@ -64,7 +70,7 @@ public class BillingServiceController {
         });
         //Définition de l'action du bouton de calcul du montant total
         panel.getCalculateButton().setOnAction(e -> {
-            //Récupération de la facture sélctionnée
+            //Récupération de la facture sélectionnée
             Bill bill = panel.getBills().getSelectionModel().getSelectedItem();
             //Si la facture existe
             if (bill != null)
@@ -83,7 +89,7 @@ public class BillingServiceController {
             if (!panel.getBills().getItems().isEmpty() && !panel.getBills().getSelectionModel().isEmpty())
                 //Récupération de l'index de l'élément sélectionné
                 selected = panel.getBills().getSelectionModel().getFocusedIndex();
-            //Ajout des factures à la table
+            //Rafraichissement
             refreshPanel();
             //Si l'index a été définit
             if (selected != -1)
@@ -106,11 +112,11 @@ public class BillingServiceController {
         Bill bill = panel.getBills().getSelectionModel().getSelectedItem();
         //Si la facture existe et que le nombre d'éléments du tableau est supérieur à zéro
         if (bill != null && panel.getBills().getItems().size() > 0) {
-            //facture pas archivée
+            //Facture pas archivée
             boolean notArchived = !bill.getIS_ARCHIVED() && bill.getIS_PAYED();
-            //montant total facture non calculé
+            //Montant total facture non calculé
             boolean notCalculated = (bill.getAMOUNT() == 0.0);
-            //facture impayée
+            //Facture impayée
             boolean notPayed = !bill.getIS_PAYED() && !notCalculated;
             //Définition visibilité bouton confirmation paiement
             panel.getMakePaymentButton().setManaged(notPayed);

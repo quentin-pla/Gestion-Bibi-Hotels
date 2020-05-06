@@ -10,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 /**
- * Page d'accueil
+ * Fenêtre de sélection du client
  */
 public class SelectClientPanel extends BorderPane {
     private Button back = new Button("←");
@@ -18,6 +18,9 @@ public class SelectClientPanel extends BorderPane {
     private ComboBox<String> clients = new ComboBox<>();
     private Button validate = new Button("Valider");
 
+    /**
+     * Constructeur
+     */
     public SelectClientPanel() {
         setMinSize(MainController.width, MainController.height);
         title.getStyleClass().add("h2");

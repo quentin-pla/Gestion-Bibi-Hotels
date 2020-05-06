@@ -4,6 +4,9 @@ import database.DatabaseColumns;
 import database.DatabaseData;
 import database.DatabaseModel;
 
+/**
+ * Modèle Service provenant de la base de données
+ */
 public class Service extends DatabaseModel {
     /**
      * ID de l'hotel lié
@@ -21,7 +24,7 @@ public class Service extends DatabaseModel {
     private double PRICE;
 
     /**
-     * Achat multiple
+     * Achat unique
      */
     private boolean UNIQUE_ORDER;
 

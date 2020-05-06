@@ -4,6 +4,9 @@ import database.DatabaseColumns;
 import database.DatabaseData;
 import database.DatabaseModel;
 
+/**
+ * Modèle facture de la base de données
+ */
 public class Bill extends DatabaseModel {
     /**
      * Réservation liée à la facture

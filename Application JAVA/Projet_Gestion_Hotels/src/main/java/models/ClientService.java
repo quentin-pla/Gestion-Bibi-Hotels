@@ -5,10 +5,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 
-import static database.DatabaseConnection.getAvailableRoomsQuery;
-
+/**
+ * Service client
+ */
 public class ClientService {
     /**
      * Liste des occupations
@@ -16,7 +20,7 @@ public class ClientService {
     private ObservableList<Occupation> occupations;
 
     /**
-     * Archives des occupations
+     * Archives
      */
     private ArrayList<Occupation> archives;
 
@@ -55,7 +59,7 @@ public class ClientService {
     }
 
     /**
-     * Récupérer les occupations depuis les données locales
+     * Initialiser les occupations
      */
     public void initOccupations() {
         //Suppression des occupations
@@ -143,7 +147,7 @@ public class ClientService {
     public ArrayList<Reservation> getClientHistory(Client client) {
         //Historique
         ArrayList<Reservation> history = new ArrayList<>();
-        //Pour chaque occupation dans les archives
+        //Pour chaque réservation dans les archives
         for (Reservation reservation : DatabaseData.getInstance().getReservations().values())
             //Si la réservation est liée au client et qu'elle est archivée
             if (reservation.getIS_ARCHIVED() && reservation.getCLIENT_ID() == client.getID())
@@ -182,29 +186,10 @@ public class ClientService {
         System.out.println("Publicité envoyée à l'adresse mail " + mail);
     }
 
-    /**
-     * Affecter des chambres pour une réservation
-     * @param reservation reservation
-     */
-    public boolean addOccupation(Reservation reservation) {
-        //Vérification s'il reste des chambres disponibles pour la réservation
-        List<Integer> results = getAvailableRoomsQuery(reservation);
-        //Si le nombre de chambres restantes est inférieur au nombre de chambre voulu
-        if (results.size() < reservation.getROOM_COUNT())
-            //Retourne faux
-            return false;
-        //Récupération du nombre de chambres nécessaire en fonction du nombre de chambre voulu
-        results = results.subList(0, reservation.getROOM_COUNT());
-        //Pour chaque chambre
-        for (Integer room_id : results)
-            //Ajout d'une nouvelle occupation dans la liste des occupations
-            occupations.add(new Occupation(reservation.getID(), room_id, false));
-        //Retourne vrai
-        return true;
-    }
+    //TODO bouton pour envoyer mail au client depuis l'historique des réservations
 
     /**
-     * Récupérer l'espace restant dans l'occupation
+     * Récupérer l'espace restant dans une occupation
      * @param occupation occupation
      */
     public int getRemainingSize(Occupation occupation) {
@@ -294,6 +279,12 @@ public class ClientService {
         return results;
     }
 
+    /**
+     * Savoir si un service a déjà été facturé pour une occupation
+     * @param occupation occupation
+     * @param service service
+     * @return booléen
+     */
     public boolean isServiceFactured(Occupation occupation, Service service) {
         //Récupération des services facturés pour l'occupation
         ArrayList<BilledService> billedServices = getBilledServices(occupation);

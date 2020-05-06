@@ -4,6 +4,9 @@ import database.DatabaseColumns;
 import database.DatabaseData;
 import database.DatabaseModel;
 
+/**
+ * Modèle Chambre depuis la base de données
+ */
 public class Room extends DatabaseModel {
     /**
      * ID de l'hotel lié

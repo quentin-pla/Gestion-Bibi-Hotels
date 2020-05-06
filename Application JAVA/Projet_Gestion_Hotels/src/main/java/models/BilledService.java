@@ -4,6 +4,9 @@ import database.DatabaseColumns;
 import database.DatabaseData;
 import database.DatabaseModel;
 
+/**
+ * Modèle service facturé de la base de données
+ */
 public class BilledService extends DatabaseModel {
     /**
      * ID de l'occupation liée

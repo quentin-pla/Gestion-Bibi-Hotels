@@ -7,6 +7,9 @@ import database.DatabaseModel;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Modèle Réservation provenant de la base de données
+ */
 public class Reservation extends DatabaseModel {
     /**
      * ID du client lié

@@ -15,7 +15,7 @@ import models.Reservation;
 import java.text.SimpleDateFormat;
 
 /**
- * Page du service réservation
+ * Fenêtre du service réservation
  */
 public class ReservationServicePanel extends BorderPane {
     private Button back = new Button("←");
@@ -26,6 +26,9 @@ public class ReservationServicePanel extends BorderPane {
     private Button makePaymentButton = new Button("Encaisser Arrhes");
     private HBox refButtons = new HBox(confirmArrivalButton, archiveButton, makePaymentButton);
 
+    /**
+     * Constructeur
+     */
     public ReservationServicePanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
@@ -47,6 +50,9 @@ public class ReservationServicePanel extends BorderPane {
         setCenter(centerContent);
     }
 
+    /**
+     * Initialiser le tableau contenant la liste des réservations
+     */
     private void initReservationsTable() {
         //Taille maximale
         reservations.setMinSize(MainController.width-100, MainController.height-140);

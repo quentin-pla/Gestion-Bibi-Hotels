@@ -4,6 +4,9 @@ import database.DatabaseColumns;
 import database.DatabaseData;
 import database.DatabaseModel;
 
+/**
+ * Modèle Occupant provenant de la base de données
+ */
 public class Occupant extends DatabaseModel {
     /**
      * ID de l'occupation liée

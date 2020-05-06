@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
- * Page d'accueil
+ * Fenêtre de sélection (accueil)
  */
 public class SelectPanel extends BorderPane {
     private Label brand                 = new Label("BestHotels");
@@ -22,6 +22,9 @@ public class SelectPanel extends BorderPane {
     private Button administration       = new Button("Administration");
     private ImageView icon              = new ImageView(new Image("/hotels.png"));
 
+    /**
+     * Constructeur
+     */
     public SelectPanel() {
         setMinSize(MainController.width, MainController.height);
         brand.getStyleClass().add("h1");

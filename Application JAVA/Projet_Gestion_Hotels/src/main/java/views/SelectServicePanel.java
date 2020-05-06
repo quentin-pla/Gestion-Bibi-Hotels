@@ -10,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 /**
- * Page de sélection des services lors de la facturation d'un service
+ * Fenêtre de sélection des services lors de la facturation d'un service
  */
 public class SelectServicePanel extends BorderPane {
     private Button back = new Button("←");

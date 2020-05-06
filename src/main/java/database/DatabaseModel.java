@@ -13,6 +13,9 @@ import java.util.Map;
 import static database.DatabaseConnection.insertQuery;
 import static database.DatabaseConnection.updateQuery;
 
+/**
+ * Modèle provenant de la base de données
+ */
 public abstract class DatabaseModel {
     /**
      * ID
@@ -114,6 +117,7 @@ public abstract class DatabaseModel {
      * @param column colonne
      */
     public void updateColumn(DatabaseColumns column) {
+        //Exécution d'une requête SQL de mise à jour
         updateQuery(this, column.toString());
     }
 
@@ -123,11 +127,15 @@ public abstract class DatabaseModel {
      * @param value valeur à attribuer
      */
     public void setColumnAttribute(String columnItem, String value) {
+        //Récupération du type de l'attribut
         Class<?> parameterType = getColumnType(columnItem);
         try {
+            //Récupération du setter à partir du nom de l'attribut
             Method setColumn = getClass().getMethod("set" + columnItem, parameterType);
+            //Selon le type
             switch (parameterType.getSimpleName()) {
                 case "boolean":
+                    //Exécution de la méthode
                     setColumn.invoke(this, value.equals("1"));
                     break;
                 case "int":
@@ -146,12 +154,13 @@ public abstract class DatabaseModel {
                     break;
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ParseException e) {
+            //Message d'erreur
             e.printStackTrace();
         }
     }
 
     /**
-     * Récupérer toutes la valeur de chaque colonne
+     * Récupérer la valeur de chaque colonne
      * @return valeur de chaque colonne
      */
     public Map<String,String> getAttributesData() {
@@ -175,7 +184,7 @@ public abstract class DatabaseModel {
                 if (isContained) {
                     //Valeur de la colonne
                     String value = "";
-                    //Récupération du nom de la méthode
+                    //Récupération du getter de la méthode
                     Method getColumn = getClass().getMethod("get" + column);
                     //Si le type de retour est une date
                     if (getColumn.getReturnType() == Date.class)
@@ -192,13 +201,21 @@ public abstract class DatabaseModel {
                 }
             }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            //Message d'erreur
             e.printStackTrace();
         }
+        //Retour des données
         return data;
     }
 
+    /**
+     * Récupérer le type d'une colonne
+     * @param column colonne
+     * @return type
+     */
     public Class<?> getColumnType(String column) {
         try {
+            //Récupération du getter de la colonne et renvoi du type
             return getClass().getMethod("get" + column).getReturnType();
         } catch (NoSuchMethodException e) { e.printStackTrace(); }
         return null;
@@ -221,13 +238,11 @@ public abstract class DatabaseModel {
                 this.setColumnAttribute(attribute.getKey(),updateAttributes.get(attribute.getKey()));
     }
 
-    public boolean compareTo(DatabaseModel model) {
-        return this.getAttributesData().equals(model.getAttributesData());
-    }
-
     //************* GETTERS & SETTERS ***************//
 
     public int getID() { return ID; }
+
     public void setID(int ID) { this.ID = ID; }
+
     public Tables getTable() { return this.table; }
 }

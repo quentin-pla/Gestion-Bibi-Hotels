@@ -7,6 +7,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import models.Hotel;
 
+/**
+ * Controleur global de l'application
+ */
 public class MainController {
     /**
      * Fenêtre affichée à l'écran
@@ -29,22 +32,22 @@ public class MainController {
     private SelectController selectController;
 
     /**
-     * Controleur du panneau de sélection
+     * Controleur du panneau d'administration
      */
     private AdministrationController administrationController;
 
     /**
-     * Controleur du panneau de sélection
+     * Controleur du panneau du service client
      */
     private ClientServiceController clientServiceController;
 
     /**
-     * Controleur du panneau de sélection
+     * Controleur du panneau du service réservation
      */
     private ReservationServiceController reservationServiceController;
 
     /**
-     * Controleur du panneau de sélection
+     * Controleur du panneau du service facturation
      */
     private BillingServiceController billingServiceController;
 
@@ -96,7 +99,7 @@ public class MainController {
         if (instance == null) {
             //Initialisation de l'instance
             instance = new MainController();
-            //Récupération des données de la base de données
+            //Récupération des données de la base de données de manière asynchrone
             new Thread(DatabaseData::getInstance).start();
         }
         //Retour de l'instance
@@ -109,7 +112,7 @@ public class MainController {
     private static MainController instance = null;
 
     /**
-     * Changement de fenêtre sur la sélection
+     * Affichage de la fenêtre de sélection
      */
     public void switchToSelect() {
         //Affichage du panneau de sélection
@@ -117,7 +120,7 @@ public class MainController {
     }
 
     /**
-     * Changement de fenêtre sur le panneau d'administration
+     * Affichage de la fenêtre d'administration
      */
     public void switchToAdministration() {
         //Service sélectionné Administration
@@ -127,7 +130,7 @@ public class MainController {
     }
 
     /**
-     * Changement de fenêtre sur le service client
+     * Affichage de la fenêtre du service client
      */
     public void switchToClientService() {
         //Service sélectionné Client
@@ -137,7 +140,7 @@ public class MainController {
     }
 
     /**
-     * Changement de fenêtre sur le service réservation
+     * Affichage de la fenêtre du service réservation
      */
     public void switchToReservationService() {
         //Service sélectionné Réservation
@@ -147,7 +150,7 @@ public class MainController {
     }
 
     /**
-     * Changement de fenêtre sur le service facturation
+     * Affichage de la fenêtre du service facturation
      */
     public void switchToBillingService() {
         //Service sélectionné Facturation
@@ -157,7 +160,7 @@ public class MainController {
     }
 
     /**
-     * Afficher une fenêtre à l'écran
+     * Changer de fenêtre
      * @param window fenêtre
      */
     public void setWindow(BorderPane window) {
@@ -168,7 +171,7 @@ public class MainController {
     }
 
     /**
-     * Retour de la fenêtre affichée
+     * Retour de la scène affichée
      * @return fenêtre
      */
     public Scene getScene() {

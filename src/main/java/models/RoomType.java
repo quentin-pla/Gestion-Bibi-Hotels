@@ -3,6 +3,9 @@ package models;
 import database.DatabaseColumns;
 import database.DatabaseModel;
 
+/**
+ * Modèle Type de chambre depuis la base de données
+ */
 public class RoomType extends DatabaseModel {
     /**
      * Nom

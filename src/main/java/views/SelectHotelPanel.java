@@ -10,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 /**
- * Page d'accueil
+ * Fenêtre de sélection de l'hotel
  */
 public class SelectHotelPanel extends BorderPane {
     private Button back = new Button("←");
@@ -18,6 +18,9 @@ public class SelectHotelPanel extends BorderPane {
     private ComboBox<String> hotels = new ComboBox<>();
     private Button validate = new Button("Valider");
 
+    /**
+     * Constructeur
+     */
     public SelectHotelPanel() {
         setMinSize(MainController.width, MainController.height);
         title.getStyleClass().add("h2");

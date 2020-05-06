@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Liaison avec la base de données
+ * Connexion avec la base de données
  */
 public class DatabaseConnection {
     /**
@@ -26,12 +26,12 @@ public class DatabaseConnection {
     private final String PASSWORD = "***REMOVED***";
 
     /**
-     * Connexion à la base de données
+     * Connexion
      */
     private Connection connection;
 
     /**
-     * Constructeur JDBC
+     * Constructeur
      */
     private DatabaseConnection() {
         try {
@@ -44,36 +44,21 @@ public class DatabaseConnection {
     }
 
     /**
-     * Classe responsable de l'instanciation de l'instance unique JDBC
+     * Classe responsable de l'instanciation de l'instance unique
      */
     private static class DatabaseConnectionHolder {
+        /**
+         * Instance unique
+         */
         private final static DatabaseConnection instance = new DatabaseConnection();
     }
 
     /**
-     * Instance JDBC
+     * Récupérer l'instance
      * @return instance
      */
     private static DatabaseConnection getInstance() {
         return DatabaseConnectionHolder.instance;
-    }
-
-    /**
-     * Exécuter une requête SQL SELECT COUNT(*) sur une table
-     * @param table table
-     * @return nombre d'éléments
-     */
-    public static int selectCountQuery(DatabaseModel.Tables table) {
-        try {
-            //Exécution de la requête
-            ResultSet rs = getInstance().connection.prepareStatement("SELECT COUNT(*) FROM " + table).executeQuery();
-            //Retour du résultat
-            return rs.getInt(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //Retour 0 en cas d'erreur
-        return 0;
     }
 
     /**
@@ -102,6 +87,7 @@ public class DatabaseConnection {
      * @return classes issues du modèle
      */
     public static ArrayList<DatabaseModel> selectQuery(DatabaseModel.Tables table, String columns, String where) {
+        //Récupération d'une nouvelle instance du modèle
         DatabaseModel model = DatabaseModel.newModelInstance(table);
         //Liste des résultats
         ArrayList<DatabaseModel> results = new ArrayList<>();
@@ -129,7 +115,7 @@ public class DatabaseConnection {
                 }
                 //Ajout de la classe à la liste des résultats
                 results.add(model);
-                //Initialisation
+                //Initialisation d'une nouvelle instance
                 model = DatabaseModel.newModelInstance(table);
             }
             //Fermeture de l'instruction (liberation des ressources)
@@ -177,7 +163,7 @@ public class DatabaseConnection {
     }
 
     /**
-     * Modifier un tuple dans la base de données
+     * Mettre à jour un tuple dans la base de données
      * @param model modèle à mettre à jour
      */
     public static void updateQuery(DatabaseModel model, String columns) {

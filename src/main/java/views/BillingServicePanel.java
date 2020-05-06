@@ -13,7 +13,7 @@ import javafx.util.Callback;
 import models.Bill;
 
 /**
- * Page du service facturation
+ * Fenêtre du service facturation
  */
 public class BillingServicePanel extends BorderPane {
     private Button back = new Button("←");
@@ -24,6 +24,9 @@ public class BillingServicePanel extends BorderPane {
     private Button makePaymentButton = new Button("Confirmer paiement");
     private HBox refButtons = new HBox(archiveButton, makePaymentButton, calculateButton);
 
+    /**
+     * Constructeur
+     */
     public BillingServicePanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
@@ -45,6 +48,9 @@ public class BillingServicePanel extends BorderPane {
         setCenter(centerContent);
     }
 
+    /**
+     * Initialiser la table contenant les données
+     */
     private void initBillsTable() {
         //Taille maximale
         bills.setMinSize(MainController.width-100, MainController.height-140);

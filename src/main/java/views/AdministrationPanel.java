@@ -12,11 +12,11 @@ import javafx.scene.layout.VBox;
 import java.util.Map;
 
 /**
- * Page d'administration
+ * Fenêtre d'administration
  */
 public class AdministrationPanel extends BorderPane {
     private Button back = new Button("←");
-    private Label title = new Label("Informations sur les hôtels - 3 derniers mois");
+    private Label title = new Label();
     private VBox centerContent = new VBox();
     private VBox roomTypesContainer = new VBox();
     private VBox billedAmountsContainer = new VBox();
@@ -25,6 +25,9 @@ public class AdministrationPanel extends BorderPane {
     private HBox servicesContainer = new HBox();
     private HBox hotelsContainer = new HBox();
 
+    /**
+     * Constructeur
+     */
     public AdministrationPanel() {
         setMinSize(MainController.width, MainController.height);
         title.getStyleClass().add("h3");
@@ -67,6 +70,10 @@ public class AdministrationPanel extends BorderPane {
         setMargin(centerContent, new Insets(20,40,10,40));
     }
 
+    /**
+     * Initialiser les ratios pour chaque type de chambre
+     * @param roomTypesRatios données provenant du service administration
+     */
     public void initRoomTypesRatios(Map<String,Double> roomTypesRatios) {
         ratioContainer.getChildren().clear();
         for (Map.Entry<String,Double> roomType : roomTypesRatios.entrySet())
@@ -75,6 +82,10 @@ public class AdministrationPanel extends BorderPane {
             );
     }
 
+    /**
+     * Initialiser les bénéfices totaux de chaque hotel
+     * @param billedAmounts données provenant du service administration
+     */
     public void initTotalBilledAmounts(Map<String,Double> billedAmounts) {
         hotelsContainer.getChildren().clear();
         for (Map.Entry<String,Double> hotel : billedAmounts.entrySet())
@@ -83,6 +94,10 @@ public class AdministrationPanel extends BorderPane {
             );
     }
 
+    /**
+     * Initialiser le nombre de facture effectuée pour chaque service
+     * @param billedServicesAmounts données provenant du service administration
+     */
     public void initBilledServicesAmounts(Map<String,Integer> billedServicesAmounts) {
         servicesContainer.getChildren().clear();
         for (Map.Entry<String,Integer> service : billedServicesAmounts.entrySet())
@@ -91,6 +106,13 @@ public class AdministrationPanel extends BorderPane {
             );
     }
 
+    /**
+     * Générer un élément
+     * @param title titre
+     * @param value valeur
+     * @param format unité
+     * @return élément
+     */
     private VBox generateItem(String title, String value, String format) {
         VBox itemData = new VBox();
         itemData.setAlignment(Pos.CENTER);
@@ -107,4 +129,6 @@ public class AdministrationPanel extends BorderPane {
     public Button getBack() {
         return back;
     }
+
+    public void setPanelTitle(String value) { title.setText(value); }
 }

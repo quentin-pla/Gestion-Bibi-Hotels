@@ -3,6 +3,9 @@ package models;
 import database.DatabaseColumns;
 import database.DatabaseModel;
 
+/**
+ * Modèle Hôtel provenant de la base de données
+ */
 public class Hotel extends DatabaseModel {
     /**
      * Nom

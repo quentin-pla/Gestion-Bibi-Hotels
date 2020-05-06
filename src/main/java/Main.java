@@ -2,8 +2,15 @@ import controllers.MainController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * Main
+ */
 public class Main extends Application {
 
+    /**
+     * Démarrage de l'application
+     * @param primaryStage fenêtre de l'application
+     */
     @Override
     public void start(Stage primaryStage) {
         //Titre de la fenêtre

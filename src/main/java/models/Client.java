@@ -3,6 +3,9 @@ package models;
 import database.DatabaseColumns;
 import database.DatabaseModel;
 
+/**
+ * Modèle Client de la base de données
+ */
 public class Client extends DatabaseModel {
     /**
      * Nom
@@ -35,7 +38,7 @@ public class Client extends DatabaseModel {
     private String PASSWORD;
 
     /**
-     * Régulier
+     * Est régulier
      */
     private boolean IS_REGULAR;
 
@@ -80,9 +83,7 @@ public class Client extends DatabaseModel {
         return Columns.values();
     }
 
-    public String getFIRSTNAME() {
-        return FIRSTNAME;
-    }
+    public String getFIRSTNAME() { return FIRSTNAME; }
 
     public void setFIRSTNAME(String FIRSTNAME) {
         this.FIRSTNAME = FIRSTNAME;
@@ -100,9 +101,7 @@ public class Client extends DatabaseModel {
         return STREET;
     }
 
-    public void setSTREET(String STREET) {
-        this.STREET = STREET;
-    }
+    public void setSTREET(String STREET) { this.STREET = STREET; }
 
     public String getCITY() {
         return CITY;

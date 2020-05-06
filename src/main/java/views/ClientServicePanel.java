@@ -13,7 +13,7 @@ import javafx.util.Callback;
 import models.Occupation;
 
 /**
- * Page du service client
+ * Fenêtre du service client
  */
 public class ClientServicePanel extends BorderPane {
     private Button back = new Button("←");
@@ -24,6 +24,9 @@ public class ClientServicePanel extends BorderPane {
     private Button billServiceButton = new Button("Facturer service");
     private HBox refButtons = new HBox(clientHistoryButton,billServiceButton, presenceButton);
 
+    /**
+     * Constructeur
+     */
     public ClientServicePanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
@@ -44,7 +47,7 @@ public class ClientServicePanel extends BorderPane {
     }
 
     /**
-     * Initialisation de la liste des occupations
+     * Initialiser le tableau contenant la liste des occupations
      */
     private void initOccupationsTable() {
         //Taille maximale

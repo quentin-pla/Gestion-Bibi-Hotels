@@ -8,6 +8,9 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Service facturation
+ */
 public class BillingService {
     /**
      * Réduction pour les groupes en pourcentages
@@ -25,7 +28,7 @@ public class BillingService {
     private ObservableList<Bill> pending_bills;
 
     /**
-     * Archives des factures
+     * Archives
      */
     private ArrayList<Bill> archives;
 

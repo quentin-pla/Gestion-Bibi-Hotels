@@ -4,6 +4,9 @@ import javafx.scene.layout.BorderPane;
 import models.Administration;
 import views.AdministrationPanel;
 
+/**
+ * Controleur gérant le panneau d'administration
+ */
 public class AdministrationController {
     /**
      * Fenêtre d'administration
@@ -23,6 +26,8 @@ public class AdministrationController {
     public BorderPane initPanel() {
         //Initialisation des hotels
         Administration.getInstance().initHotels();
+        //Définition du titre
+        panel.setPanelTitle("Informations sur les hôtels - " + Administration.getInstance().getInformationsFrequency() + " derniers jours");
         //Définition du bouton de retour
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
         //Initialisation des ratios pour chaque type de chambre

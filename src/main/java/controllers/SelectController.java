@@ -7,6 +7,9 @@ import views.SelectPanel;
 
 import java.util.ArrayList;
 
+/**
+ * Controleur gérant la fenêtre de sélection du service
+ */
 public class SelectController {
     /**
      * Fenêtre de sélection
@@ -19,7 +22,7 @@ public class SelectController {
     private SelectHotelPanel hotelSelection;
 
     /**
-     * Liste des fenêtres précédentes
+     * Liste des fenêtres nécessitant la sélection de l'hotel
      */
     private enum Services {
         RESERVATION,BILLING
@@ -33,16 +36,16 @@ public class SelectController {
     }
 
     /**
-     * Initialiser les boutons de la fenêtre
+     * Initialiser la fenêtre
      */
     public SelectPanel initPanel() {
-        //Lorsque l'utilisateur clique sur le bouton service client
+        //Lorsque l'utilisateur clique sur le bouton service client, affichage service client
         panel.getService_client().setOnAction(e -> MainController.getInstance().switchToClientService());
-        //Lorsque l'utilisateur clique sur le bouton service réservation
+        //Lorsque l'utilisateur clique sur le bouton service réservation, affichage sélection hotel
         panel.getService_reservation().setOnAction(e -> initHotelSelection(Services.RESERVATION));
-        //Lorsque l'utilisateur clique sur le bouton service facturation
+        //Lorsque l'utilisateur clique sur le bouton service facturation, affichage sélection hotel
         panel.getService_facturation().setOnAction(e -> initHotelSelection(Services.BILLING));
-        //Lorsque l'utilisateur clique sur le bouton administration
+        //Lorsque l'utilisateur clique sur le bouton administration, affichage administration
         panel.getAdministration().setOnAction(e -> MainController.getInstance().switchToAdministration());
         //Retour de la fenêtre
         return panel;
@@ -56,7 +59,7 @@ public class SelectController {
         hotelSelection = new SelectHotelPanel();
         //Récupération de la liste des hotels
         ArrayList<Hotel> hotels = new ArrayList<>(DatabaseData.getInstance().getHotels().values());
-        //Récupération de la liste des hotels disponibles
+        //Pour chaque hôtel
         for (Hotel hotel : hotels)
             //Ajout du nom de l'hotel dans la comboBox
             hotelSelection.getHotels().getItems().add(hotel.getHOTEL_NAME());

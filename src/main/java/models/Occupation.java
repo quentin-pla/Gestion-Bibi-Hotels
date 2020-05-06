@@ -4,6 +4,9 @@ import database.DatabaseColumns;
 import database.DatabaseData;
 import database.DatabaseModel;
 
+/**
+ * Modèle Occupation provenant de la base de données
+ */
 public class Occupation extends DatabaseModel {
     /**
      * ID de la réservation liée

@@ -1,11 +1,14 @@
 package controllers;
 
+import database.DatabaseData;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import models.ClientService;
-import models.Occupation;
-import models.Service;
+import javafx.scene.layout.BorderPane;
+import models.*;
+import views.ClientHistoryPanel;
 import views.ClientServicePanel;
+import views.SelectClientPanel;
 import views.SelectServicePanel;
 
 import java.util.ArrayList;
@@ -19,7 +22,17 @@ public class ClientServiceController {
     /**
      * Fenêtre de sélection du service
      */
-    private SelectServicePanel serviceSelection;
+    private SelectServicePanel selectServicePanel;
+
+    /**
+     * Fenêtre de sélection du client
+     */
+    private SelectClientPanel selectClientPanel;
+
+    /**
+     * Fenêtre affichant l'historique des réservations d'un client
+     */
+    private ClientHistoryPanel clientHistoryPanel;
 
     /**
      * Constructeur
@@ -58,6 +71,11 @@ public class ClientServiceController {
             //Rafraichissement
             refreshPanel();
         });
+        //Définition de l'action du bouton pour voir l'historique d'un client
+        panel.getClientHistoryButton().setOnAction(e -> {
+            //Initialisation du panneau pour sélectionner un client
+            initClientSelection();
+        });
         //Récupération des occupations
         ObservableList<Occupation> items = ClientService.getInstance().getOccupations();
         //Ajout d'un listener pour mettre à jour automatiquement le tableau
@@ -77,6 +95,8 @@ public class ClientServiceController {
         });
         //Ajout des occupations à la table
         panel.getOccupations().setItems(items);
+        //Refraichissement
+        refreshPanel();
         //Retour de la fenêtre
         return panel;
     }
@@ -98,11 +118,14 @@ public class ClientServiceController {
             //Affichage du bouton pour facturer un service s'il y en a de disponibles
             panel.getBillServiceButton().setVisible(isAvailableServices && isClientPresent);
             panel.getBillServiceButton().setManaged(isAvailableServices && isClientPresent);
-            //Affichage de la liste contenant les boutons
-            panel.getRefButtons().setVisible(true);
+            panel.getPresenceButton().setVisible(true);
+            panel.getPresenceButton().setManaged(true);
+        } else {
+            panel.getPresenceButton().setVisible(false);
+            panel.getPresenceButton().setManaged(false);
+            panel.getBillServiceButton().setVisible(false);
+            panel.getBillServiceButton().setManaged(false);
         }
-        //Masquage de la liste contenant les boutons
-        else panel.getRefButtons().setVisible(false);
     }
 
     /**
@@ -110,19 +133,19 @@ public class ClientServiceController {
      */
     private void initServiceSelection(Occupation occupation) {
         //Initialisation de la fenêtre de sélection de l'hotel
-        serviceSelection = new SelectServicePanel();
+        selectServicePanel = new SelectServicePanel();
         //Récupération de la liste des services disponibles pour l'occupation
         ArrayList<Service> services = ClientService.getInstance().getAvailableServices(occupation);
         //Récupération de la liste des services disponibles
         for (Service service : services)
             //Ajout du nom du service dans la comboBox
-            serviceSelection.getServices().getItems().add(service.getNAME());
+            selectServicePanel.getServices().getItems().add(service.getNAME());
         //Affichage de la fenêtre de sélection du service
-        MainController.getInstance().setWindow(serviceSelection);
+        MainController.getInstance().setWindow(selectServicePanel);
         //Afficher la fenêtre du service lorsque le service est sélectionné
-        serviceSelection.getValidate().setOnAction(e -> {
+        selectServicePanel.getValidate().setOnAction(e -> {
             //Service sélectionné
-            Service selectedService = services.get(serviceSelection.getServices().getSelectionModel().getSelectedIndex());
+            Service selectedService = services.get(selectServicePanel.getServices().getSelectionModel().getSelectedIndex());
             //Facturation du service à l'occupation
             ClientService.getInstance().billService(occupation,selectedService);
             //Affichage de la liste des occupations
@@ -131,6 +154,63 @@ public class ClientServiceController {
             refreshPanel();
         });
         //Lorsque l'utilisateur appuie sur le bouton retour, affichage fenêtre service client
-        serviceSelection.getBack().setOnAction(e -> MainController.getInstance().setWindow(panel));
+        selectServicePanel.getBack().setOnAction(e -> MainController.getInstance().setWindow(panel));
+    }
+
+    private void initClientSelection() {
+        //Initialisation de la fenêtre de sélection du client
+        selectClientPanel = new SelectClientPanel();
+        //Récupération de la liste des clients
+        ArrayList<Client> clients = new ArrayList<>(DatabaseData.getInstance().getClients().values());
+        //Récupération de la liste des clients disponibles
+        for (Client client : clients)
+            //Ajout du nom du client dans la comboBox
+            selectClientPanel.getClients().getItems().add(client.getLASTNAME() + " " + client.getFIRSTNAME());
+        //Affichage de la fenêtre de sélection du client
+        MainController.getInstance().setWindow(selectClientPanel);
+        //Afficher la fenêtre du client lorsque le service est sélectionné
+        selectClientPanel.getValidate().setOnAction(e -> {
+            //Client sélectionné
+            Client selectedClient = clients.get(selectClientPanel.getClients().getSelectionModel().getSelectedIndex());
+            //Affichage de l'hitorique du client
+            MainController.getInstance().setWindow(initClientHistoryPanel(selectedClient));
+            //Rafraichissement
+            refreshPanel();
+        });
+        //Lorsque l'utilisateur appuie sur le bouton retour, affichage fenêtre service client
+        selectClientPanel.getBack().setOnAction(e -> MainController.getInstance().setWindow(panel));
+    }
+
+    private BorderPane initClientHistoryPanel(Client client) {
+        //Initialisation de la fenêtre
+        clientHistoryPanel = new ClientHistoryPanel();
+        //Définition du titre
+        clientHistoryPanel.setPanelTitle("Historique des réservations - "
+                + client.getFIRSTNAME() + " " + client.getLASTNAME() + (client.getIS_REGULAR() ? " (Régulier)" : ""));
+        //Lorsque l'on appuie sur le bouton retour, affichage fenêtre service client
+        clientHistoryPanel.getBack().setOnAction(e -> MainController.getInstance().setWindow(panel));
+        //Si le client n'est pas régulier
+        if (!client.getIS_REGULAR()) {
+            //Définition de l'action du bouton pour mettre un client régulier
+            clientHistoryPanel.getRegularClientButton().setOnAction(e -> {
+                //Définition du client comme étant régulier
+                ClientService.getInstance().setRegularClient(client);
+                //Masquage du bouton
+                clientHistoryPanel.getRegularClientButton().setVisible(false);
+                clientHistoryPanel.getRegularClientButton().setManaged(false);
+                //Ajout du mot régulier au titre
+                clientHistoryPanel.getTitle().setText(clientHistoryPanel.getTitle().getText() + " (Régulier)");
+            });
+        } else {
+            //Masquage du bouton
+            clientHistoryPanel.getRegularClientButton().setVisible(false);
+            clientHistoryPanel.getRegularClientButton().setManaged(false);
+        }
+        //Récupération de l'historique du client
+        ObservableList<Reservation> clientHistory = FXCollections.observableList(ClientService.getInstance().getClientHistory(client));
+        //Définition des réservations à afficher
+        clientHistoryPanel.getClientReservations().setItems(clientHistory);
+        //Retour de la fenêtre
+        return clientHistoryPanel;
     }
 }

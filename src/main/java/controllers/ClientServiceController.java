@@ -38,21 +38,6 @@ public class ClientServiceController {
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
         //Affichage des boutons liés à une occupation sélectionnée
         panel.getOccupations().setOnMouseClicked(e -> refreshPanel());
-        //Définition de l'action du bouton d'archivage
-        panel.getArchiveButton().setOnAction(e -> {
-            //Récupération de l'occupation sélectionnée
-            Occupation occupation = panel.getOccupations().getSelectionModel().getSelectedItem();
-            //Si l'occupation existe
-            if (occupation != null)
-                //Archivage de l'occupation
-                ClientService.getInstance().archiveOccupation(occupation);
-            //Suppression du focus sur l'occupation
-            panel.getOccupations().getSelectionModel().clearSelection();
-            //Suppression de l'occupation du tableau
-            panel.getOccupations().getItems().remove(occupation);
-            //Rafraichissement
-            refreshPanel();
-        });
         //Définition de l'action du bouton pour facturer un service
         panel.getBillServiceButton().setOnAction(e -> {
             //Récupération de l'occupation sélctionnée

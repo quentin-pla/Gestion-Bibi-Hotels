@@ -19,17 +19,15 @@ public class ClientServicePanel extends BorderPane {
     private Button back = new Button("←");
     private Label title = new Label("Service Client");
     private TableView<Occupation> occupations = new TableView<>();
-    private Button archiveButton = new Button("Archiver");
     private Button presenceButton = new Button("Client présent");
     private Button billServiceButton = new Button("Facturer service");
-    private HBox refButtons = new HBox(archiveButton, billServiceButton, presenceButton);
+    private HBox refButtons = new HBox(billServiceButton, presenceButton);
 
     public ClientServicePanel() {
         setMinSize(MainController.width, MainController.height);
         back.getStyleClass().add("back");
         title.getStyleClass().add("h3");
         presenceButton.getStyleClass().add("ref-button");
-        archiveButton.getStyleClass().addAll("ref-button","red-text");
         billServiceButton.getStyleClass().addAll("ref-button");
         initOccupationsTable();
         BorderPane topContent = new BorderPane();
@@ -121,10 +119,6 @@ public class ClientServicePanel extends BorderPane {
 
     public TableView<Occupation> getOccupations() {
         return occupations;
-    }
-
-    public Button getArchiveButton() {
-        return archiveButton;
     }
 
     public Button getPresenceButton() {

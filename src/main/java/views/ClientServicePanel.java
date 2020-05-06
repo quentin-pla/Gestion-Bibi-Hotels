@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import models.Occupation;
 
+import java.util.Map;
+
 /**
  * Fenêtre du service client
  */
@@ -79,7 +81,7 @@ public class ClientServicePanel extends BorderPane {
         presence_col.setCellValueFactory(
                 param -> {
                     boolean condition = param.getValue().getIS_CLIENT_PRESENT();
-                    colorColumn(presence_col, condition ? Color.GREEN : Color.RED);
+                    colorColumn(presence_col, Map.of("Oui",Color.GREEN,"Non",Color.RED));
                     return new SimpleStringProperty(condition ? "Oui" : "Non");
                 });
         //Ajout et dimensionnement des colonnes
@@ -95,17 +97,17 @@ public class ClientServicePanel extends BorderPane {
     /**
      * Colorer une colonne en fonction de la valeur booléenne
      * @param column colonne
-     * @param color couleur
+     * @param conditionsColors couleur pour chaque condition
      */
-    private void colorColumn(TableColumn<Occupation, String> column, Color color) {
-        column.setCellFactory(new Callback<TableColumn<Occupation, String>, TableCell<Occupation, String>>() {
-            public TableCell<Occupation, String> call(TableColumn<Occupation, String> param) {
-                return new TableCell<Occupation, String>() {
+    private void colorColumn(TableColumn<Occupation, String> column, Map<String,Color> conditionsColors) {
+        column.setCellFactory(new Callback<>() {
+            public TableCell<Occupation, String> call(TableColumn param) {
+                return new TableCell<>() {
                     @Override
                     public void updateItem(String item, boolean value) {
                         super.updateItem(item, value);
                         if (!isEmpty()) {
-                            this.setTextFill(color);
+                            setTextFill(conditionsColors.get(item));
                             setText(item);
                         }
                     }

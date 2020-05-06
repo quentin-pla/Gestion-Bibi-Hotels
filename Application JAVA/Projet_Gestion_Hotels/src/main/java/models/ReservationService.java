@@ -158,23 +158,6 @@ public class ReservationService {
     }
 
     /**
-     * Enregistrer une réservation
-     * @param reservation réservation
-     */
-    public boolean registerReservation(Reservation reservation) {
-        //Vérifier que la réservation soit bien effectuée 2 jours avant la date d'arrivée
-        boolean checkArrivalDate = !getCurrentDate(2).after(reservation.getARRIVAL_DATE());
-        //Création de/des occupation(s) pour la réservation
-        if (checkArrivalDate && ClientService.getInstance().addOccupation(reservation)) {
-            //Ajout de la réservation à la liste
-            reservations.add(reservation);
-            //Retourne vrai
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Archiver une réservation
      * @param reservation reservation
      */
@@ -205,30 +188,6 @@ public class ReservationService {
                 linkedOccupations.add(occupation);
         //Retour des résultats
         return linkedOccupations;
-    }
-
-    /**
-     * Annuler une réservation
-     * @param reservation réservation
-     */
-    public boolean cancelReservation(Reservation reservation) {
-        //Vérifier que la réservation soit bien effectuée 2 jours avant la date d'arrivée
-        boolean checkArrivalDate = !getCurrentDate(2).after(reservation.getARRIVAL_DATE());
-        //Si la date est valide
-        if (checkArrivalDate) {
-            //Passage du booléen confirmée à vrai
-            reservation.setIS_CANCELLED(true);
-            //Mise à jour dans la base de données
-            reservation.updateColumn(Reservation.Columns.IS_CANCELLED);
-            //Suppression de la réservation dans la liste
-            reservations.remove(reservation);
-            //Ajout de la réservation dans les archives
-            archives.add(reservation);
-            //Retourne vrai
-            return true;
-        }
-        //Retourne faux
-        return false;
     }
 
     /**

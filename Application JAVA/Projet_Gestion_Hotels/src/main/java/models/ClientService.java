@@ -186,8 +186,6 @@ public class ClientService {
         System.out.println("Publicité envoyée à l'adresse mail " + mail);
     }
 
-    //TODO bouton pour envoyer mail au client depuis l'historique des réservations
-
     /**
      * Récupérer l'espace restant dans une occupation
      * @param occupation occupation

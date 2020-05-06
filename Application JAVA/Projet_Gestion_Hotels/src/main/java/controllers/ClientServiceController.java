@@ -219,6 +219,11 @@ public class ClientServiceController {
             clientHistoryPanel.getRegularClientButton().setVisible(false);
             clientHistoryPanel.getRegularClientButton().setManaged(false);
         }
+        //Définition de l'action du bouton pour envoyer une publicité
+        clientHistoryPanel.getSendAdvertisingButton().setOnAction(e -> {
+            //Envoi d'une publicité
+            ClientService.getInstance().sendAdvertising(client.getMAIL());
+        });
         //Récupération de l'historique du client
         ObservableList<Reservation> clientHistory = FXCollections.observableList(ClientService.getInstance().getClientHistory(client));
         //Définition des réservations à afficher

@@ -17,11 +17,12 @@ import models.Occupation;
  */
 public class ClientServicePanel extends BorderPane {
     private Button back = new Button("←");
-    private Label title = new Label("Service Client");
+    private Label title = new Label("Liste des occupations en cours");
     private TableView<Occupation> occupations = new TableView<>();
+    private Button clientHistoryButton = new Button("Historique Client");
     private Button presenceButton = new Button("Client présent");
     private Button billServiceButton = new Button("Facturer service");
-    private HBox refButtons = new HBox(billServiceButton, presenceButton);
+    private HBox refButtons = new HBox(clientHistoryButton,billServiceButton, presenceButton);
 
     public ClientServicePanel() {
         setMinSize(MainController.width, MainController.height);
@@ -34,7 +35,6 @@ public class ClientServicePanel extends BorderPane {
         topContent.setLeft(back);
         topContent.setCenter(title);
         BorderPane.setAlignment(title, Pos.CENTER);
-        refButtons.setVisible(false);
         refButtons.setSpacing(10);
         VBox centerContent = new VBox(occupations,refButtons);
         centerContent.setSpacing(20);
@@ -120,6 +120,8 @@ public class ClientServicePanel extends BorderPane {
     public TableView<Occupation> getOccupations() {
         return occupations;
     }
+
+    public Button getClientHistoryButton() { return clientHistoryButton; }
 
     public Button getPresenceButton() {
         return presenceButton;

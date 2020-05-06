@@ -4,8 +4,6 @@ import database.DatabaseData;
 
 import java.util.*;
 
-//TODO bug affichage multiple données
-
 public class Administration {
     /**
      * Hotels disponibles

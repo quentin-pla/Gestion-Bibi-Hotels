@@ -41,7 +41,7 @@ public class ReservationServiceController {
         //Initialisation des réservations
         ReservationService.getInstance(hotel).initReservations();
         //Définition du titre de la fenêtre
-        panel.setPanelTitle("Service Réservation - " + hotel.getHOTEL_NAME());
+        panel.setPanelTitle("Liste des réservations - Hôtel " + hotel.getHOTEL_NAME());
         //Définition de l'action du bouton retour
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
         //Affichage des boutons liés à une réservation sélectionnée

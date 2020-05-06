@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.Reservation;
 
@@ -21,6 +22,7 @@ public class ClientHistoryPanel extends BorderPane {
     private Button back = new Button("←");
     private Label title = new Label();
     private Button regularClientButton = new Button("Client régulier");
+    private Button sendAdvertisingButton = new Button("Envoyer publicité");
     private TableView<Reservation> reservations = new TableView<>();
 
     /**
@@ -31,12 +33,15 @@ public class ClientHistoryPanel extends BorderPane {
         back.getStyleClass().add("back");
         title.getStyleClass().add("h3");
         regularClientButton.getStyleClass().add("ref-button");
+        sendAdvertisingButton.getStyleClass().add("ref-button");
         initReservationsTable();
         BorderPane topContent = new BorderPane();
         topContent.setLeft(back);
         topContent.setCenter(title);
         BorderPane.setAlignment(title, Pos.CENTER);
-        VBox centerContent = new VBox(reservations, regularClientButton);
+        HBox buttons = new HBox(sendAdvertisingButton, regularClientButton);
+        buttons.setSpacing(10);
+        VBox centerContent = new VBox(reservations, buttons);
         centerContent.setSpacing(20);
         BorderPane.setMargin(centerContent, new Insets(10,50,0,50));
         setTop(topContent);
@@ -94,6 +99,8 @@ public class ClientHistoryPanel extends BorderPane {
     public void setPanelTitle(String value) { title.setText(value); }
 
     public Button getRegularClientButton() { return regularClientButton; }
+
+    public Button getSendAdvertisingButton() { return sendAdvertisingButton; }
 
     public TableView<Reservation> getClientReservations() { return reservations; }
 }

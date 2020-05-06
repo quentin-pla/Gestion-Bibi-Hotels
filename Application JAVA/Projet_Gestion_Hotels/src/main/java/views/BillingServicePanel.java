@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import models.Bill;
 
+import java.util.Map;
+
 /**
  * Fenêtre du service facturation
  */
@@ -75,7 +77,7 @@ public class BillingServicePanel extends BorderPane {
         amount_col.setCellValueFactory(
                 param -> {
                     boolean condition = !(param.getValue().getAMOUNT() == 0.0);
-                    colorColumn(amount_col, condition ? Color.BLACK : Color.RED);
+                    colorColumn(amount_col, Map.of(param.getValue().getAMOUNT() + "€",Color.BLACK,"À calculer",Color.RED));
                     return new SimpleStringProperty(condition ? param.getValue().getAMOUNT() + "€" : "À calculer");
                 });
         //Colonne est payée
@@ -83,7 +85,7 @@ public class BillingServicePanel extends BorderPane {
         is_payed_col.setCellValueFactory(
                 param -> {
                     boolean condition = param.getValue().getIS_PAYED();
-                    colorColumn(is_payed_col, condition ? Color.GREEN : Color.RED);
+                    colorColumn(is_payed_col, Map.of("Effectué",Color.GREEN,"En attente",Color.RED));
                     return new SimpleStringProperty(condition ? "Effectué":"En attente");
                 });
         //Ajout et dimensionnement des colonnes
@@ -98,17 +100,17 @@ public class BillingServicePanel extends BorderPane {
     /**
      * Colorer une colonne en fonction de la valeur booléenne
      * @param column colonne
-     * @param color couleur
+     * @param conditionsColors couleur pour chaque condition
      */
-    private void colorColumn(TableColumn<Bill, String> column, Color color) {
-        column.setCellFactory(new Callback<TableColumn<Bill, String>, TableCell<Bill, String>>() {
-            public TableCell<Bill, String> call(TableColumn<Bill, String> param) {
-                return new TableCell<Bill, String>() {
+    private void colorColumn(TableColumn<Bill, String> column, Map<String,Color> conditionsColors) {
+        column.setCellFactory(new Callback<>() {
+            public TableCell<Bill, String> call(TableColumn param) {
+                return new TableCell<>() {
                     @Override
                     public void updateItem(String item, boolean value) {
                         super.updateItem(item, value);
                         if (!isEmpty()) {
-                            this.setTextFill(color);
+                            setTextFill(conditionsColors.get(item));
                             setText(item);
                         }
                     }

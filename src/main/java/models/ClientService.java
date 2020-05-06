@@ -1,7 +1,6 @@
 package models;
 
 import database.DatabaseData;
-import database.DatabaseModel;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -9,9 +8,6 @@ import javafx.collections.ObservableList;
 import java.util.*;
 
 import static database.DatabaseConnection.getAvailableRoomsQuery;
-import static database.DatabaseConnection.selectQuery;
-
-//TODO - page affichant l'historique des réservations d'un client
 
 public class ClientService {
     /**
@@ -140,19 +136,19 @@ public class ClientService {
     }
 
     /**
-     * Récupérer l'historique des occupations d'un client
-     * @param client_id id du client
-     * @return occupations
+     * Récupérer l'historique des réservations d'un client
+     * @param client client
+     * @return réservations
      */
-    public ArrayList<Occupation> getClientHistory(int client_id) {
+    public ArrayList<Reservation> getClientHistory(Client client) {
         //Historique
-        ArrayList<Occupation> history = new ArrayList<>();
+        ArrayList<Reservation> history = new ArrayList<>();
         //Pour chaque occupation dans les archives
-        for (Occupation archive : archives)
-            //Si l'archive est liée au client
-            if (archive.getReservation().getCLIENT_ID() == client_id)
+        for (Reservation reservation : DatabaseData.getInstance().getReservations().values())
+            //Si la réservation est liée au client et qu'elle est archivée
+            if (reservation.getIS_ARCHIVED() && reservation.getCLIENT_ID() == client.getID())
                 //Ajout de l'archive dans l'historique
-                history.add(archive);
+                history.add(reservation);
         //Retour de l'historique
         return history;
     }
@@ -257,11 +253,9 @@ public class ClientService {
 
     /**
      * Définir un client comme étant régulier
-     * @param client_id id du client
+     * @param client client
      */
-    public void setRegularClient(int client_id) {
-        //Récupération du client depuis la base de données
-        Client client = (Client) selectQuery(DatabaseModel.Tables.CLIENTS, client_id);
+    public void setRegularClient(Client client) {
         //Passage du booléen à vrai
         client.setIS_REGULAR(true);
         //Mise à jour dans la base de données

@@ -31,7 +31,7 @@ public class BillingServiceController {
         //Initialisation des factures
         BillingService.getInstance(hotel).initBills();
         //Définition du titre de la fenêtre
-        panel.setPanelTitle("Service Facturation - " + hotel.getHOTEL_NAME());
+        panel.setPanelTitle("Liste des factures - Hôtel " + hotel.getHOTEL_NAME());
         //Définition de l'action du bouton retour
         panel.getBack().setOnAction(e -> MainController.getInstance().switchToSelect());
         //Affichage des boutons liés à une facture sélectionnée

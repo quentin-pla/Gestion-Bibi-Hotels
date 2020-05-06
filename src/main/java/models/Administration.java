@@ -2,10 +2,9 @@ package models;
 
 import database.DatabaseData;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
+//TODO bug affichage multiple données
 
 public class Administration {
     /**
@@ -31,6 +30,8 @@ public class Administration {
      * Initialisation des hotels
      */
     public void initHotels() {
+        //Suppression de la liste des hotels
+        hotels.clear();
         //Ajout des hotels à la liste
         hotels.addAll(DatabaseData.getInstance().getHotels().values());
     }
@@ -57,6 +58,14 @@ public class Administration {
      * Retour sous forme de pourcentages
      */
     public Map<String,Double> getAvailableBilledRoomRatio() {
+        //Récupération de l'instance du calendrier
+        Calendar cal = Calendar.getInstance();
+        //Heure à minuit
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        //Enlèvement de 3 mois à la date
+        cal.add(Calendar.DATE,-90);
         //Ratio pour chaque type de chambre
         Map<String,Double> roomTypesRatio = new HashMap<>();
         //Récupération de tous les types de chambres
@@ -69,10 +78,13 @@ public class Administration {
         for (Hotel hotel : hotels) {
             //Pour chaque facture archivée de l'hotel
             for (Bill bill : BillingService.getInstance(hotel).getArchives()) {
-                //Nom du type de chambre
-                String room_type_name = bill.getReservation().getRoomType().getNAME();
-                //Incrémentation de 1 dans le ratio pour le type de chambre
-                roomTypesRatio.put(room_type_name,roomTypesRatio.get(room_type_name) + 1);
+                //Si la date de sortie de la réservation est comprise dans les 3 derniers mois
+                if (cal.getTime().before(bill.getReservation().getEXIT_DATE())) {
+                    //Nom du type de chambre
+                    String room_type_name = bill.getReservation().getRoomType().getNAME();
+                    //Incrémentation de 1 dans le ratio pour le type de chambre
+                    roomTypesRatio.put(room_type_name, roomTypesRatio.get(room_type_name) + 1);
+                }
             }
         }
         //Pour chaque ratio division par le nombre de jours
@@ -84,18 +96,39 @@ public class Administration {
     /**
      * Factures de chaque chambre de chaque hotel
      */
-    public Map<Hotel,ArrayList<Bill>> getBilledAmounts() {
+    public Map<String,Double> getBilledAmounts() {
         //Initialisation d'une map
-        Map<Hotel,ArrayList<Bill>> results = new HashMap<>();
+        Map<String,Double> results = new HashMap<>();
         //Pour chaque hotel
-        for (Hotel hotel : hotels)
-            //Ajout des factures
-            results.put(hotel, BillingService.getInstance(hotel).getArchives());
+        for (Hotel hotel : hotels) {
+            //Ajout de l'hotel dans les résultats
+            results.put(hotel.getHOTEL_NAME(), 0.0);
+            //Pour chaque facture archivée
+            for (Bill bill : BillingService.getInstance(hotel).getArchives())
+                //Ajout des factures
+                results.put(hotel.getHOTEL_NAME(), results.get(hotel.getHOTEL_NAME()) + bill.getAMOUNT());
+        }
         //Retour des résultats
         return results;
     }
 
-    public ArrayList<Hotel> getHotels() {
-        return hotels;
+    /**
+     * Nombre de services facturés pour chaque hotel
+     */
+    public Map<String,Integer> getBilledServicesAmount() {
+        //Initialisation d'une map
+        Map<String,Integer> results = new HashMap<>();
+        //Pour chaque service facturé
+        for (BilledService billedService : DatabaseData.getInstance().getBilledServices().values()) {
+            //Si le service n'est pas contenu dans les résultats
+            if (!results.containsKey(billedService.getService().getNAME()))
+                //Ajout du service dans les résultats
+                results.put(billedService.getService().getNAME(), 1);
+            else
+                //Incrémentation du nombre de services facturés
+                results.put(billedService.getService().getNAME(), results.get(billedService.getService().getNAME()) + 1);
+        }
+        //Retour des résultats
+        return results;
     }
 }

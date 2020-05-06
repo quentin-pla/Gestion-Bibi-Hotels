@@ -28,6 +28,10 @@
     -fx-font-size: 20px;
 }
 
+.h4 {
+    -fx-font-size: 15px;
+}
+
 .label {
     -fx-text-fill: white;
 }

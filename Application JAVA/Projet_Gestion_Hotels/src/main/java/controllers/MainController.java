@@ -123,7 +123,7 @@ public class MainController {
         //Service sélectionné Administration
         selected_service = ServicePanel.ADMINISTRATION;
         //Affichage du panneau d'administration
-        setWindow(administrationController.getPanel());
+        setWindow(administrationController.initPanel());
     }
 
     /**

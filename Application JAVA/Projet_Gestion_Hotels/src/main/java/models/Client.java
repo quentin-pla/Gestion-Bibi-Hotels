@@ -3,8 +3,6 @@ package models;
 import database.DatabaseColumns;
 import database.DatabaseModel;
 
-//TODO - hash password avec bcrypt
-
 public class Client extends DatabaseModel {
     /**
      * Nom

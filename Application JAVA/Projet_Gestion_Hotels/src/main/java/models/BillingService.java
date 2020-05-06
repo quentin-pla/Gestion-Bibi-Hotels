@@ -84,6 +84,8 @@ public class BillingService {
     public void initBills() {
         //Suppression des factures
         pending_bills.clear();
+        //Récupération des Factures de la base de données
+        DatabaseData.getInstance().retrieveDatabaseBills();
         //Initialisation des factures
         filterBills(DatabaseData.getInstance().getBills().values());
     }

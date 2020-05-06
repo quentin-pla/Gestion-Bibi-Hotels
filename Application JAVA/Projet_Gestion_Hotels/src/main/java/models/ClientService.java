@@ -254,25 +254,6 @@ public class ClientService {
     }
 
     /**
-     * Archiver une occupation
-     * @param occupation occupation
-     */
-    public void archiveOccupation(Occupation occupation) {
-        //Archivage de l'occupation
-        archives.add(occupation);
-        //Suppression de l'occupation
-        occupations.remove(occupation);
-        //Passage du booléen archivée à vrai
-        occupation.setIS_ARCHIVED(true);
-        //Mise à jour dans la base de données
-        occupation.updateColumn(Occupation.Columns.IS_ARCHIVED);
-        //Client non présent
-        occupation.setIS_CLIENT_PRESENT(false);
-        //Mise à jour dans la base de données
-        occupation.updateColumn(Occupation.Columns.IS_CLIENT_PRESENT);
-    }
-
-    /**
      * Récupérer les occupants liés à une occupation
      * @param occupation occupation
      * @return liste d'occupants

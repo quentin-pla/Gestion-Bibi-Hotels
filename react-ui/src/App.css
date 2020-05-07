@@ -24,6 +24,10 @@ svg {
     padding-right: 10%;
 }
 
+.no-carret {
+    caret-color: transparent !important;
+}
+
 .media-object{
     width: 160px;
 }
@@ -33,15 +37,12 @@ svg {
 }
 
 .ul{
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 .hotel-view{
     margin-top: 5%;
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-right: 10px;
+    padding: 10px;
     border-style: solid;
     border-width: 10px;
     background-color: gainsboro;
@@ -75,8 +76,24 @@ p {
 
 .navbar-top {
     z-index: 1;
+    box-shadow: 0 0 20px 10px rgba(0,0,0,0.1);
 }
 
 .card {
     border: none;
+}
+
+.searchInput {
+    padding: 15px 0 15px 0;
+    border-radius: 10px;
+    box-shadow: 0 0 20px 3px rgba(0,0,0,0.1);
+}
+
+.searchInput label {
+    justify-content: left;
+    padding: 0 0 5px 0;
+}
+
+#peopleInput {
+    max-width: 140px;
 }

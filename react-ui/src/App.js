@@ -9,7 +9,6 @@ import Profil from './components/Profil'
 import Signup from './components/auth/Signup';
 import AuthButton from './components/auth/AuthButton';
 import {AuthContext} from "./context/AuthContext";
-import Hotels from "./components/Hotels";
 import HotelView from "./components/HotelView";
 import Reservation from "./components/Reservation";
 import Facture from "./components/Facture";
@@ -20,18 +19,15 @@ class App extends Component {
      */
     static contextType = AuthContext;
 
-    constructor(props, context) {
-        super(props, context);
-    }
-
     render() {
-        const auth = this.context;
         return (
             <Router>
-                <Navbar bg="dark">
+                <Navbar sticky="top" className="navbar-top mb-5" bg={"light"} variant={"light"}>
                     <Navbar.Brand>
-                        <Link className="navbar-brand text-white" to="/">
-                            BestHotels
+                        <Link className="navbar-brand text-primary" to="/">
+                            <img alt="logo" src={process.env.PUBLIC_URL + '/bibi.PNG'} width="30" height="30"
+                                 className="d-inline-block mb-1 mr-2"/>
+                                 Hôtels Bibi
                         </Link>
                     </Navbar.Brand>
                     <NavLinks authenticated={this.context.authenticated}/>
@@ -44,7 +40,6 @@ class App extends Component {
                 <Switch>
                     <Route exact path="/">
                         <Home />
-                        {auth.authenticated ? <Hotels/> : ""}
                     </Route>
                     <Route path="/login">
                         <Login/>
@@ -78,9 +73,9 @@ function NavLinks(props) {
     //Si l'utilisateur est authentifié
     return props.authenticated ? (
         <Nav className="mr-auto">
-            <Link className="nav-link text-white" to="/profil">Profil</Link>
-            <Link className="nav-link text-white" to="/reservation">Mes Reservations</Link>
-            <Link className="nav-link text-white" to="/facture">Mes factures</Link>
+            <Link className="nav-link" to="/profil">Profil</Link>
+            <Link className="nav-link" to="/reservation">Réservations</Link>
+            <Link className="nav-link" to="/facture">Factures</Link>
         </Nav>
     ) : (
         <Nav className="mr-auto"/>

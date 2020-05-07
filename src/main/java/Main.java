@@ -1,5 +1,6 @@
 import controllers.MainController;
 import javafx.application.Application;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -21,6 +22,8 @@ public class Main extends Application {
         primaryStage.setScene(MainController.getInstance().getScene());
         //Ajout du style
         primaryStage.getScene().getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        //Initialisation de la police Avenir
+        Font.loadFont(getClass().getResource("Avenir.otf").toExternalForm(),13);
         //Affichage de la fenêtre
         primaryStage.show();
     }

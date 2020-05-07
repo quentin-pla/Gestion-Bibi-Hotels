@@ -1,6 +1,7 @@
 import {Container, Row, Col} from "react-bootstrap";
 import React, {Component} from "react";
 import {AuthContext} from "../context/AuthContext";
+import HotelList from "./HotelList";
 
 class Home extends Component {
     /**
@@ -12,16 +13,19 @@ class Home extends Component {
         const auth = this.context;
 
         return (
-            <Container fluid>
-                <Row className="justify-content-md-center">
-                    <Col className="col-12 text-center">
-                        <h1 className="display-3">{auth.authenticated ? "Bienvenue " + auth.mail : "Bienvenue"}</h1>
-                    </Col>
-                    <Col className="col-12 text-center">
-                        <h3 className="text-muted">{auth.authenticated ? "Réservez un hôtel dès maintenant." : "Connectez-vous pour réserver un hôtel."}</h3>
-                    </Col>
-                </Row>
-            </Container>
+            auth.authenticated ?
+                <HotelList/>
+            :
+                <Container fluid className={"flex-center full-height"}>
+                    <Row className="justify-content-md-center">
+                        <Col className="col-12 text-center">
+                            <h1 className="display-3">Bienvenue</h1>
+                        </Col>
+                        <Col className="col-12 text-center">
+                            <h3 className="text-muted">Connectez-vous pour réserver un hôtel.</h3>
+                        </Col>
+                    </Row>
+                </Container>
         );
     }
 }

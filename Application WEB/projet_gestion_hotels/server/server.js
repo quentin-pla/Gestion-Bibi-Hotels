@@ -206,7 +206,6 @@ io.sockets.on('connection', function (socket) {
                 MAIL: data.mail
             }
         }).then((client) => {
-            console.log(data);
             Reservation.create({
                 client_id: client.id,
                 hotel_id: data.hotel_id,

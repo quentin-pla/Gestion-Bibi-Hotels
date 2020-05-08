@@ -22,12 +22,12 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <Navbar sticky="top" className="navbar-top mb-5" bg={"light"} variant={"light"}>
+                <Navbar sticky="top" className="navbar-top mb-4" bg={"light"} variant={"light"}>
                     <Navbar.Brand>
                         <Link className="navbar-brand text-primary" to="/">
                             <img alt="logo" src={process.env.PUBLIC_URL + '/bibi.PNG'} width="30" height="30"
                                  className="d-inline-block mb-1 mr-2"/>
-                                 Hôtels Bibi
+                                <strong>Bibi</strong> hôtels
                         </Link>
                     </Navbar.Brand>
                     <NavLinks authenticated={this.context.authenticated}/>

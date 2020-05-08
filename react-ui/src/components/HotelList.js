@@ -2,7 +2,11 @@ import React, {Component} from "react";
 import {AuthContext} from "../context/AuthContext";
 import socket from "../context/SocketIOInstance";
 import {Link} from "react-router-dom";
-import {Button, Col, Form, Row} from "react-bootstrap";
+import {Button, Card, Col, Form, Row} from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import PeopleFill from "react-bootstrap-icons/dist/icons/people-fill";
+import StarFill from "react-bootstrap-icons/dist/icons/star-fill";
+import Star from "react-bootstrap-icons/dist/icons/star";
 
 class HotelList extends Component {
     /**
@@ -50,7 +54,7 @@ class HotelList extends Component {
     applyFilter(){
         let data = {
             ville : this.state.ville,
-            nblits: this.state.nblits,
+            nblits: this.state.nbPersonnes*2,
             dateA : this.state.dateA,
             dateD : this.state.dateD
         };
@@ -131,65 +135,90 @@ class HotelList extends Component {
         const minExitDate = this.getActualDate(4);
 
         return (
-            <Row>
-                <Col bsPrefix={"col-12 text-center mb-4"}>
+            <Container fluid>
+                <Row bsPrefix={"text-center mb-4"}>
                     <h1>Voyagez à travers le monde, grâce à Bibi.</h1>
-                </Col>
-                <Col bsPrefix={"col-12 mb-4 justify-content-center"}>
+                </Row>
+                <Row bsPrefix={"mb-4 justify-content-center"}>
                     <Form className={"form-inline justify-content-center"}>
                         <Row className={"searchInput"}>
                             <Col>
-                                <Form.Label column={"cityInput"} className={"text-left"}>Destination</Form.Label>
-                                <Form.Control id="cityInput" placeholder="Marseille" type="text" onChange={e => this.setState({"ville": e.target.value})}/>
+                                <Form.Label column={"cityInput"} className={"text-left label-field"}>DESTINATION</Form.Label>
+                                <Form.Control className="form-control-sm" id="cityInput" placeholder="Marseille" type="text" onChange={e => this.setState({"ville": e.target.value})}/>
                             </Col>
                             <Col>
-                                <Form.Label column={"dateAInput"} className={"text-left"}>Arrivée</Form.Label>
-                                <Form.Control id="dateAInput" type="date" min={minArrivalDate} value={minArrivalDate} onChange={e => this.setState({"dateA": e.target.value})}/>
+                                <Form.Label column={"dateAInput"} className={"text-left label-field"}>ARRIVÉE</Form.Label>
+                                <Form.Control className="form-control-sm" id="dateAInput" type="date" min={minArrivalDate} value={minArrivalDate} onChange={e => this.setState({"dateA": e.target.value})}/>
                             </Col>
                             <Col>
-                                <Form.Label column={"dateDInput"} className={"text-left"}>Départ</Form.Label>
-                                <Form.Control id="dateDInput" type="date" min={minExitDate} value={minExitDate} onChange={e => this.setState({"dateD": e.target.value})}/>
+                                <Form.Label column={"dateDInput"} className={"text-left label-field"}>DÉPART</Form.Label>
+                                <Form.Control className="form-control-sm" id="dateDInput" type="date" min={minExitDate} value={minExitDate} onChange={e => this.setState({"dateD": e.target.value})}/>
                             </Col>
                             <Col>
-                                <Form.Label column={"peopleInput"} className={"text-left"}>Voyageurs</Form.Label>
-                                <Form.Control id="peopleInput" className={"no-carret"} type="number" min="1" placeholder={this.state.nbPersonnes} onKeyDown={e => e.preventDefault()} onChange={e => this.setState({"nbPersonnes": e.target.value})}/>
+                                <Form.Label column={"peopleInput"} className={"text-left label-field"}>VOYAGEURS</Form.Label>
+                                <Form.Control className="form-control-sm no-carret" id="peopleInput" type="number" min="1" placeholder={this.state.nbPersonnes} onKeyDown={e => e.preventDefault()} onChange={e => this.setState({"nbPersonnes": e.target.value})}/>
                             </Col>
                             <Col className={"my-auto"}>
-                                <Button variant="dark" onClick={() => this.applyFilter()}>Rechercher</Button>
+                                <Button variant="primary" onClick={() => this.applyFilter()}>Rechercher</Button>
                             </Col>
                         </Row>
                     </Form>
-                </Col>
-                <div className="justify-content-md-center row">
-                    {this.state.merged.length === 0 ? <h3>Aucun resultat</h3> :
-                        <ul className="ul">
-                            {this.state.merged.map((item) => {
+                </Row>
+                <Row>
+                    <Row className={"m-0 px-4 mb-4 w-100"}>
+                        {this.state.merged.length === 0 ? <h3>Aucun resultat</h3> :
+                            this.state.merged.map((item) => {
                                 let link = "room/" + item.id;
                                 return (
-                                    <Link key={item.id} className="nav-link text-black" to={link}>
-                                        <div className="hotel-view">
-                                            <div className="media">
-                                                <div className="media-left media-middle">
-                                                    <img src={this.getRoomPreview(item)} className="media-object" alt={"room"}/>
-                                                </div>
-                                                <div className="media-body">
-                                                    <h4 className="media-heading">{item.hotel_name}</h4>
-                                                    <h6>Nombre de lit : {item.bed_capacity}</h6>
-                                                    <h6>Ville : {item.city}</h6>
-                                                    <h6>Prix : {item.price}</h6>
-                                                    <h6>Note : {item.stars}/5</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Link>
+                                    <Col className={"col-4 p-4"}>
+                                        <RoomItem item={item} preview={this.getRoomPreview(item)}>
+                                            <Link to={link} className="stretched-link"/>
+                                        </RoomItem>
+                                    </Col>
                                 )
-                            })}
-                        </ul>
-                    }
-                </div>
-            </Row>
+                            })
+                        }
+                    </Row>
+                </Row>
+            </Container>
         );
     }
+}
+
+
+function RoomItem(props) {
+    function getStars(stars) {
+        let result = [];
+        for (let i = 1; i <= 5; i++)
+            result.push((i <= stars) ? <StarFill className={"star"}/> : <Star className={"star"}/>);
+        return result;
+    }
+
+    return (
+        <Card className={"room-card"}>
+            <Card.Img variant="top" className="media-object" src={props.preview} alt="room preview"/>
+            <Card.Body>
+                {props.children}
+                <div className="d-flex">
+                    <div>
+                        <Card.Title className={"m-0"}><strong>Bibi</strong> {props.item.hotel_name}</Card.Title>
+                    </div>
+                    <div className="ml-auto">
+                        <h5 className={"m-0"}>{getStars(props.item.stars)}</h5>
+                    </div>
+                </div>
+                <div className="d-flex">
+                    <div>
+                        <h6 className={"hotel-city"}>{props.item.city}</h6>
+                    </div>
+                    <div className="ml-auto mr-1">
+                        <PeopleFill style={{fontSize: 20}}/> {props.item.bed_capacity*2}
+                    </div>
+                </div>
+                <h6 className={"room-price"}><strong>{props.item.price}€</strong>/nuit </h6>
+            </Card.Body>
+        </Card>
+    );
 }
 
 export default HotelList;

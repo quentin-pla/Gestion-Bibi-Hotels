@@ -2,7 +2,7 @@ html, body, #root {
     height:100%;
 }
 
-*:focus, *:active {
+input:focus, input:active {
     outline: none;
     box-shadow: none !important;
 }
@@ -28,10 +28,6 @@ svg {
     caret-color: transparent !important;
 }
 
-.media-object{
-    width: 160px;
-}
-
 .label{
     color: black;
 }
@@ -46,10 +42,6 @@ svg {
     border-style: solid;
     border-width: 10px;
     background-color: gainsboro;
-}
-
-.media-body{
-    padding-left: 13px;
 }
 
 p {
@@ -79,14 +71,12 @@ p {
     box-shadow: 0 0 20px 10px rgba(0,0,0,0.1);
 }
 
-.card {
-    border: none;
-}
+/*************** Barre de recherche ****************/
 
 .searchInput {
-    padding: 15px 0 15px 0;
+    padding: 10px 0 10px 0;
     border-radius: 10px;
-    box-shadow: 0 0 20px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px 3px rgba(0,0,0,0.1);
 }
 
 .searchInput label {
@@ -96,4 +86,37 @@ p {
 
 #peopleInput {
     max-width: 140px;
+}
+
+.label-field {
+    font-size: 12px;
+    font-weight: bold;
+    color: rgba(0,0,0,.7);
+}
+
+/*************** Carte chambre ****************/
+
+.room-card {
+    box-shadow: 0 4px 10px 3px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 18vw;
+    object-fit: cover;
+}
+
+.star {
+    color: gold;
+}
+
+.hotel-city {
+    color: #363636;
+    font-weight: lighter;
+    font-size: 17px;
+}
+
+.room-price {
+    font-size: 20px;
 }

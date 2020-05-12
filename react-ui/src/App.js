@@ -9,7 +9,6 @@ import Profil from './components/Profil'
 import Signup from './components/auth/Signup';
 import AuthButton from './components/auth/AuthButton';
 import {AuthContext} from "./context/AuthContext";
-import HotelView from "./components/HotelView";
 import Reservation from "./components/Reservation";
 import Facture from "./components/Facture";
 
@@ -46,9 +45,6 @@ class App extends Component {
                     </Route>
                     <Route path="/signup">
                         <Signup/>
-                    </Route>
-                    <Route path="/room/:id" component={HotelView}>
-                        <HotelView/>
                     </Route>
                     <PrivateRoute path="/profil">
                         <Profil/>

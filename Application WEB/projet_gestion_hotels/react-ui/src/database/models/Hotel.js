@@ -1,7 +1,10 @@
-const {Model, DataTypes} = require('sequelize');
 const connection = require("../dbconnection");
+const {Model, DataTypes} = connection.sequelize;
+const Reservation = require("./Reservation");
+const Room = require("./Room");
 
 class Hotel extends Model {}
+
 Hotel.init({
     id: {
         type: DataTypes.INTEGER,
@@ -25,7 +28,7 @@ Hotel.init({
         field: 'STAR_RATING'
     },
 }, {
-    modelName: 'hotels',
+    modelName: 'hotel',
     tableName: 'HOTELS',
     sequelize: connection,
     timestamps: false

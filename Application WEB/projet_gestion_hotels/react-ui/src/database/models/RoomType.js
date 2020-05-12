@@ -1,7 +1,8 @@
-const {Model, DataTypes} = require('sequelize');
 const connection = require("../dbconnection");
+const {Model, DataTypes} = connection.sequelize;
 
 class RoomType extends Model {}
+
 RoomType.init({
     id: {
         type: DataTypes.INTEGER,
@@ -29,7 +30,7 @@ RoomType.init({
         field: 'HAS_TV'
     }
 }, {
-    modelName: 'roomtypes',
+    modelName: 'roomtype',
     tableName: 'ROOMTYPES',
     sequelize: connection,
     timestamps: false

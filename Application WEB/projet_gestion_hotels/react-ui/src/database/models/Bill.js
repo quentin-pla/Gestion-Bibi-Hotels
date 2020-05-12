@@ -1,31 +1,48 @@
-const {Model, DataTypes} = require('sequelize');
 const connection = require("../dbconnection");
+const {Model, DataTypes} = connection.sequelize;
+const Client = require("./Client");
+const Reservation = require("./Reservation");
 
 class Bill extends Model {}
+
 Bill.init({
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER.UNSIGNED,
         field: 'ID',
-        primaryKey: true
+        unique: true
     },
     reservation_id: {
         type: DataTypes.INTEGER,
-        field: 'RESERVATION_ID'
+        field: 'RESERVATION_ID',
+        references: {
+            model: Reservation,
+            key: 'ID'
+        },
+        primaryKey: true
     },
     client_id: {
         type: DataTypes.INTEGER,
-        field: 'CLIENT_ID'
+        field: 'CLIENT_ID',
+        references: {
+            model: Client,
+            key: 'ID'
+        },
+        primaryKey: true
     },
     amount: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.DOUBLE,
         field: 'AMOUNT'
+    },
+    is_payed: {
+        type: DataTypes.BOOLEAN,
+        field: 'IS_PAYED'
     },
     is_archived: {
         type: DataTypes.BOOLEAN,
         field: 'IS_ARCHIVED'
     }
 }, {
-    modelName: 'bills',
+    modelName: 'bill',
     tableName: 'BILLS',
     sequelize: connection,
     timestamps: false

@@ -1,33 +1,57 @@
-const {Model, DataTypes} = require('sequelize');
 const connection = require("../dbconnection");
+const {Model, DataTypes} = connection.sequelize;
+const Client = require("./Client");
+const Hotel = require("./Hotel");
+const RoomType = require("./RoomType");
+const Bill = require("./Bill");
+const Occupation = require("./Occupation");
 
 class Reservation extends Model {}
+
 Reservation.init({
     id: {
         type: DataTypes.INTEGER,
         field: 'ID',
-        primaryKey: true
+        unique: true
     },
     client_id: {
         type: DataTypes.INTEGER,
-        field: 'CLIENT_ID'
+        field: 'CLIENT_ID',
+        references: {
+            model: Client,
+            key: 'ID'
+        },
+        primaryKey: true
     },
     hotel_id: {
         type: DataTypes.INTEGER,
-        field: 'HOTEL_ID'
+        field: 'HOTEL_ID',
+        references: {
+            model: Hotel,
+            key: 'ID'
+        },
+        primaryKey: true
     },
     roomtype_id: {
         type: DataTypes.INTEGER,
         defaultValue: 1,
-        field: 'ROOMTYPE_ID'
+        field: 'ROOMTYPE_ID',
+        references: {
+            model: RoomType,
+            key: 'ID'
+        },
+        primaryKey: true
     },
     arrival_date: {
         type: DataTypes.DATE,
-        field: 'ARRIVAL_DATE'
+        field: 'ARRIVAL_DATE',
+        defaultValue: DataTypes.NOW,
+        primaryKey: true
     },
     exit_date: {
         type: DataTypes.DATE,
-        field: 'EXIT_DATE'
+        field: 'EXIT_DATE',
+        defaultValue: DataTypes.NOW
     },
     duration: {
         type: DataTypes.INTEGER,
@@ -63,6 +87,12 @@ Reservation.init({
     sequelize: connection,
     timestamps: false
 });
+
+// Reservation.associate = (models) => {
+//     Reservation.belongsTo(models.clients, {foreignKey: 'CLIENT_ID'});
+//     Reservation.belongsTo(models.hotels, {foreignKey: 'HOTEL_ID'});
+//     Reservation.belongsTo(models.roomtypes, {foreignKey: 'ROOMTYPE_ID'});
+// };
 
 //Exportation du modèle
 module.exports = Reservation;

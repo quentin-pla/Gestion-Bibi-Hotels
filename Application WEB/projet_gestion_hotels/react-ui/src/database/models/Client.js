@@ -1,11 +1,20 @@
-const {Model, DataTypes} = require('sequelize');
 const connection = require("../dbconnection");
+const {Model, DataTypes} = connection.sequelize;
+const Reservation = require("./Reservation");
 
 class Client extends Model {}
+
 Client.init({
+    id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        field: 'ID',
+        primaryKey: true
+    },
     mail: {
         type: DataTypes.STRING,
-        field: 'MAIL'
+        field: 'MAIL',
+        unique: true,
+        primaryKey: true
     },
     firstname: {
         type: DataTypes.STRING,

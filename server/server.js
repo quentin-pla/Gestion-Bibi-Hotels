@@ -31,33 +31,40 @@ const io = require('socket.io')(app);
 /************************************************/
 
 /**
+ * Connexion à la base de données
+ */
+const connection = require(path.join(__dirname, "../react-ui/src/database/dbconnection"));
+
+/**
  * Modèle Client de la base de données
  */
 const Client = require(path.join(__dirname, "../react-ui/src/database/models/Client"));
+
 /**
  * Modèle Hotel de la base de données
  */
 const Hotel = require(path.join(__dirname, "../react-ui/src/database/models/Hotel"));
+
 /**
  * Modèle Room de la base de données
  */
 const Room = require(path.join(__dirname, "../react-ui/src/database/models/Room"));
+Room.associate();
+
 /**
  * Modèle Reservation de la base de données
  */
 const Reservation = require(path.join(__dirname, "../react-ui/src/database/models/Reservation"));
+
 /**
  * Modèle RoomType de la base de données
  */
 const RoomType = require(path.join(__dirname, "../react-ui/src/database/models/RoomType"));
+
 /**
  * Modèle Bill de la base de données
  */
 const Bill = require(path.join(__dirname, "../react-ui/src/database/models/Bill"));
-/**
- * Connexion à la base de données
- */
-const connection = require(path.join(__dirname, "../react-ui/src/database/dbconnection"));
 
 /*************************************************/
 /************** CLIENT SOCKET IO *****************/
@@ -112,7 +119,6 @@ io.sockets.on('connection', function (socket) {
             street: data.street,
             city: data.city,
             password: data.password
-
         }, {where: {MAIL: data.mail}}).then((item) => {
             if (item !== null) {
                 socket.emit('update_result', true);
@@ -160,15 +166,18 @@ io.sockets.on('connection', function (socket) {
     });
 
     /**
-     * Recupereation de toutes les chambres, types de chambre et hotels
+     * Récupération de toutes les chambres disponibles pour la date du jour
      */
-    socket.on('rooms', function () {
-        Room.findAll({}).then((rooms) => {
-            RoomType.findAll({}).then((roomTypes) => {
-                Hotel.findAll({}).then((hotels) => {
-                    socket.emit('rooms_res', rooms, hotels, roomTypes);
-                })
-            })
+    socket.on('rooms', async (dateA,dateD) => {
+        const availableRooms = await connection.query("call getAvailableRooms('" + dateA + "','" + dateD + "')");
+        const roomIds = [];
+        availableRooms.forEach((room) => roomIds.push(room.ID));
+        Room.findAll({
+            where: {ID: roomIds},
+            include: ['hotel','roomtype'],
+            group: ['hotel.hotel_name','roomtype.name']
+        }).then((rooms) => {
+            socket.emit('rooms_res', rooms);
         })
     });
 
@@ -177,24 +186,11 @@ io.sockets.on('connection', function (socket) {
      */
     socket.on('room_id', function (id) {
         Room.findOne({
-            where: {
-                ID: id
-            }
+            where: {ID: id},
+            include: ['hotel','roomtype']
         }).then((room) => {
-            RoomType.findOne({
-                where: {
-                    ID: room.roomtype_id
-                }
-            }).then((roomtype) => {
-                Hotel.findOne({
-                    where: {
-                        ID: room.hotel_id
-                    }
-                }).then((hotel) => {
-                    socket.emit("roomId_res", room, roomtype, hotel);
-                })
-            })
-        })
+            socket.emit("roomId_res", room);
+        });
     });
 
     /**
@@ -202,9 +198,7 @@ io.sockets.on('connection', function (socket) {
      */
     socket.on('reserver', function (data) {
         Client.findOne({
-            where: {
-                MAIL: data.mail
-            }
+            where: {MAIL: data.mail}
         }).then((client) => {
             Reservation.create({
                 client_id: client.id,
@@ -219,10 +213,10 @@ io.sockets.on('connection', function (socket) {
                 is_comfirmed: 0,
                 is_cancelled: 0,
                 is_archived: 0
-            }).then((reservation) => {
+            }).then(() => {
                 socket.emit('reservation_res', true);
-            }).catch((err) => {
-                socket.emit('reservation_res', false, 'Erreur verifiée que les champs ont été remplis correctement');
+            }).catch(() => {
+                socket.emit('reservation_res', false, 'Erreur, verifiez que les champs ont été remplis correctement');
             })
         })
     });
@@ -230,68 +224,21 @@ io.sockets.on('connection', function (socket) {
     /**
      * Renvoie les chambres correspondant aux criteres choisis par l'utilisateur
      */
-    socket.on('apply_filter', function (data) {
-        console.log(data);
-        if (data.nblits !== 0) {
-            RoomType.findAll({
-                where: {
-                    BED_CAPACITY: data.nblits
-                }
-            }).then((roomtype) => {
-                let type_id = [];
-                roomtype.map(function (item, index) {
-                    type_id.push(roomtype[index].id)
-                });
-                if (data.ville !== "") {
-                    Hotel.findAll({
-                        where: {
-                            CITY: data.ville
-                        }
-                    }).then((hotels) => {
-                        let hotel_id = [];
-                        hotels.map(function (item, index) {
-                            hotel_id.push(hotels[index].id)
-                        });
-                        Room.findAll({
-                            where: {
-                                ROOMTYPE_ID: [type_id],
-                                HOTEL_ID: [hotel_id]
-                            }
-                        }).then((rooms) => {
-                            socket.emit('filter_res', rooms)
-                        })
-                    })
-                } else {
-                    Room.findAll({
-                        where: {
-                            ROOMTYPE_ID: [type_id],
-                        }
-                    }).then((rooms) => {
-                        socket.emit('filter_res', rooms)
-                    })
-                }
-            })
-        } else if (data.ville !== "") {
-            Hotel.findAll({
-                where: {
-                    CITY: data.ville
-                }
-            }).then((hotel) => {
-                let hotel_id = [];
-                hotel.map(function (item, index) {
-                    hotel_id.push(hotel[index].id)
-                });
-                console.log(hotel_id);
-                Room.findAll({
-                    where: {
-                        HOTEL_ID: [hotel_id]
-                    }
-                }).then((rooms) => {
-                    socket.emit('filter_res', rooms)
-                })
-            })
-        }else
-            socket.emit('filter_res',[])
+    socket.on('apply_filter', async (data) => {
+        const {Op} = require('sequelize');
+        const query = (data.ville.length > 0)
+            ? "call getAvailableRoomsByCity('" + data.ville + "','" + data.dateA + "','" + data.dateD + "')"
+            : "call getAvailableRooms('" + data.dateA + "','" + data.dateD + "')";
+        const availableRooms = await connection.query(query);
+        const roomIds = [];
+        availableRooms.forEach((room) => roomIds.push(room.ID));
+        Room.findAll({
+            where: {ID: roomIds},
+            include: [{model: Hotel},{model: RoomType, where: {BED_CAPACITY: {[Op.gte]: data.nbPersonnes/2}}}], // {[Op.gte]: data.nbPersonnes/2}
+            group: ['hotel.hotel_name','roomtype.name']
+        }).then((rooms) => {
+            socket.emit('rooms_res', rooms);
+        })
     });
 
     /**

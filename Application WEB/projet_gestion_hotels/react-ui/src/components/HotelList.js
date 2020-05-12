@@ -7,6 +7,7 @@ import Container from "react-bootstrap/Container";
 import PeopleFill from "react-bootstrap-icons/dist/icons/people-fill";
 import StarFill from "react-bootstrap-icons/dist/icons/star-fill";
 import Star from "react-bootstrap-icons/dist/icons/star";
+import Modal from "react-bootstrap/Modal";
 
 class HotelList extends Component {
     /**
@@ -22,29 +23,29 @@ class HotelList extends Component {
          */
         this.state = {
             rooms: [],
-            hotels: [],
-            roomtype: [],
-            ville : "",
+            selectedRoom: undefined,
+            ville : "Sélectionner",
             nbPersonnes: 1,
-            dateA: this.getActualDate(3),
-            dateD : this.getActualDate(4),
-            merged: []
+            dateA: this.dateToString(this.addDaysToDate(new Date(),3)),
+            dateD : this.dateToString(this.addDaysToDate(new Date(),4)),
+            modalShow: false
         };
 
-        this.mergeArrayObjects = this.mergeArrayObjects.bind(this);
         this.applyFilter = this.applyFilter.bind(this);
-        this.getActualDate = this.getActualDate.bind(this);
+        this.addDaysToDate = this.addDaysToDate.bind(this);
         this.getRoomPreview = this.getRoomPreview.bind(this);
+        this.updateArrivalDate = this.updateArrivalDate.bind(this);
+        this.updateExitDate = this.updateExitDate.bind(this);
+        this.dateToString = this.dateToString.bind(this);
     }
 
     /**
      * Fonction s'activant a l'initialisation du composant
      */
     componentDidMount() {
-        socket.emit("rooms");
-        socket.on('rooms_res', (rooms,hotels,roomtype) => {
-            this.setState({'rooms': rooms ,'hotels': hotels,'roomtype': roomtype});
-            this.mergeArrayObjects(this.state.rooms, this.state.roomtype, this.state.hotels);
+        socket.emit("rooms",this.state.dateA,this.state.dateD);
+        socket.on('rooms_res', (rooms) => {
+            this.setState({'rooms': rooms});
         });
     }
 
@@ -53,86 +54,79 @@ class HotelList extends Component {
      */
     applyFilter(){
         let data = {
-            ville : this.state.ville,
-            nblits: this.state.nbPersonnes*2,
-            dateA : this.state.dateA,
-            dateD : this.state.dateD
+            ville : (this.state.ville === 'Sélectionner') ? '' : this.state.ville,
+            nbPersonnes: (this.state.nbPersonnes < 1) ? 1 : this.state.nbPersonnes,
+            dateA : (this.state.dateA < this.addDaysToDate(new Date(),3)) ? this.addDaysToDate(new Date(),3) : this.state.dateA,
+            dateD : (this.state.dateD < this.addDaysToDate(new Date(),4)) ? this.addDaysToDate(new Date(),4) : this.state.dateD
         };
         socket.emit("apply_filter",data);
-        socket.on("filter_res", (item) => {
-            this.setState({"rooms" : item});
-            this.mergeArrayObjects(this.state.rooms, this.state.roomtype, this.state.hotels);
+        socket.on("rooms_res", (rooms) => {
+            this.setState({"rooms" : rooms});
         })
     }
 
     /**
-     * Cette fonction réunit chaque array en un seul pour faciliter le traitement
-     * @param rooms : liste des chambres
-     * @param roomtypes : liste des types de chambres
-     * @param hotels ; liste des hotels
-     */
-    mergeArrayObjects(rooms, roomtypes, hotels) {
-        let merged = [];
-        let mergedF = [];
-
-        for (let i = 0; i < rooms.length; i++) {
-            merged.push({
-                    ...rooms[i],
-                    ...(roomtypes.find((itmInner) => itmInner.id === rooms[i].roomtype_id))
-                }
-            );
-            merged[i].id = rooms[i].id;
-        }
-
-        for (let i = 0; i < merged.length; i++) {
-            mergedF.push({
-                    ...merged[i],
-                    ...(hotels.find((itmInner) => itmInner.id === rooms[i].hotel_id))
-                }
-            );
-            mergedF[i].id = merged[i].id
-        }
-        this.setState({"merged": mergedF});
-    }
-
-    /**
      * Récupérer la date du jour (possibilité d'ajouter un nombre de jours)
+     * @param date date
      * @param daysToAdd jours à ajouter
      * @returns {string}
      */
-    getActualDate(daysToAdd) {
-        const actualDate = new Date();
-        let day = actualDate.getDate() + daysToAdd;
-        let month = actualDate.getMonth() + 1;
-        let year = actualDate.getFullYear();
-        if (day < 10) day = '0' + day;
-        if (month < 10) month = '0' + month;
+    addDaysToDate(date, daysToAdd) {
+        date.setDate(date.getDate()+daysToAdd);
+        return date;
+    }
+
+    /**
+     * Convertir une date en chaine de caractères
+     * @param date date
+     * @returns {string}
+     */
+    dateToString(date) {
+        const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
+        const month = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(date);
+        const day = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
         return [year, month, day].join('-');
     }
 
     /**
      * Récupérer l'URL de l'image preview pour une chambre
-     * @param item chambre
+     * @param room chambre
      */
-    getRoomPreview(item) {
+    getRoomPreview(room) {
         const publicFolder = process.env.PUBLIC_URL;
-        switch (item.name) {
-            case "STANDARD":
-                return publicFolder + "/roomTypes/standard.png";
-            case "TOURISM":
-                return publicFolder + "/roomTypes/tourism.png";
-            case "COMFORT":
-                return publicFolder + "/roomTypes/comfort.png";
-            case "LUXURY":
-                return publicFolder + "/roomTypes/luxe.png";
-            default:
-                return null;
-        }
+        return room !== undefined ?
+            publicFolder + "/roomTypes/" + room.roomtype.name.toLowerCase() + "-" + room.hotel.city.toLowerCase() + ".jpg"
+        :
+            null;
+    }
+
+    /**
+     * Mettre à jour la date d'arrivée
+     * @param dateA date d'arrivée
+     */
+    updateArrivalDate(dateA) {
+        if (new Date(dateA) >= new Date(this.state.dateD))
+            this.setState({"dateA": dateA, "dateD": this.dateToString(this.addDaysToDate(new Date(dateA),1))});
+        else
+            this.setState({"dateA": dateA});
+    }
+
+    /**
+     * Mettre à jour la date de sortie
+     * @param dateD de de sortie
+     */
+    updateExitDate(dateD) {
+        this.setState({"dateD": dateD});
     }
 
     render() {
-        const minArrivalDate = this.getActualDate(3);
-        const minExitDate = this.getActualDate(4);
+        const minArrivalDate = this.dateToString(this.addDaysToDate(new Date(),3));
+        const minExitDate = this.dateToString(this.addDaysToDate(new Date(this.state.dateA),1));
+        const availableCities = ['Sélectionner'];
+
+        this.state.rooms.forEach((room) => {
+            if (!availableCities.includes(room.hotel.city)) availableCities.push(room.hotel.city);
+        });
 
         return (
             <Container fluid>
@@ -144,19 +138,21 @@ class HotelList extends Component {
                         <Row className={"searchInput"}>
                             <Col>
                                 <Form.Label column={"cityInput"} className={"text-left label-field"}>DESTINATION</Form.Label>
-                                <Form.Control className="form-control-sm" id="cityInput" placeholder="Marseille" type="text" onChange={e => this.setState({"ville": e.target.value})}/>
+                                <Form.Control as="select" className="form-control-sm" id="cityInput" value={this.state.ville} onChange={e => this.setState({"ville": e.target.value})}>
+                                    {availableCities.map((city) => {return (<option key={city}>{city}</option>);})}
+                                </Form.Control>
                             </Col>
                             <Col>
                                 <Form.Label column={"dateAInput"} className={"text-left label-field"}>ARRIVÉE</Form.Label>
-                                <Form.Control className="form-control-sm" id="dateAInput" type="date" min={minArrivalDate} value={minArrivalDate} onChange={e => this.setState({"dateA": e.target.value})}/>
+                                <Form.Control className="form-control-sm" id="dateAInput" type="date" min={minArrivalDate} value={this.state.dateA} onChange={e => this.updateArrivalDate(e.target.value)}/>
                             </Col>
                             <Col>
                                 <Form.Label column={"dateDInput"} className={"text-left label-field"}>DÉPART</Form.Label>
-                                <Form.Control className="form-control-sm" id="dateDInput" type="date" min={minExitDate} value={minExitDate} onChange={e => this.setState({"dateD": e.target.value})}/>
+                                <Form.Control className="form-control-sm" id="dateDInput" type="date" min={minExitDate} value={this.state.dateD} onChange={e => this.setState({"dateD": e.target.value})}/>
                             </Col>
                             <Col>
                                 <Form.Label column={"peopleInput"} className={"text-left label-field"}>VOYAGEURS</Form.Label>
-                                <Form.Control className="form-control-sm no-carret" id="peopleInput" type="number" min="1" placeholder={this.state.nbPersonnes} onKeyDown={e => e.preventDefault()} onChange={e => this.setState({"nbPersonnes": e.target.value})}/>
+                                <Form.Control className="form-control-sm no-carret" id="peopleInput" type="number" min="1" placeholder={this.state.nbPersonnes} onKeyDown={e => e.preventDefault()} onChange={e => this.setState({"nbPersonnes": parseInt(e.target.value)})}/>
                             </Col>
                             <Col className={"my-auto"}>
                                 <Button variant="primary" onClick={() => this.applyFilter()}>Rechercher</Button>
@@ -166,13 +162,16 @@ class HotelList extends Component {
                 </Row>
                 <Row>
                     <Row className={"m-0 px-4 mb-4 w-100"}>
-                        {this.state.merged.length === 0 ? <h3>Aucun resultat</h3> :
-                            this.state.merged.map((item) => {
-                                let link = "room/" + item.id;
+                        {this.state.rooms.length === 0 ?
+                            <Col className="col-12 text-center mt-5">
+                                <h3 className="display-4">Aucun résultat...</h3>
+                            </Col>
+                            :
+                            this.state.rooms.map((room, index) => {
                                 return (
-                                    <Col className={"col-4 p-4"}>
-                                        <RoomItem item={item} preview={this.getRoomPreview(item)}>
-                                            <Link to={link} className="stretched-link"/>
+                                    <Col key={index} className={"col-4 p-4"}>
+                                        <RoomItem room={room} preview={this.getRoomPreview(room)}>
+                                            <Link onClick={() => this.setState({"selectedRoom": room, "modalShow": true})} className="stretched-link" to={"#"}/>
                                         </RoomItem>
                                     </Col>
                                 )
@@ -180,17 +179,28 @@ class HotelList extends Component {
                         }
                     </Row>
                 </Row>
+                <BookModal
+                    show={this.state.modalShow}
+                    room={this.state.selectedRoom}
+                    preview={this.getRoomPreview(this.state.selectedRoom)}
+                    dateA={this.state.dateA}
+                    dateD={this.state.dateD}
+                    minArrivalDate={minArrivalDate}
+                    minExitDate={minExitDate}
+                    updateArrivalDate={this.updateArrivalDate}
+                    updateExitDate={this.updateExitDate}
+                    onHide={() => this.setState({"modalShow": false})}
+                />
             </Container>
         );
     }
 }
 
-
 function RoomItem(props) {
     function getStars(stars) {
         let result = [];
         for (let i = 1; i <= 5; i++)
-            result.push((i <= stars) ? <StarFill className={"star"}/> : <Star className={"star"}/>);
+            result.push((i <= stars) ? <StarFill key={i} className={"star"}/> : <Star key={i} className={"star"}/>);
         return result;
     }
 
@@ -201,24 +211,103 @@ function RoomItem(props) {
                 {props.children}
                 <div className="d-flex">
                     <div>
-                        <Card.Title className={"m-0"}><strong>Bibi</strong> {props.item.hotel_name}</Card.Title>
+                        <Card.Title className={"m-0"}><strong>Bibi</strong> {props.room.roomtype.name.toUpperCase()}</Card.Title>
                     </div>
                     <div className="ml-auto">
-                        <h5 className={"m-0"}>{getStars(props.item.stars)}</h5>
+                        <h5 className={"m-0"}>{getStars(props.room.hotel.stars)}</h5>
                     </div>
                 </div>
                 <div className="d-flex">
                     <div>
-                        <h6 className={"hotel-city"}>{props.item.city}</h6>
+                        <h6 className={"hotel-city"}>{props.room.hotel.city}</h6>
                     </div>
                     <div className="ml-auto mr-1">
-                        <PeopleFill style={{fontSize: 20}}/> {props.item.bed_capacity*2}
+                        <PeopleFill style={{fontSize: 20}}/> {props.room.roomtype.bed_capacity*2}
                     </div>
                 </div>
-                <h6 className={"room-price"}><strong>{props.item.price}€</strong>/nuit </h6>
+                <h6 className={"room-price"}><strong>{props.room.roomtype.price}€</strong>/nuit </h6>
             </Card.Body>
         </Card>
     );
+}
+
+function BookModal(props) {
+    const totalDays = Math.abs(new Date(props.dateD) - new Date(props.dateA)) / (1000 * 60 * 60 * 24);
+
+    return props.room !== undefined ?
+        (<Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+                <Modal.Body>
+                    <Row>
+                        <Col>
+                            <Row>
+                                <Col bsPrefix={"col-12"}>
+                                    <div className="d-flex flex-wrap">
+                                        <h4>Hôtel</h4>
+                                        <h4 className={"text-grey ml-2"}>{props.room.hotel.hotel_name}</h4>
+                                    </div>
+                                </Col>
+                                <Col bsPrefix={"col-12 ml-3"}>
+                                    <h5 className={"text-grey"}>{props.room.hotel.street + ", " + props.room.hotel.city}</h5>
+                                </Col>
+                                <Col bsPrefix={"col-12"}>
+                                    <div className="d-flex flex-wrap">
+                                        <h4>Type de chambre</h4>
+                                        <h4 className={"text-grey ml-2"}>{props.room.roomtype.name}</h4>
+                                    </div>
+                                </Col>
+                                {props.room.roomtype.has_tv ?
+                                    <Col bsPrefix={"col-12"}>
+                                        <h5 className={"text-grey ml-3"}>1x Télévision</h5>
+                                    </Col>
+                                    :
+                                    null
+                                }
+                                {props.room.roomtype.has_phone ?
+                                    <Col bsPrefix={"col-12"}>
+                                        <h5 className={"text-grey ml-3"}>1x Téléphone</h5>
+                                    </Col>
+                                    :
+                                    null
+                                }
+                                <Col bsPrefix={"col-12"}>
+                                    <h5 className={"text-grey ml-3"}>{props.room.roomtype.bed_capacity}x Lit double</h5>
+                                </Col>
+                                <hr/>
+                                <Col bsPrefix={"col-6"}>
+                                    <div className="d-flex flex-wrap">
+                                        <h4>Arrivée</h4>
+                                        <Form.Control className="form-control-sm mb-3" type="date" min={props.minArrivalDate} value={props.dateA} onChange={e => props.updateArrivalDate(e.target.value)}/>
+                                    </div>
+                                </Col>
+                                <Col bsPrefix={"col-6"}>
+                                    <div className="d-flex flex-wrap">
+                                        <h4>Départ</h4>
+                                        <Form.Control className="form-control-sm mb-3" type="date" min={props.minExitDate} value={props.dateD} onChange={e => props.updateExitDate(e.target.value)}/>
+                                    </div>
+                                </Col>
+                                <Col bsPrefix={"col-12"}>
+                                    <div className="d-flex flex-wrap">
+                                        <h4>Durée</h4>
+                                        <h4 className={"text-grey ml-2"}>{totalDays} {totalDays > 1 ? "jours" : "jour"}</h4>
+                                    </div>
+                                </Col>
+                                <Col><hr/></Col>
+                                <Col bsPrefix={"col-12"}>
+                                    <div className="d-flex flex-wrap align-content-center">
+                                        <h4 className={"mb-0 my-auto"}>TOTAL</h4>
+                                        <h4 className={"text-grey ml-2 mb-0 my-auto"}><strong>{Math.round(props.room.roomtype.price * totalDays * 100) / 100}€</strong></h4>
+                                        <Button className={"ml-auto"} onClick={console.log('Réservée')}>Réserver</Button>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col><RoomItem room={props.room} preview={props.preview}/></Col>
+                    </Row>
+                </Modal.Body>
+            </Modal>
+        )
+    :
+        <div/>;
 }
 
 export default HotelList;

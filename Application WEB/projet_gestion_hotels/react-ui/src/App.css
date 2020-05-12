@@ -2,12 +2,12 @@ html, body, #root {
     height:100%;
 }
 
-input:focus, input:active {
+input:focus, input:active, select:focus, select:active {
     outline: none;
     box-shadow: none !important;
 }
 
-input:focus {
+input:focus, select:focus {
     border-color: darkgray !important;
 }
 
@@ -94,6 +94,15 @@ p {
     color: rgba(0,0,0,.7);
 }
 
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent url("data:image/svg+xml;utf8,<svg fill='grey' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat;
+    background-position-x: 96%;
+    background-position-y: 3px;
+    padding-right: 25px !important;
+}
+
 /*************** Carte chambre ****************/
 
 .room-card {
@@ -119,4 +128,11 @@ p {
 
 .room-price {
     font-size: 20px;
+}
+
+/**************** Modal réservation ******************/
+
+.text-grey {
+    color: grey;
+    font-weight: initial;
 }

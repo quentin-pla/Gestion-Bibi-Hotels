@@ -6,4 +6,6 @@ const connection = new sequelize.Sequelize('gestion-hotel_projet','***REMOVED***
     logging: false
 });
 
+connection.sequelize = sequelize;
+
 module.exports = connection;

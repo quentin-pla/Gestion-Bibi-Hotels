@@ -1,10 +1,5 @@
 const connection = require("../dbconnection");
 const {Model, DataTypes} = connection.sequelize;
-const Client = require("./Client");
-const Hotel = require("./Hotel");
-const RoomType = require("./RoomType");
-const Bill = require("./Bill");
-const Occupation = require("./Occupation");
 
 class Reservation extends Model {}
 
@@ -17,29 +12,17 @@ Reservation.init({
     client_id: {
         type: DataTypes.INTEGER,
         field: 'CLIENT_ID',
-        references: {
-            model: Client,
-            key: 'ID'
-        },
         primaryKey: true
     },
     hotel_id: {
         type: DataTypes.INTEGER,
         field: 'HOTEL_ID',
-        references: {
-            model: Hotel,
-            key: 'ID'
-        },
         primaryKey: true
     },
     roomtype_id: {
         type: DataTypes.INTEGER,
         defaultValue: 1,
         field: 'ROOMTYPE_ID',
-        references: {
-            model: RoomType,
-            key: 'ID'
-        },
         primaryKey: true
     },
     arrival_date: {
@@ -88,11 +71,11 @@ Reservation.init({
     timestamps: false
 });
 
-// Reservation.associate = (models) => {
-//     Reservation.belongsTo(models.clients, {foreignKey: 'CLIENT_ID'});
-//     Reservation.belongsTo(models.hotels, {foreignKey: 'HOTEL_ID'});
-//     Reservation.belongsTo(models.roomtypes, {foreignKey: 'ROOMTYPE_ID'});
-// };
+Reservation.associate = () => {
+    Reservation.belongsTo(connection.models.client, {foreignKey: "client_id", targetKey: "id"});
+    Reservation.belongsTo(connection.models.hotel, {foreignKey: "hotel_id", targetKey: "id"});
+    Reservation.belongsTo(connection.models.roomtype, {foreignKey: "roomtype_id", targetKey: "id"});
+};
 
 //Exportation du modèle
 module.exports = Reservation;

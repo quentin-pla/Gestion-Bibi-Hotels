@@ -136,3 +136,12 @@ select {
     color: grey;
     font-weight: initial;
 }
+
+.number-input {
+    max-width: 70px;
+}
+
+hr {
+    margin-top: 8px;
+    margin-bottom: 12px;
+}

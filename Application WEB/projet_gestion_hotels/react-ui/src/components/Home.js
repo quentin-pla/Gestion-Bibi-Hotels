@@ -1,7 +1,7 @@
 import {Container, Row, Col} from "react-bootstrap";
 import React, {Component} from "react";
 import {AuthContext} from "../context/AuthContext";
-import HotelList from "./HotelList";
+import HotelRooms from "./HotelRooms";
 
 class Home extends Component {
     /**
@@ -14,7 +14,7 @@ class Home extends Component {
 
         return (
             auth.authenticated ?
-                <HotelList/>
+                <HotelRooms/>
             :
                 <Container fluid className={"flex-center full-height"}>
                     <Row className="justify-content-md-center">

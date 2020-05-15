@@ -5,12 +5,12 @@ import "./App.css";
 import PrivateRoute from "./components/routing/PrivateRoute";
 import Home from "./components/Home";
 import Login from "./components/auth/Login";
-import Profil from './components/Profil'
+import Profil from './components/UserProfile'
 import Signup from './components/auth/Signup';
 import AuthButton from './components/auth/AuthButton';
 import {AuthContext} from "./context/AuthContext";
-import Reservation from "./components/Reservation";
-import Facture from "./components/Facture";
+import UserReservations from "./components/UserReservations";
+import UserBills from "./components/UserBills";
 
 class App extends Component {
     /**
@@ -50,10 +50,10 @@ class App extends Component {
                         <Profil/>
                     </PrivateRoute>
                     <PrivateRoute path="/reservation">
-                        <Reservation/>
+                        <UserReservations/>
                     </PrivateRoute>
                     <PrivateRoute path="/facture">
-                        <Facture />
+                        <UserBills />
                     </PrivateRoute>
                     <Redirect to="/"/>
                 </Switch>

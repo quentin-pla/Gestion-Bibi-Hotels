@@ -1,6 +1,5 @@
 const connection = require("../dbconnection");
 const {Model, DataTypes} = connection.sequelize;
-const Reservation = require("./Reservation");
 
 class Client extends Model {}
 

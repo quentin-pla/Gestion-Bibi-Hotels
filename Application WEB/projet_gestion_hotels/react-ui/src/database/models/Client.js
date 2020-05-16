@@ -1,4 +1,5 @@
 const connection = require("../dbconnection");
+const bcrypt = require("bcrypt");
 const {Model, DataTypes} = connection.sequelize;
 
 class Client extends Model {}
@@ -45,6 +46,15 @@ Client.init({
     sequelize: connection,
     timestamps: false
 });
+
+Client.beforeCreate((client, options) => {
+    return bcrypt.hash(client.password, 8)
+        .then(hash => client.password = hash);
+});
+
+Client.prototype.checkPassword = function(password) {
+    return bcrypt.compare(password, this.dataValues.PASSWORD);
+};
 
 //Exportation du modèle
 module.exports = Client;

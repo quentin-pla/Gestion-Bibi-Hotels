@@ -68,7 +68,7 @@ class UserBills extends Component {
 
     render() {
         return (
-            <Container fluid>
+            <Container fluid className={"mt-4"}>
                 <Row>
                     <Col className={"text-center mb-4 col-12"}>
                         <h1>Vos factures</h1>

@@ -30,11 +30,13 @@ class AuthButton extends Component {
     }
 
     render() {
-        return this.context.authenticated ? (
-            <Button variant="outline-primary" onClick={(e) => this.handleClick(e)}>Déconnexion</Button>
-        ) : (
-            <Button variant="outline-primary" onClick={(e) => this.handleClick(e)}>Connexion</Button>
-        );
+        return this.context.loaded ?
+            this.context.authenticated ?
+                <Button variant="outline-primary" onClick={(e) => this.handleClick(e)}>Déconnexion</Button>
+            :
+                <Button variant="outline-primary" onClick={(e) => this.handleClick(e)}>Connexion</Button>
+        :
+        null
     }
 }
 

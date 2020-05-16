@@ -35,7 +35,8 @@ class HotelRooms extends Component {
             modalShow: false,
             reservationValidated: false,
             error: false,
-            errorMessage: ""
+            errorMessage: "",
+            loaded: false
         };
 
         this.applyFilter = this.applyFilter.bind(this);
@@ -55,7 +56,7 @@ class HotelRooms extends Component {
     componentDidMount() {
         socket.emit("rooms",this.state.dateA,this.state.dateD);
         socket.on('rooms_res', (rooms) => {
-            this.setState({'rooms': rooms});
+            this.setState({"rooms": rooms, "loaded": true});
         });
     }
 
@@ -217,20 +218,23 @@ class HotelRooms extends Component {
                 </Row>
                 <Row>
                     <Row className={"m-0 px-4 mb-4 w-100"}>
-                        {this.state.rooms.length === 0 ?
-                            <Col className="col-12 text-center mt-5">
-                                <h3 className="display-4">Aucun résultat...</h3>
-                            </Col>
+                        {this.state.loaded ?
+                            this.state.rooms.length === 0 ?
+                                <Col className="col-12 text-center mt-5">
+                                    <h3 className="display-4">Aucun résultat...</h3>
+                                </Col>
+                                :
+                                this.state.rooms.map((room, index) => {
+                                    return (
+                                        <Col key={index} className={"col-4 p-4"}>
+                                            <RoomItem room={room} preview={this.getRoomPreview(room)}>
+                                                <Link onClick={() => this.setState({"selectedRoom": room, "modalShow": true})} className="stretched-link" to={"#"}/>
+                                            </RoomItem>
+                                        </Col>
+                                    )
+                                })
                             :
-                            this.state.rooms.map((room, index) => {
-                                return (
-                                    <Col key={index} className={"col-4 p-4"}>
-                                        <RoomItem room={room} preview={this.getRoomPreview(room)}>
-                                            <Link onClick={() => this.setState({"selectedRoom": room, "modalShow": true})} className="stretched-link" to={"#"}/>
-                                        </RoomItem>
-                                    </Col>
-                                )
-                            })
+                            null
                         }
                     </Row>
                 </Row>
@@ -268,7 +272,7 @@ function RoomItem(props) {
     }
 
     return (
-        <Card className={"room-card"}>
+        <Card className={"room-card fade-effect"}>
             <Card.Img variant="top" className="media-object" src={props.preview} alt="room preview"/>
             <Card.Body>
                 {props.children}

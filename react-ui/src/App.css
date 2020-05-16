@@ -145,3 +145,20 @@ hr {
     margin-top: 8px;
     margin-bottom: 12px;
 }
+
+/*************** Transition ****************/
+
+.fade-effect {
+    animation: fadeIn 0.3s ease-out both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -5%, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}

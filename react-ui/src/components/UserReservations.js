@@ -26,16 +26,26 @@ class UserReservations extends Component {
         this.formatDate = this.formatDate.bind(this);
         this.payReservation = this.payReservation.bind(this);
         this.cancelReservation = this.cancelReservation.bind(this);
+
+        this._isMounted = false;
     }
 
     /**
      * Fonction s'activant a l'initialisation du composant
      */
     componentDidMount() {
+        this._isMounted = true;
         socket.emit("user_reservation", this.state.mail);
         socket.on('user_reservation_res', (reservations) => {
-            this.setState({"reservations": reservations, "loaded": true});
+            if (this._isMounted) this.setState({"reservations": reservations, "loaded": true});
         });
+    }
+
+    /**
+     * Destruction du composant
+     */
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     /**

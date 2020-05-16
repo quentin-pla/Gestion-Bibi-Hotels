@@ -48,15 +48,18 @@ class HotelRooms extends Component {
         this.dateToString = this.dateToString.bind(this);
         this.updateRoomsNumber = this.updateRoomsNumber.bind(this);
         this.updatePeopleNumber = this.updatePeopleNumber.bind(this);
+
+        this._isMounted = false;
     }
 
     /**
      * Fonction s'activant a l'initialisation du composant
      */
     componentDidMount() {
+        this._isMounted = true;
         socket.emit("rooms",this.state.dateA,this.state.dateD);
         socket.on('rooms_res', (rooms) => {
-            this.setState({"rooms": rooms, "loaded": true});
+            if (this._isMounted) this.setState({"rooms": rooms, "loaded": true});
         });
     }
 
@@ -65,6 +68,13 @@ class HotelRooms extends Component {
         if (!this.state.modalShow && this.state.reservationValidated) {
             setTimeout(async () => await this.setState({"reservationValidated": false}), 1000);
         }
+    }
+
+    /**
+     * Destruction du composant
+     */
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     /**

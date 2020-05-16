@@ -1,16 +1,20 @@
 import React, {Component} from "react";
-import {Form, Button, Card, Container, Row} from "react-bootstrap";
-import {withRouter} from 'react-router-dom';
+import {Form, Container, Row, Table} from "react-bootstrap";
 import {AuthContext} from "../context/AuthContext";
 import socket from "../context/SocketIOInstance";
+import Col from "react-bootstrap/Col";
+import PencilSquare from "react-bootstrap-icons/dist/icons/pencil-square";
+import Check from "react-bootstrap-icons/dist/icons/check";
+
 /**
  * Connexion
  */
-class Profil extends Component {
+class UserProfile extends Component {
     /**
      * Contexte d'authentification
      */
     static contextType = AuthContext;
+
     constructor(props,context) {
         super(props,context);
 
@@ -18,43 +22,49 @@ class Profil extends Component {
          * Initialisation de l'état
          */
         this.state = {
-            //Erreur d'inscription
-            isError: false,
-            //Message d'erreur
-            errorMessage: "",
-            //Nom
             firstname: "",
-            //Prénom
             lastname: "",
-            //mail
             mail: "",
-            //Rue
-            street: "",
-            //Ville
-            city: "",
-            //Confirmation du mot de passe
             password: "",
+            street: "",
+            city: "",
+            loaded: false,
+            firstname_editing: false,
+            lastname_editing: false,
+            street_editing: false,
+            city_editing: false,
         };
+
+        this.isValid = this.isValid.bind(this);
+        this.checkData = this.checkData.bind(this);
+
+        this._isMounted = false;
     }
 
     /**
      * Fonction s'activant a l'initialisation du composant
      */
     componentDidMount() {
-        const self = this;
+        this._isMounted = true;
         const auth = this.context;
         socket.emit("profil",auth.mail);
-        socket.on("profil_info",(item)=>{
-            this.setState({'firstname': item.firstname});
-            this.setState({'lastname': item.lastname});
-            this.setState({'street': item.street});
-            this.setState({'city': item.city});
-            this.setState({'mail': item.mail});
-            this.setState({'password': item.mapasswordil});
-            self.setState({data: item});
+        socket.on("profil_info",(client) => {
+            if (this._isMounted) this.setState({
+                'firstname': client.firstname,
+                'lastname': client.lastname,
+                'street': client.street,
+                'city': client.city,
+                'mail': client.mail,
+                'loaded': true
+            });
         });
-        this.handleSubmit = this.handleSubmit.bind(this);
+    }
 
+    /**
+     * Destruction du composant
+     */
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     /**
@@ -70,198 +80,156 @@ class Profil extends Component {
     }
 
     /**
-     * Demande de modification du profile
+     * Vérifier une donnée avant de la mettre à jour
+     * @param stateItem identifiant
+     * @param value valeur
      */
-    handleSubmit() {
-        //Syntaxe alphanumérique avec espace
-        const alphanumSyntax = /^[0-9a-zA-Z ]+$/;
-        //Syntaxe seulement caractères de l'alphabet
-        const streetSyntax = /^[a-zA-Z /']+$/;
-        //Vérification des champs
-        let fieldsCheck = (
-            this.isValid(this.state.lastname, streetSyntax) &&
-            this.isValid(this.state.firstname, streetSyntax) &&
-            this.isValid(this.state.street, alphanumSyntax) &&
-            this.isValid(this.state.city, streetSyntax)
-        );
-        //Vérifications du mot de passe
-        let passwordCheck = this.context.password.length >= 3;
-        //Vérification de la confirmation du mot de passe
-        let confirmCheck = this.context.password === this.state.password;
-        //Validation des champs
-        if (!fieldsCheck) {
-            this.setState({isError: true, errorMessage: "Utilisation de caractères invalides"});
-            return false;
+    checkData(stateItem, value) {
+        let data = {};
+        switch (stateItem) {
+            case "firstname":
+            case "lastname":
+            case "city":
+                if (this.isValid(value, /^[a-zA-Z-]+$/)) data[stateItem] = value;
+                break;
+            case "street":
+                if (this.isValid(value, /^[0-9a-zA-Z -']+$/)) data[stateItem] = value;
+                break;
+            default:
+                break;
         }
-        //Validation du mot de passe
-        if (!passwordCheck) {
-            this.setState({isError: true, errorMessage: "Mot de passe invalide"});
-            return false;
-        }
-        //Validation de la confirmation
-        if (!confirmCheck) {
-            this.setState({isError: true, errorMessage: "Confirmation invalide"});
-            return false;
-        }
-        //Compression des données dans un objet
-        let data = {
-            mail: this.context.mail,
-            firstname: this.state.firstname,
-            lastname: this.state.lastname,
-            street: this.state.street,
-            city: this.state.city,
-            password: this.context.password
-        };
-        socket.emit("update_user",data);
-        socket.on("update_result", (success, errorMessage) => {
-            //Si c'est un succès
-            if (success) {
-                this.context.setMail(this.state.mail);
-                this.context.setPassword(this.state.password);
-                alert("Informations modifiée avec succes")
-            }
-            //Affichage d'une erreur
-            else this.setState({isError: true, errorMessage: errorMessage});
-        });
-        return false;
+        return data;
+    }
+
+    /**
+     * Mise à jour des données dans la base de données lorsqu'une modification a été éffectuée
+     */
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        let data = undefined;
+
+        if (prevState.firstname_editing && !this.state.firstname_editing)
+            data = {firstname: this.state.firstname};
+        else if (prevState.lastname_editing && !this.state.lastname_editing)
+            data = {lastname: this.state.lastname};
+        else if (prevState.street_editing && !this.state.street_editing)
+            data = {street: this.state.street};
+        else if (prevState.city_editing && !this.state.city_editing)
+            data = {city: this.state.city};
+
+        if (data !== undefined) socket.emit("update_user", data, this.context.mail);
     }
 
     render() {
-        return (
+        return this.state.loaded ?
             <Container fluid>
-                <Row className="User_info">
-                    {this.state.data ?
-                        <UserInfo data={this.state.data}/> : <h1>loading</h1>
-                    }
-                    <Form noValidate validated={this.state.validated}>
-                        <Form.Group>
-                            <Form.Control
-                                required
-                                type="email"
-                                min="5"
-                                onChange={e => {
-                                    this.context.setMail(e.target.value);
-                                }}
-                                value={this.state.mail}
-                                placeholder="Adresse Mail"
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Control
-                                required
-                                type="text"
-                                min="3"
-                                onChange={e => {
-                                    this.setState({lastname: e.target.value});
-                                }}
-                                value={this.state.lastname}
-                                placeholder="Nom"
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Control
-                                required
-                                type="text"
-                                min="3"
-                                onChange={e => {
-                                    this.setState({firstname: e.target.value});
-                                }}
-                                value={this.state.firstname}
-                                placeholder="Prénom"
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Control
-                                required
-                                type="text"
-                                min="3"
-                                onChange={e => {
-                                    this.setState({street: e.target.value});
-                                }}
-                                value={this.state.street}
-                                placeholder="Adresse"
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Control
-                                required
-                                type="text"
-                                min="3"
-                                onChange={e => {
-                                    this.setState({city: e.target.value});
-                                }}
-                                value={this.state.city}
-                                placeholder="Ville"
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Control
-                                required
-                                type="password"
-                                min="3"
-                                onChange={e => {
-                                    this.context.setPassword(e.target.value);
-                                }}
-                                placeholder="Mot de passe"
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Control
-                                required
-                                type="password"
-                                min="3"
-                                onChange={e => {
-                                    this.setState({password: e.target.value});
-                                }}
-                                placeholder="Confirmation"
-                            />
-                        </Form.Group>
-                        <Button variant="dark" className="mt-4 mb-4" onClick={this.handleSubmit} block>
-                            Modifier
-                        </Button>
-                        <Card.Text className="text-danger error-message mt-3">{this.state.isError ? this.state.errorMessage : ""} </Card.Text>
-                    </Form>
+                <Row>
+                    <Col className={"col-12 mb-4 text-center"}><h1>Profil utilisateur</h1></Col>
+                    <Col className={"col-12 fade-effect"}>
+                        <Form>
+                            <Table responsive className={"w-50 mx-auto"}>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Prénom</strong></td>
+                                        <td>{
+                                            this.state.lastname_editing ?
+                                                <Form.Control
+                                                    required
+                                                    type="text"
+                                                    min="3"
+                                                    className={"w-50"}
+                                                    onChange={e => this.setState(this.checkData("lastname",e.target.value))}
+                                                    value={this.state.lastname}
+                                                />
+                                            :
+                                                this.state.lastname
+                                        }</td>
+                                        <td>
+                                            {this.state.lastname_editing ?
+                                                <Check color={"green"} className={"edit-link"} onClick={() => this.setState({"lastname_editing": !this.state.lastname_editing})}/>
+                                            :
+                                                <PencilSquare className={"edit-link"} onClick={() => this.setState({"lastname_editing": !this.state.lastname_editing})}/>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nom</strong></td>
+                                        <td>{
+                                            this.state.firstname_editing ?
+                                                <Form.Control
+                                                    required
+                                                    type="text"
+                                                    min="3"
+                                                    className={"w-50"}
+                                                    onChange={e => {this.setState(this.checkData("firstname",e.target.value))}}
+                                                    value={this.state.firstname}
+                                                />
+                                            :
+                                                this.state.firstname
+                                        }</td>
+                                        <td>
+                                            {this.state.firstname_editing ?
+                                                <Check color={"green"} className={"edit-link"} onClick={() => this.setState({"firstname_editing": !this.state.firstname_editing})}/>
+                                                :
+                                                <PencilSquare className={"edit-link"} onClick={() => this.setState({"firstname_editing": !this.state.firstname_editing})}/>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Adresse</strong></td>
+                                        <td>{
+                                            this.state.street_editing ?
+                                                <Form.Control
+                                                    required
+                                                    type="text"
+                                                    min="3"
+                                                    className={"w-50"}
+                                                    onChange={e => {this.setState(this.checkData("street",e.target.value))}}
+                                                    value={this.state.street}
+                                                />
+                                            :
+                                                this.state.street
+                                        }</td>
+                                        <td>
+                                            {this.state.street_editing ?
+                                                <Check color={"green"} className={"edit-link"} onClick={() => this.setState({"street_editing": !this.state.street_editing})}/>
+                                                :
+                                                <PencilSquare className={"edit-link"} onClick={() => this.setState({"street_editing": !this.state.street_editing})}/>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Ville</strong></td>
+                                        <td>{
+                                            this.state.city_editing ?
+                                                <Form.Control
+                                                    required
+                                                    type="text"
+                                                    min="3"
+                                                    className={"w-50"}
+                                                    onChange={e => {this.setState(this.checkData("city",e.target.value))}}
+                                                    value={this.state.city}
+                                                />
+                                            :
+                                                this.state.city
+                                        }</td>
+                                        <td>
+                                            {this.state.city_editing ?
+                                                <Check color={"green"} className={"edit-link"} onClick={() => this.setState({"city_editing": !this.state.city_editing})}/>
+                                                :
+                                                <PencilSquare className={"edit-link"} onClick={() => this.setState({"city_editing": !this.state.city_editing})}/>
+                                            }
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                            </Table>
+                        </Form>
+                    </Col>
                 </Row>
             </Container>
-        );
+            :
+            null
+        ;
     }
 }
 
-/**
- * Renvoie les informations de l'utilisateur
- * @param data
- * @returns {*}
- */
-function UserInfo(data){
-        return(
-            <div className="container">
-                <h2>Profile Utilisateur</h2>
-                <p>Pour modifier vos informations veuillez remplir le formulaire et cliquer sur valider</p>
-                <table className="table">
-                    <thead>
-                    <tr>
-                        <th>Prenom </th>
-                        <th>{data.data.firstname}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Nom</td>
-                        <td>{data.data.lastname}</td>
-                    </tr>
-                    <tr>
-                        <td>Adresse</td>
-                        <td>{data.data.street}</td>
-                    </tr>
-                    <tr>
-                        <td>Ville</td>
-                        <td>{data.data.city}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        )
-}
-
-//withRouter pour récupérer l'historique
-export default withRouter(Profil);
+export default UserProfile;

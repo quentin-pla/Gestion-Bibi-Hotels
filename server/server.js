@@ -127,25 +127,6 @@ io.sockets.on('connection', function (socket) {
     });
 
     /**
-     * Mise a jour du profil
-     */
-    socket.on("update_user", function (data) {
-        Client.update({
-            mail: data.mail,
-            firstname: data.firstname,
-            lastname: data.lastname,
-            street: data.street,
-            city: data.city,
-            password: data.password
-        }, {where: {MAIL: data.mail}}).then((item) => {
-            if (item !== null) {
-                socket.emit('update_result', true);
-            } else socket.emit('update_result', false);
-        });
-    });
-
-
-    /**
      * Inscription de l'utilisateur
      */
     socket.on('signup', function (data) {
@@ -170,16 +151,22 @@ io.sockets.on('connection', function (socket) {
     });
 
     /**
+     * Mise a jour du profil
+     */
+    socket.on("update_user",(data, mail) => {
+        Client.update(data, {where: {MAIL: mail}}).then((item) => {
+            socket.emit('update_result', item !== null);
+        });
+    });
+
+    /**
      * Recuperation des infos de l'utilisateur
      */
-    socket.on('profil', function (mail) {
+    socket.on('profil',(mail) => {
         Client.findOne({
-            where: {
-                MAIL: mail
-            }
-        }).then((item) => {
-            if (item !== null)
-                socket.emit('profil_info', item);
+            where: {MAIL: mail}
+        }).then((client) => {
+            if (client !== null) socket.emit('profil_info', client);
         })
     });
 

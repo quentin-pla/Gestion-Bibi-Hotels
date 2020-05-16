@@ -27,16 +27,26 @@ class UserBills extends Component {
 
         this.payBill = this.payBill.bind(this);
         this.formatDate = this.formatDate.bind(this);
+
+        this._isMounted = false;
     }
 
     /**
      * Fonction s'activant a l'initialisation du composant
      */
     componentDidMount() {
+        this._isMounted = true;
         socket.emit("user_bills", this.state.mail);
         socket.on('user_bills_res', (bills) => {
-            this.setState({ "bills": bills, "loaded": true});
+            if (this._isMounted) this.setState({ "bills": bills, "loaded": true});
         });
+    }
+
+    /**
+     * Destruction du composant
+     */
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     /**

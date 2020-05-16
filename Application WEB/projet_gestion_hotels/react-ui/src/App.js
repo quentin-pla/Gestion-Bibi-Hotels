@@ -49,10 +49,10 @@ class App extends Component {
                     <PrivateRoute path="/profil">
                         <Profil/>
                     </PrivateRoute>
-                    <PrivateRoute path="/reservation">
+                    <PrivateRoute path="/reservations">
                         <UserReservations/>
                     </PrivateRoute>
-                    <PrivateRoute path="/facture">
+                    <PrivateRoute path="/factures">
                         <UserBills />
                     </PrivateRoute>
                     <Redirect to="/"/>
@@ -70,8 +70,8 @@ function NavLinks(props) {
     return props.authenticated ? (
         <Nav className="mr-auto">
             <Link className="nav-link" to="/profil">Profil</Link>
-            <Link className="nav-link" to="/reservation">Réservations</Link>
-            <Link className="nav-link" to="/facture">Factures</Link>
+            <Link className="nav-link" to="/reservations">Réservations</Link>
+            <Link className="nav-link" to="/factures">Factures</Link>
         </Nav>
     ) : (
         <Nav className="mr-auto"/>

@@ -59,12 +59,6 @@ const Room = require(path.join(__dirname, "../react-ui/src/database/models/Room"
  * Modèle Reservation de la base de données
  */
 const Reservation = require(path.join(__dirname, "../react-ui/src/database/models/Reservation"));
-//Reservation.associate();
-
-/**
- * Modèle Occupation de la base de données
- */
-const Occupation = require(path.join(__dirname, "../react-ui/src/database/models/Occupation"));
 
 /**
  * Modèle Bill de la base de données
@@ -106,15 +100,13 @@ io.sockets.on('connection', function (socket) {
             //Sélection de l'adresse mail et du mot de passe
             attributes: ['MAIL', 'PASSWORD'],
             //L'adresse mail du client doit être égale à celle passée en paramètres
-            where: {
-                MAIL: mail
-            }
+            where: {MAIL: mail}
             //Une fois le tuple trouvé dans la BDD
-        }).then((item) => {
+        }).then((client) => {
             //Vérification que le client a bien été trouvé dans la base de données
-            if (item !== null) {
+            if (client !== null) {
                 //Comparaison du mot de passe avec celui passé en paramètre
-                if (item.dataValues.PASSWORD === password) {
+                if (client.checkPassword(password)) {
                     //Renvoi d'un message de validation de l'authentification vers la classe Login
                     socket.emit('auth_info', true);
                 }
@@ -279,7 +271,7 @@ io.sockets.on('connection', function (socket) {
     /**
      * Récupèrer les réservations de l'utilisateur
      */
-    socket.on('user_reservation', (mail) => {
+    socket.on('user_reservations', (mail) => {
         Client.findOne({
             where: {MAIL: mail}
         }).then((client) => {
@@ -287,7 +279,7 @@ io.sockets.on('connection', function (socket) {
                 where: {CLIENT_ID: client.id},
                 include: [{model: Hotel},{model: RoomType}]
             }).then((reservations) => {
-                socket.emit("user_reservation_res", reservations);
+                socket.emit("user_reservations_res", reservations);
             })
         });
     });
@@ -311,12 +303,12 @@ io.sockets.on('connection', function (socket) {
     /**
      * Permet de payer une reservation
      */
-    socket.on("pay_reservation", function (id) {
+    socket.on("pay_reservation", (id) => {
         Reservation.update({
             is_payed: true
         }, {where: {ID: id}}).catch((err) => {
             console.log(err)
-        })
+        });
     });
     /**
      * Permet de confirmer une reservation
@@ -324,7 +316,9 @@ io.sockets.on('connection', function (socket) {
     socket.on("confirm_reservation", function (id) {
         Reservation.update({
             is_comfirmed: true
-        }, {where: {ID: id}})
+        }, {where: {ID: id}}).catch((err) => {
+            console.log(err)
+        });
     });
 
     /**

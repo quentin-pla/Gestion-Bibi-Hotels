@@ -31,12 +31,9 @@ svg {
     padding-left: 0;
 }
 
-.hotel-view{
-    margin-top: 5%;
-    padding: 10px;
-    border-style: solid;
-    border-width: 10px;
-    background-color: gainsboro;
+#logo {
+    width: 80%;
+    height: 224px;
 }
 
 p {

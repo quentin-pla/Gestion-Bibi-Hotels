@@ -3,6 +3,8 @@ import {AuthContext} from "../context/AuthContext";
 import socket from "../context/SocketIOInstance";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import {Container, Table} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 
 class UserBills extends Component {
 
@@ -18,10 +20,13 @@ class UserBills extends Component {
          * Initialisation de l'état
          */
         this.state = {
-            msg: "",
             mail: this.context.mail,
-            bills: []
+            bills: [],
+            loaded: false,
         };
+
+        this.payBill = this.payBill.bind(this);
+        this.formatDate = this.formatDate.bind(this);
     }
 
     /**
@@ -30,36 +35,74 @@ class UserBills extends Component {
     componentDidMount() {
         socket.emit("user_bills", this.state.mail);
         socket.on('user_bills_res', (bills) => {
-            this.setState({ "bills": bills});
+            this.setState({ "bills": bills, "loaded": true});
         });
     }
 
+    /**
+     * Formatter une date
+     * @param date
+     */
+    formatDate(date) {
+        const newdate = new Date(date.toString());
+        return newdate.toLocaleDateString();
+    }
+
+    /**
+     * Payer une facture
+     * @param id : identifiant de la facture
+     */
+    payBill(id) {
+        socket.emit("pay_bill", id);
+    }
 
     render() {
         return (
-            <Row className={"m-0 px-4 mb-4 w-100"}>
-                {this.state.bills.length === 0 ?
-                    <Col className="col-12 text-center mt-5">
-                        <h3 className="display-4">Aucun résultat...</h3>
+            <Container fluid>
+                <Row>
+                    <Col className={"text-center mb-4 col-12"}>
+                        <h1>Vos factures</h1>
                     </Col>
-                    :
-                    this.state.bills.map((bill, index) => {
-                        return (
-                            <h2>{bill.id}</h2>
-                        )
-                    })
-                }
-            </Row>
+                    {this.state.loaded ?
+                        this.state.bills.length === 0 ?
+                        <Col className="col-12 text-center mt-5 fade-effect">
+                            <h3 className={"text-grey"}>Aucune facture disponible.</h3>
+                        </Col>
+                        :
+                        <Col className={"m-0 px-4 mb-4 w-100 col-12 fade-effect"}>
+                            <Table responsive>
+                                <thead>
+                                <tr>
+                                    <th>Réservation</th>
+                                    <th>Montant TOTAL</th>
+                                    <th/>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {this.state.bills.map((bill, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            <td>
+                                                Hôtel {bill.reservation.hotel.hotel_name} (Chambre {bill.reservation.roomtype.name})
+                                                - Du {this.formatDate(bill.reservation.arrival_date)} au {this.formatDate(bill.reservation.exit_date)}
+                                            </td>
+                                            <td>{bill.amount}€</td>
+                                            <td className={"text-right"}>
+                                                {!bill.is_payed ? <Button variant={"outline-success m-2"} onClick={() => this.payReservation(bill.id)}>Payer</Button> : null}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                                </tbody>
+                            </Table>
+                        </Col>
+                        :
+                        null
+                    }
+                </Row>
+            </Container>
         );
     }
-}
-
-/**
- * Permet de payer une facture
- * @param id : identifiant de la facture
- */
-function payBill(id) {
-    socket.emit("pay_bill", id);
 }
 
 export default UserBills;

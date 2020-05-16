@@ -19,7 +19,8 @@ class UserReservations extends Component {
          */
         this.state = {
             mail: this.context.mail,
-            reservations: []
+            reservations: [],
+            loaded: false
         };
 
         this.formatDate = this.formatDate.bind(this);
@@ -33,10 +34,14 @@ class UserReservations extends Component {
     componentDidMount() {
         socket.emit("user_reservation", this.state.mail);
         socket.on('user_reservation_res', (reservations) => {
-            this.setState({"reservations": reservations});
+            this.setState({"reservations": reservations, "loaded": true});
         });
     }
 
+    /**
+     * Formatter une date
+     * @param date
+     */
     formatDate(date) {
         const newdate = new Date(date.toString());
         return newdate.toLocaleDateString();
@@ -63,15 +68,15 @@ class UserReservations extends Component {
     render() {
         return (
             <Container fluid>
-                <Row bsPrefix={"text-center mb-4"}>
-                    <h1>Vos réservations</h1>
-                </Row>
-                {this.state.reservations.length === 0 ?
-                    <Col className="col-12 text-center mt-5">
-                        <h3 className="display-4">Aucun résultat...</h3>
+                <Row className={"text-center"}>
+                    <Col className={"col-12 mb-4"}><h1>Vos réservations</h1></Col>
+                {this.state.loaded ?
+                    this.state.reservations.length === 0 ?
+                    <Col className="col-12 text-center mt-5 fade-effect">
+                        <h3 className={"text-grey"}>Aucune réservation effectuée.</h3>
                     </Col>
                     :
-                    <Col className={"m-0 px-4 mb-4 w-100"}>
+                    <Col className={"m-0 px-4 mb-4 w-100 col-12 fade-effect"}>
                         <Table responsive>
                             <thead>
                             <tr>
@@ -106,7 +111,10 @@ class UserReservations extends Component {
                             </tbody>
                         </Table>
                     </Col>
+                    :
+                    null
                 }
+                </Row>
             </Container>
         );
     }

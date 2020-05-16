@@ -74,6 +74,7 @@ const Bill = require(path.join(__dirname, "../react-ui/src/database/models/Bill"
 //Association des modèles
 Room.associate();
 Reservation.associate();
+Bill.associate();
 
 /**
  * Messages d'erreur
@@ -312,7 +313,8 @@ io.sockets.on('connection', function (socket) {
             where: {MAIL: mail}
         }).then((client) => {
             Bill.findAll({
-                where: {CLIENT_ID: client.id}
+                where: {CLIENT_ID: client.id},
+                include: [{model: Reservation, include: [{model: Hotel},{model: RoomType}]}]
             }).then((bills) => {
                 socket.emit("user_bills_res", bills);
             })

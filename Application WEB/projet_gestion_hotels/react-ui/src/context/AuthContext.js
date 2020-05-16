@@ -33,6 +33,8 @@ class AuthContextProvider extends Component {
             mail: prevMail,
             //Mot de passe
             password: prevPassword,
+            //Initialisation
+            loaded: false,
             //Modifier l'état de connexion
             setAuthenticated: this.setAuthenticated.bind(this),
             //Modifier le pseudo
@@ -57,6 +59,8 @@ class AuthContextProvider extends Component {
                 //Authentification validée
                 this.setAuthenticated(true);
             }
+            //Initialisation effectuée
+            this.setState({"loaded": true});
         });
     }
 

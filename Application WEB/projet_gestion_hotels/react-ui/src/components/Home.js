@@ -13,19 +13,22 @@ class Home extends Component {
         const auth = this.context;
 
         return (
-            auth.authenticated ?
-                <HotelRooms/>
+            auth.loaded ?
+                auth.authenticated ?
+                    <HotelRooms/>
+                :
+                    <Container fluid className={"flex-center full-height"}>
+                        <Row className="justify-content-md-center">
+                            <Col className="col-12 text-center">
+                                <h1 className="display-3">Bienvenue</h1>
+                            </Col>
+                            <Col className="col-12 text-center">
+                                <h3 className="text-muted">Connectez-vous pour réserver un hôtel.</h3>
+                            </Col>
+                        </Row>
+                    </Container>
             :
-                <Container fluid className={"flex-center full-height"}>
-                    <Row className="justify-content-md-center">
-                        <Col className="col-12 text-center">
-                            <h1 className="display-3">Bienvenue</h1>
-                        </Col>
-                        <Col className="col-12 text-center">
-                            <h3 className="text-muted">Connectez-vous pour réserver un hôtel.</h3>
-                        </Col>
-                    </Row>
-                </Container>
+            null
         );
     }
 }

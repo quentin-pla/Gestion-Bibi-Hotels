@@ -20,7 +20,6 @@ class UserBills extends Component {
          * Initialisation de l'état
          */
         this.state = {
-            mail: this.context.mail,
             bills: [],
             loaded: false,
         };
@@ -32,14 +31,21 @@ class UserBills extends Component {
     }
 
     /**
+     * Rafraichir la liste des factures
+     */
+    refreshBills() {
+        socket.emit("user_bills", this.context.mail);
+        socket.on('user_bills_res', (bills) => {
+            if (this._isMounted) this.setState({ "bills": bills, "loaded": true});
+        });
+    }
+
+    /**
      * Fonction s'activant a l'initialisation du composant
      */
     componentDidMount() {
         this._isMounted = true;
-        socket.emit("user_bills", this.state.mail);
-        socket.on('user_bills_res', (bills) => {
-            if (this._isMounted) this.setState({ "bills": bills, "loaded": true});
-        });
+        this.refreshBills();
     }
 
     /**
@@ -64,6 +70,7 @@ class UserBills extends Component {
      */
     payBill(id) {
         socket.emit("pay_bill", id);
+        this.refreshBills();
     }
 
     render() {

@@ -18,7 +18,6 @@ class UserReservations extends Component {
          * Initialisation de l'état
          */
         this.state = {
-            mail: this.context.mail,
             reservations: [],
             loaded: false
         };
@@ -31,14 +30,21 @@ class UserReservations extends Component {
     }
 
     /**
+     * Rafraichir la liste des reservations
+     */
+    refreshReservations() {
+        socket.emit("user_reservations", this.context.mail);
+        socket.on('user_reservations_res', (reservations) => {
+            if (this._isMounted) this.setState({"reservations": reservations, "loaded": true});
+        });
+    }
+
+    /**
      * Fonction s'activant a l'initialisation du composant
      */
     componentDidMount() {
         this._isMounted = true;
-        socket.emit("user_reservation", this.state.mail);
-        socket.on('user_reservation_res', (reservations) => {
-            if (this._isMounted) this.setState({"reservations": reservations, "loaded": true});
-        });
+        this.refreshReservations();
     }
 
     /**
@@ -59,20 +65,20 @@ class UserReservations extends Component {
 
     /**
      * Permet de payer une reservation
-     * @param id : identifiant de la reservation
+     * @param reservation
      */
-    payReservation(id) {
-        socket.emit("pay_reservation", id);
-        alert("Règlement effectué");
+    payReservation(reservation) {
+        socket.emit("pay_reservation", reservation.id);
+        this.refreshReservations();
     }
 
     /**
      * Permet d'annuler une reservation
-     * @param id : identifiant de la reservation
+     * @param reservation
      */
-    cancelReservation(id) {
-        socket.emit("cancel_reservation", id);
-        alert('Reservation annulée');
+    cancelReservation(reservation) {
+        socket.emit("cancel_reservation", reservation.id);
+        this.refreshReservations();
     }
 
     render() {
@@ -103,7 +109,7 @@ class UserReservations extends Component {
                             <tbody>
                                 {this.state.reservations.map((reservation, index) => {
                                     return (
-                                        <tr key={index}>
+                                        <tr key={index} className={reservation.is_cancelled ? "strikeout" : null}>
                                             <td>{reservation.hotel.hotel_name}</td>
                                             <td>{reservation.roomtype.name}</td>
                                             <td>{this.formatDate(reservation.arrival_date)}</td>
@@ -112,8 +118,8 @@ class UserReservations extends Component {
                                             <td>{reservation.room_count}</td>
                                             <td>{reservation.people_count}</td>
                                             <td className={"text-right"}>
-                                                {!reservation.is_payed ? <Button variant={"outline-success m-2"} onClick={() => this.payReservation(reservation.id)}>Payer</Button> : null}
-                                                {!reservation.is_cancelled ? <Button variant={"outline-danger m-2"} onClick={() => this.cancelReservation(reservation.id)}>Annuler</Button> : null}
+                                                {!reservation.is_payed ? <Button variant={"outline-success m-2"} onClick={() => this.payReservation(reservation)}>Payer</Button> : null}
+                                                {!reservation.is_cancelled ? <Button variant={"outline-danger m-2"} onClick={() => this.cancelReservation(reservation)}>Annuler</Button> : null}
                                             </td>
                                         </tr>
                                     )

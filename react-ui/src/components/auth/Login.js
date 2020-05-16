@@ -70,9 +70,7 @@ class Login extends Component {
             <Container className="flex-center position-ref full-height" fluid>
                 <Row className="justify-content-md-center">
                     <Card style={{width: '20rem'}} className="text-center no-border fade-effect" body>
-                        <Card.Title className="display-4 text-left mb-4">
-                            Connexion
-                        </Card.Title>
+                        <Card.Img variant="top" id="logo" className="mb-4" src={process.env.PUBLIC_URL + '/bibi.PNG'}/>
                         <Form id="loginform">
                             <Form.Group>
                                 <Form.Control

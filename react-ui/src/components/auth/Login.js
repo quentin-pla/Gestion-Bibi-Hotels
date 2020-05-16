@@ -64,8 +64,6 @@ class Login extends Component {
         //Si l'utilisateur est authentifié, redirection vers la page d'accueil
         if (this.context.authenticated) return <Redirect to="/"/>;
 
-        console.log(this.state.isError);
-
         return (
             <Container className="flex-center position-ref full-height" fluid>
                 <Row className="justify-content-md-center">

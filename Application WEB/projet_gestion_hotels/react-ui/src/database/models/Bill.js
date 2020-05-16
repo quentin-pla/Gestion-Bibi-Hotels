@@ -48,6 +48,10 @@ Bill.init({
     timestamps: false
 });
 
+Bill.associate = () => {
+    Bill.belongsTo(connection.models.reservation, {foreignKey: "reservation_id", targetKey: "id"});
+};
+
 //Exportation du modèle
 module.exports = Bill;
 

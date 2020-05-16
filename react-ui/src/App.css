@@ -58,7 +58,7 @@ p {
 }
 
 .no-border {
-    border: none;
+    border: none !important;
 }
 
 .navbar-top {

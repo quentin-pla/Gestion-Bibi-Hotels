@@ -77,7 +77,7 @@ class UserReservations extends Component {
 
     render() {
         return (
-            <Container fluid>
+            <Container fluid className={"mt-4"}>
                 <Row className={"text-center"}>
                     <Col className={"col-12 mb-4"}><h1>Vos réservations</h1></Col>
                 {this.state.loaded ?

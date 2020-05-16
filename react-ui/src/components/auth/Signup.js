@@ -22,6 +22,8 @@ class Signup extends Component {
             isError: false,
             //Message d'erreur
             errorMessage: "",
+            //Adresse mail
+            mail: "",
             //Nom
             firstname: "",
             //Prénom
@@ -30,12 +32,15 @@ class Signup extends Component {
             street: "",
             //Ville
             city: "",
+            //Mot de passe
+            password: "",
             //Confirmation du mot de passe
             password_confirm: ""
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.submitLoginEnter = this.submitLoginEnter.bind(this);
+        this.checkData = this.checkData.bind(this);
     }
 
     /**
@@ -54,24 +59,15 @@ class Signup extends Component {
      * Demande d'inscription
      */
     handleSubmit() {
-        //Syntaxe alphanumérique avec espace
-        const alphanumSyntax = /^[0-9a-zA-Z ]+$/;
-        //Syntaxe seulement caractères de l'alphabet
-        const streetSyntax = /^[a-zA-Z /']+$/;
-        //Vérification des champs nom, prénom, rue, ville
-        let fieldsCheck = (
-            this.isValid(this.state.lastname, streetSyntax) &&
-            this.isValid(this.state.firstname, streetSyntax) &&
-            this.isValid(this.state.street, alphanumSyntax) &&
-            this.isValid(this.state.city, streetSyntax)
-        );
-        //Vérifications du mot de passe
-        let passwordCheck = this.context.password.length >= 3;
+        //Vérification de l'adresse mail
+        let mailCheck = this.state.mail.match(/\S+@\S+\.\S+/);
+        //Vérification du mot de passe
+        let passwordCheck = this.state.password.length >= 3;
         //Vérification de la confirmation du mot de passe
-        let confirmCheck = this.context.password === this.state.password_confirm;
-        //Validation des champs nom, prénom, rue, ville
-        if (!fieldsCheck) {
-            this.setState({isError: true, errorMessage: "Utilisation de caractères invalides"});
+        let confirmCheck = this.state.password === this.state.password_confirm;
+        //Validation de l'adresse mail
+        if (!mailCheck) {
+            this.setState({isError: true, errorMessage: "Adresse mail invalide"});
             return false;
         }
         //Validation du mot de passe
@@ -86,27 +82,62 @@ class Signup extends Component {
         }
         //Compression des données dans un objet
         let data = {
-            mail: this.context.mail,
-            firstname: this.state.firstname,
-            lastname: this.state.lastname,
+            mail: this.state.mail,
+            firstname: this.state.firstname.toUpperCase(),
+            lastname: this.state.lastname.charAt(0).toUpperCase() + this.state.lastname.slice(1).toLowerCase(),
             street: this.state.street,
-            city: this.state.city,
-            password: this.context.password
+            city: this.state.city.charAt(0).toUpperCase() + this.state.city.slice(1).toLowerCase(),
+            password: this.state.password
         };
+        //Vérification de la taille des données
+        for (let value of Object.values(data)) {
+            if (value.length < 3) {
+                this.setState({isError: true, errorMessage: "Trois caractères minimum"});
+                return false;
+            }
+        }
         //Émission d'une demande d'inscription
         socket.emit("signup", data);
         //Récupération des informations d'inscription
         socket.on("auth_info", (success, errorMessage) => {
             //Si c'est un succès
             if (success) {
+                //Définition du mail dans le contexte
+                this.context.setMail(this.state.mail);
+                //Définition du mot de passe dans le contexte
+                this.context.setPassword(this.state.password);
                 //Authentification validée
                 this.context.setAuthenticated(true);
-                alert("Informations modifiée avec succès");
             }
             //Affichage d'une erreur
             else this.setState({isError: true, errorMessage: errorMessage});
         });
         return false;
+    }
+
+    /**
+     * Vérifier une donnée avant de la mettre à jour
+     * @param stateItem identifiant
+     * @param value valeur
+     */
+    checkData(stateItem, value) {
+        let data = {};
+        switch (stateItem) {
+            case "firstname":
+            case "lastname":
+            case "city":
+                if (value.match(/^[a-zA-Z-]*$/)) data[stateItem] = value;
+                break;
+            case "street":
+                if (value.match(/^[0-9a-zA-Z -']*$/)) data[stateItem] = value;
+                break;
+            case "mail":
+                if (value.match(/^[0-9a-zA-Z_@.-]*$/)) data[stateItem] = value;
+                break;
+            default:
+                break;
+        }
+        return data;
     }
 
     /**
@@ -124,7 +155,7 @@ class Signup extends Component {
         return (
             <Container className="flex-center position-ref full-height" fluid>
                 <Row className="justify-content-md-center">
-                    <Card style={{width: '20rem'}} className="text-center no-boder fade-effect" body>
+                    <Card style={{width: '20rem'}} className="text-center no-border fade-effect" body>
                         <Card.Title className="display-4 text-left mb-4">
                             Inscription
                         </Card.Title>
@@ -135,8 +166,9 @@ class Signup extends Component {
                                     type="email"
                                     min="5"
                                     onChange={e => {
-                                        this.context.setMail(e.target.value);
+                                        this.setState(this.checkData("mail", e.target.value));
                                     }}
+                                    value={this.state.mail}
                                     placeholder="Adresse Mail"
                                 />
                             </Form.Group>
@@ -146,8 +178,9 @@ class Signup extends Component {
                                     type="text"
                                     min="3"
                                     onChange={e => {
-                                        this.setState({firstname: e.target.value});
+                                        this.setState(this.checkData("firstname", e.target.value));
                                     }}
+                                    value={this.state.firstname}
                                     placeholder="Nom"
                                 />
                             </Form.Group>
@@ -157,8 +190,9 @@ class Signup extends Component {
                                     type="text"
                                     min="3"
                                     onChange={e => {
-                                        this.setState({lastname: e.target.value});
+                                        this.setState(this.checkData("lastname", e.target.value));
                                     }}
+                                    value={this.state.lastname}
                                     placeholder="Prénom"
                                 />
                             </Form.Group>
@@ -168,8 +202,9 @@ class Signup extends Component {
                                     type="text"
                                     min="3"
                                     onChange={e => {
-                                        this.setState({street: e.target.value});
+                                        this.setState(this.checkData("street", e.target.value));
                                     }}
+                                    value={this.state.street}
                                     placeholder="Adresse"
                                 />
                             </Form.Group>
@@ -179,8 +214,9 @@ class Signup extends Component {
                                     type="text"
                                     min="3"
                                     onChange={e => {
-                                        this.setState({city: e.target.value});
+                                        this.setState(this.checkData("city", e.target.value));
                                     }}
+                                    value={this.state.city}
                                     placeholder="Ville"
                                 />
                             </Form.Group>
@@ -190,8 +226,9 @@ class Signup extends Component {
                                     type="password"
                                     min="3"
                                     onChange={e => {
-                                        this.context.setPassword(e.target.value);
+                                        this.setState({password: e.target.value});
                                     }}
+                                    value={this.state.password}
                                     placeholder="Mot de passe"
                                 />
                             </Form.Group>
@@ -204,6 +241,7 @@ class Signup extends Component {
                                         this.setState({password_confirm: e.target.value});
                                     }}
                                     onKeyPress={e => this.submitLoginEnter(e)}
+                                    value={this.state.password_confirm}
                                     placeholder="Confirmation"
                                 />
                             </Form.Group>

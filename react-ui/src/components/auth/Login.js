@@ -69,7 +69,7 @@ class Login extends Component {
         return (
             <Container className="flex-center position-ref full-height" fluid>
                 <Row className="justify-content-md-center">
-                    <Card style={{width: '20rem'}} className="text-center no-boder fade-effect" body>
+                    <Card style={{width: '20rem'}} className="text-center no-border fade-effect" body>
                         <Card.Title className="display-4 text-left mb-4">
                             Connexion
                         </Card.Title>

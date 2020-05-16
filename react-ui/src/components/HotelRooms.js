@@ -195,9 +195,9 @@ class HotelRooms extends Component {
         });
 
         return (
-            <Container fluid>
+            <Container fluid className={"mt-4"}>
                 <Row bsPrefix={"text-center mb-4"}>
-                    <h1>Voyagez à travers le monde, grâce à Bibi.</h1>
+                    <h1>Un hôtel ? Bibi est là pour vous.</h1>
                 </Row>
                 <Row bsPrefix={"mb-4 justify-content-center"}>
                     <Form className={"form-inline justify-content-center"}>

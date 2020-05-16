@@ -35,7 +35,6 @@ class UserProfile extends Component {
             city_editing: false,
         };
 
-        this.isValid = this.isValid.bind(this);
         this.checkData = this.checkData.bind(this);
 
         this._isMounted = false;
@@ -68,18 +67,6 @@ class UserProfile extends Component {
     }
 
     /**
-     * Vérifier qu'un texte valide une syntaxe
-     * @param text
-     * @param syntax syntaxe autorisée
-     */
-    isValid(text, syntax) {
-        //Si le texte n'est pas définit
-        if (text === null) return false;
-        //Renvoi vrai si le texte respecte la syntaxe
-        return text.match(syntax);
-    }
-
-    /**
      * Vérifier une donnée avant de la mettre à jour
      * @param stateItem identifiant
      * @param value valeur
@@ -90,10 +77,10 @@ class UserProfile extends Component {
             case "firstname":
             case "lastname":
             case "city":
-                if (this.isValid(value, /^[a-zA-Z-]+$/)) data[stateItem] = value;
+                if (value.match(/^[a-zA-Z-]*$/)) data[stateItem] = value;
                 break;
             case "street":
-                if (this.isValid(value, /^[0-9a-zA-Z -']+$/)) data[stateItem] = value;
+                if (value.match(/^[0-9a-zA-Z -']*$/)) data[stateItem] = value;
                 break;
             default:
                 break;
@@ -107,13 +94,13 @@ class UserProfile extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         let data = undefined;
 
-        if (prevState.firstname_editing && !this.state.firstname_editing)
+        if (prevState.firstname_editing && !this.state.firstname_editing && this.state.firstname.length >= 3)
             data = {firstname: this.state.firstname};
-        else if (prevState.lastname_editing && !this.state.lastname_editing)
+        else if (prevState.lastname_editing && !this.state.lastname_editing && this.state.lastname.length >= 3)
             data = {lastname: this.state.lastname};
-        else if (prevState.street_editing && !this.state.street_editing)
+        else if (prevState.street_editing && !this.state.street_editing && this.state.street.length >= 3)
             data = {street: this.state.street};
-        else if (prevState.city_editing && !this.state.city_editing)
+        else if (prevState.city_editing && !this.state.city_editing && this.state.city.length >= 3)
             data = {city: this.state.city};
 
         if (data !== undefined) socket.emit("update_user", data, this.context.mail);
@@ -121,7 +108,7 @@ class UserProfile extends Component {
 
     render() {
         return this.state.loaded ?
-            <Container fluid>
+            <Container fluid className={"mt-4"}>
                 <Row>
                     <Col className={"col-12 mb-4 text-center"}><h1>Profil utilisateur</h1></Col>
                     <Col className={"col-12 fade-effect"}>

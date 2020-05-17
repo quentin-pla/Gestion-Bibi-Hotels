@@ -100,7 +100,7 @@ class UserBills extends Component {
                                     return (
                                         <tr key={index}>
                                             <td>
-                                                Hôtel {bill.reservation.hotel.hotel_name} (Chambre {bill.reservation.roomtype.name})
+                                                Hôtel {bill.reservation.hotel.name} (Chambre {bill.reservation.roomtype.name})
                                                 - Du {this.formatDate(bill.reservation.arrival_date)} au {this.formatDate(bill.reservation.exit_date)}
                                             </td>
                                             <td>{bill.amount}€</td>

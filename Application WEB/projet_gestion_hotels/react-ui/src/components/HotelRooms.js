@@ -382,7 +382,7 @@ function BookModal(props) {
                             <Col bsPrefix={"col-12"}>
                                 <div className="d-flex flex-wrap">
                                     <h4>Hôtel</h4>
-                                    <h4 className={"text-grey ml-2"}>{room.hotel.hotel_name}</h4>
+                                    <h4 className={"text-grey ml-2"}>{room.hotel.name}</h4>
                                 </div>
                             </Col>
                             <Col bsPrefix={"col-12 ml-3"}>

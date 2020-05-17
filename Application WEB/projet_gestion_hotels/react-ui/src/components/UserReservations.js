@@ -110,7 +110,7 @@ class UserReservations extends Component {
                                 {this.state.reservations.map((reservation, index) => {
                                     return (
                                         <tr key={index} className={reservation.is_cancelled ? "strikeout" : null}>
-                                            <td>{reservation.hotel.hotel_name}</td>
+                                            <td>{reservation.hotel.name}</td>
                                             <td>{reservation.roomtype.name}</td>
                                             <td>{this.formatDate(reservation.arrival_date)}</td>
                                             <td>{this.formatDate(reservation.exit_date)}</td>

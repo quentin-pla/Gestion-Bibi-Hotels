@@ -11,9 +11,9 @@ Hotel.init({
         field: 'ID',
         primaryKey: true
     },
-    hotel_name: {
+    name: {
         type: DataTypes.STRING,
-        field: 'HOTEL_NAME'
+        field: 'NAME'
     },
     street: {
         type: DataTypes.STRING,

@@ -102,11 +102,11 @@ public class Administration {
         //Pour chaque hotel
         for (Hotel hotel : hotels) {
             //Ajout de l'hotel dans les résultats
-            results.put(hotel.getHOTEL_NAME(), 0.0);
+            results.put(hotel.getNAME(), 0.0);
             //Pour chaque facture archivée
             for (Bill bill : BillingService.getInstance(hotel).getArchives())
                 //Ajout des factures
-                results.put(hotel.getHOTEL_NAME(), results.get(hotel.getHOTEL_NAME()) + bill.getAMOUNT());
+                results.put(hotel.getNAME(), results.get(hotel.getNAME()) + bill.getAMOUNT());
         }
         //Retour des résultats
         return results;

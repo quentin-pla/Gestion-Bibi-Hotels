@@ -62,7 +62,7 @@ public class SelectController {
         //Pour chaque hôtel
         for (Hotel hotel : hotels)
             //Ajout du nom de l'hotel dans la comboBox
-            hotelSelection.getHotels().getItems().add(hotel.getHOTEL_NAME());
+            hotelSelection.getHotels().getItems().add(hotel.getNAME());
         //Affichage de la fenêtre de sélection de l'hotel
         MainController.getInstance().setWindow(hotelSelection);
         //Afficher la fenêtre du service lorsque l'hotel est sélectionné

@@ -10,7 +10,7 @@ public class Hotel extends DatabaseModel {
     /**
      * Nom
      */
-    private String HOTEL_NAME;
+    private String NAME;
 
     /**
      * Adresse
@@ -31,7 +31,7 @@ public class Hotel extends DatabaseModel {
      * Liste des colonnes
      */
     public enum Columns implements DatabaseColumns {
-        HOTEL_NAME,STREET,CITY,STAR_RATING
+        NAME,STREET,CITY,STAR_RATING
     }
 
     /**
@@ -43,14 +43,14 @@ public class Hotel extends DatabaseModel {
 
     /**
      * Constructeur surchargé
-     * @param HOTEL_NAME nom
+     * @param NAME nom
      * @param STREET adresse
      * @param CITY ville
      * @param STAR_RATING nombre d'étoiles
      */
-    public Hotel(String HOTEL_NAME, String STREET, String CITY, int STAR_RATING) {
+    public Hotel(String NAME, String STREET, String CITY, int STAR_RATING) {
         super(Tables.HOTELS);
-        this.HOTEL_NAME = HOTEL_NAME;
+        this.NAME = NAME;
         this.STREET = STREET;
         this.CITY = CITY;
         this.STAR_RATING = STAR_RATING;
@@ -64,12 +64,12 @@ public class Hotel extends DatabaseModel {
         return Columns.values();
     }
 
-    public String getHOTEL_NAME() {
-        return HOTEL_NAME;
+    public String getNAME() {
+        return NAME;
     }
 
-    public void setHOTEL_NAME(String HOTEL_NAME) {
-        this.HOTEL_NAME = HOTEL_NAME;
+    public void setNAME(String NAME) {
+        this.NAME = NAME;
     }
 
     public String getSTREET() {

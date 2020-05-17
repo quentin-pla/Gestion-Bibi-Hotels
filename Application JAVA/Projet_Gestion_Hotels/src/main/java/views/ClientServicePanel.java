@@ -63,7 +63,7 @@ public class ClientServicePanel extends BorderPane {
         //Colonne Hotel
         TableColumn<Occupation, String> hotel_col = new TableColumn<>("Hôtel");
         hotel_col.setCellValueFactory(
-                param -> new SimpleStringProperty(String.valueOf(param.getValue().getRoom().getHotel().getHOTEL_NAME())));
+                param -> new SimpleStringProperty(String.valueOf(param.getValue().getRoom().getHotel().getNAME())));
         //Colonne Réservation
         TableColumn<Occupation, String> reservation_col = new TableColumn<>("Réservation");
         reservation_col.setCellValueFactory(

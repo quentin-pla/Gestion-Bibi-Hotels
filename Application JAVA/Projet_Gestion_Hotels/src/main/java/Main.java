@@ -15,7 +15,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         //Titre de la fenêtre
-        primaryStage.setTitle("Gestion Hôtels");
+        primaryStage.setTitle("Gestion Bibi hôtels");
         //Fenêtre non redimensionable
         primaryStage.setResizable(false);
         //Définition de la scène avec la scène du MainController

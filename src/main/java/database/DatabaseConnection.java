@@ -1,10 +1,8 @@
 package database;
 
-import models.Reservation;
-
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Connexion avec la base de données
@@ -77,7 +75,8 @@ public class DatabaseConnection {
      * @return classes issues du modèle
      */
     public static DatabaseModel selectQuery(DatabaseModel.Tables table, int ID) {
-        return selectQuery(table, "*", "WHERE ID=" + ID).get(0);
+        ArrayList<DatabaseModel> result = selectQuery(table, "*", "WHERE ID=" + ID);
+        return !result.isEmpty() ? result.get(0) : null;
     }
 
     /**
@@ -163,6 +162,28 @@ public class DatabaseConnection {
     }
 
     /**
+     * Supprimer un tuple de la base de données
+     * @param model modèle
+     */
+    public static void deleteQuery(DatabaseModel model) {
+        //Requête SQL
+        String query = "DELETE FROM " + model.getTable() + " WHERE ID=" + model.getID();
+        //Récupération de l'instance
+        DatabaseConnection databaseConnection = getInstance();
+        try {
+            //Creation d'une instruction SQL
+            Statement instruction = databaseConnection.connection.createStatement();
+            //Execution de la requête
+            instruction.executeUpdate(query);
+            //Fermeture de l'instruction (liberation des ressources)
+            instruction.close();
+        } catch (SQLException e) {
+            //Message d'erreur
+            System.err.println(e.getMessage());
+        }
+    }
+
+    /**
      * Mettre à jour un tuple dans la base de données
      * @param model modèle à mettre à jour
      */
@@ -192,40 +213,5 @@ public class DatabaseConnection {
             //Message d'erreur
             System.err.println(e.getMessage());
         }
-    }
-
-    /**
-     * Appeler la procédure getAvailableRooms(...)
-     * @param reservation réservation
-     * @return IDs des chambres disponibles
-     */
-    public static List<Integer> getAvailableRoomsQuery(Reservation reservation) {
-        List<Integer> results = new ArrayList<>();
-        //Récupération de l'instance
-        DatabaseConnection databaseConnection = getInstance();
-        try {
-            //Creation d'une instruction SQL
-            Statement instruction = databaseConnection.connection.createStatement();
-            //Formatter les dates avec une syntaxe spécifique
-            SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
-            //Execution de la requête
-            ResultSet resultSet = instruction.executeQuery(
-            "call getAvailableRooms(" + reservation.getHOTEL_ID() + ",'" +
-                formater.format(reservation.getARRIVAL_DATE()) + "','" +
-                formater.format(reservation.getEXIT_DATE()) + "'," +
-                reservation.getROOMTYPE_ID() + ")"
-            );
-            //Pour chaque tuple
-            while (resultSet.next())
-                //Récupération de l'ID
-                results.add(resultSet.getInt("ID"));
-            //Fermeture de l'instruction (liberation des ressources)
-            instruction.close();
-        } catch (SQLException e) {
-            //Message d'erreur
-            e.printStackTrace();
-        }
-        //Retour des résultats
-        return results;
     }
 }

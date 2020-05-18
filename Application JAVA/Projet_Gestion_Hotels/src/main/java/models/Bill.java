@@ -47,7 +47,9 @@ public class Bill extends DatabaseModel {
         super(Tables.BILLS);
     }
 
-    //Constructeur surchargé
+    /**
+     * Constructeur surchargé
+     */
     public Bill(int RESERVATION_ID, int CLIENT_ID, double AMOUNT,boolean IS_PAYED, boolean IS_ARCHIVED) {
         super(Tables.BILLS);
         this.RESERVATION_ID = RESERVATION_ID;

@@ -48,11 +48,13 @@ public class Service extends DatabaseModel {
      * @param NAME nom du service
      * @param PRICE prix du service
      */
-    public Service(int HOTEL_ID, String NAME, double PRICE) {
+    public Service(int HOTEL_ID, String NAME, double PRICE, boolean UNIQUE_ORDER) {
         super(Tables.SERVICES);
         this.HOTEL_ID = HOTEL_ID;
         this.NAME = NAME;
         this.PRICE = PRICE;
+        this.UNIQUE_ORDER = UNIQUE_ORDER;
+        this.save();
     }
 
     //************* REFERENCES ***************//

@@ -8,8 +8,6 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-//TODO - montant total facture, enlever paiement arrhes
-
 /**
  * Service facturation
  */

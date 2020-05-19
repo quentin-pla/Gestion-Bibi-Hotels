@@ -6,9 +6,7 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Service client
@@ -77,24 +75,15 @@ public class ClientService {
     public void filterOccupations(Collection<Occupation> items) {
         //Suppression des archives
         archives.clear();
-        //Récupération de l'instance du calendrier
-        Calendar cal = Calendar.getInstance();
-        //Heure du jour à minuit
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
         //Pour chaque occupation
         for (Occupation occupation : items) {
-            //Date d'arrivée de la réservation de l'occupation
-            Date arrival_date = occupation.getReservation().getARRIVAL_DATE();
-            //Date de départ de la réservation de l'occupation
-            Date exit_date = occupation.getReservation().getEXIT_DATE();
-            //Si la date actuelle est comprise entre la date d'arrivée et de départ
-            if (!cal.getTime().before(arrival_date) && !cal.getTime().after(exit_date))
+            //Si la réservation est confirmée
+            if (occupation.getReservation().getIS_COMFIRMED()) {
                 //Si elle est archivée on l'ajoute aux archives
                 if (occupation.getIS_ARCHIVED()) archives.add(occupation);
-                //Sinon on l'ajoute dans les occupations si elle n'est pas déjà contenue
+                    //Sinon on l'ajoute dans les occupations si elle n'est pas déjà contenue
                 else if (!isAlreadyContained(occupation)) occupations.add(occupation);
+            }
         }
         //Suppression des occupations supprimées de la base de données
         retainOccupations();
@@ -200,6 +189,8 @@ public class ClientService {
      * @param reservation réservation
      */
     public void confirmClientPresence(Reservation reservation) {
+        //Initialisation des occupations
+        initOccupations();
         //Pour chaque occupations
         for (Occupation occupation : occupations) {
             //Si l'occupation est liée à la réservation

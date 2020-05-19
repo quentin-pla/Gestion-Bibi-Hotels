@@ -8,6 +8,8 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Collection;
 
+//TODO - montant total facture, enlever paiement arrhes
+
 /**
  * Service facturation
  */
@@ -195,11 +197,15 @@ public class BillingService {
             //Ajout du montant des services facturés
             for (BilledService billedService : ClientService.getInstance().getBilledServices(occupation))
                 total_amount += billedService.getService().getPRICE();
+            //Promotion totale
+            double total_discount = 0.00;
             //Réduction en fonction du nombre de personnes (isolé/groupe)
-            if (occupation.getReservation().getPEOPLE_COUNT() > 1) total_amount -= (total_amount * groupDiscount)/100;
+            if (occupation.getReservation().getPEOPLE_COUNT() > 2) total_discount += groupDiscount;
             //Réduction en fonction du status du client (régulier ou pas)
             if (occupation.getReservation().getClient().getIS_REGULAR())
-                total_amount -= (total_amount * regularClientDiscount)/100;
+                total_discount += regularClientDiscount;
+            //Application de la promotion totale
+            total_amount -= (total_amount * total_discount)/100;
         }
         //Mise à jour du montant de la facture
         bill.setAMOUNT((double) Math.round(total_amount * 100) / 100);
@@ -219,5 +225,11 @@ public class BillingService {
         return archives;
     }
 
+    public int getGroupDiscount() {
+        return groupDiscount;
+    }
 
+    public int getRegularClientDiscount() {
+        return regularClientDiscount;
+    }
 }

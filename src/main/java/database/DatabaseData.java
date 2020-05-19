@@ -308,6 +308,9 @@ public class DatabaseData {
                 item = bills.get(ID);
                 //Retour de l'élément si existant ou récupération depuis la BDD si introuvable
                 return (item != null) ? item : selectQuery(DatabaseModel.Tables.BILLS, ID);
+            case BILLEDSERVICES:
+                item = billedServices.get(ID);
+                return (item != null) ? item : selectQuery(DatabaseModel.Tables.BILLEDSERVICES, ID);
             case CLIENTS:
                 item = clients.get(ID);
                 return (item != null) ? item : selectQuery(DatabaseModel.Tables.CLIENTS, ID);

@@ -10,8 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static database.DatabaseConnection.insertQuery;
-import static database.DatabaseConnection.updateQuery;
+import static database.DatabaseConnection.*;
 
 /**
  * Modèle provenant de la base de données
@@ -117,6 +116,42 @@ public abstract class DatabaseModel {
      * @param column colonne
      */
     public void updateColumn(DatabaseColumns column) {
+        //En fonction de la table
+        switch (this.getTable()) {
+            case BILLS:
+                //Remplacement du modèle par celui à jour dans les données locales
+                DatabaseData.getInstance().getBills().replace(this.getID(), (Bill) this);
+                break;
+            case BILLEDSERVICES:
+                DatabaseData.getInstance().getBilledServices().replace(this.getID(), (BilledService) this);
+                break;
+            case CLIENTS:
+                DatabaseData.getInstance().getClients().replace(this.getID(), (Client) this);
+                break;
+            case HOTELS:
+                DatabaseData.getInstance().getHotels().replace(this.getID(), (Hotel) this);
+                break;
+            case OCCUPANTS:
+                DatabaseData.getInstance().getOccupants().replace(this.getID(), (Occupant) this);
+                break;
+            case OCCUPATIONS:
+                DatabaseData.getInstance().getOccupations().replace(this.getID(), (Occupation) this);
+                break;
+            case RESERVATIONS:
+                DatabaseData.getInstance().getReservations().replace(this.getID(), (Reservation) this);
+                break;
+            case ROOMS:
+                DatabaseData.getInstance().getRooms().replace(this.getID(), (Room) this);
+                break;
+            case ROOMTYPES:
+                DatabaseData.getInstance().getRoomTypes().replace(this.getID(), (RoomType) this);
+                break;
+            case SERVICES:
+                DatabaseData.getInstance().getServices().replace(this.getID(), (Service) this);
+                break;
+            default:
+                break;
+        }
         //Exécution d'une requête SQL de mise à jour
         updateQuery(this, column.toString());
     }
@@ -236,6 +271,50 @@ public abstract class DatabaseModel {
             if (!attribute.getValue().equals(updateAttributes.get(attribute.getKey())))
                 //Mise à jour de l'attribut du modèle
                 this.setColumnAttribute(attribute.getKey(),updateAttributes.get(attribute.getKey()));
+    }
+
+    /**
+     * Supprimer le modèle de la base de données
+     */
+    public void delete() {
+        //En fonction de la table
+        switch (this.getTable()) {
+            case BILLS:
+                //Suppression du modèle des données locales
+                DatabaseData.getInstance().getBills().remove(this.getID());
+                break;
+            case BILLEDSERVICES:
+                DatabaseData.getInstance().getBilledServices().remove(this.getID());
+                break;
+            case CLIENTS:
+                DatabaseData.getInstance().getClients().remove(this.getID());
+                break;
+            case HOTELS:
+                DatabaseData.getInstance().getHotels().remove(this.getID());
+                break;
+            case OCCUPANTS:
+                DatabaseData.getInstance().getOccupants().remove(this.getID());
+                break;
+            case OCCUPATIONS:
+                DatabaseData.getInstance().getOccupations().remove(this.getID());
+                break;
+            case RESERVATIONS:
+                DatabaseData.getInstance().getReservations().remove(this.getID());
+                break;
+            case ROOMS:
+                DatabaseData.getInstance().getRooms().remove(this.getID());
+                break;
+            case ROOMTYPES:
+                DatabaseData.getInstance().getRoomTypes().remove(this.getID());
+                break;
+            case SERVICES:
+                DatabaseData.getInstance().getServices().remove(this.getID());
+                break;
+            default:
+                break;
+        }
+        //Suppression de l'élément de la base de données
+        deleteQuery(this);
     }
 
     //************* GETTERS & SETTERS ***************//

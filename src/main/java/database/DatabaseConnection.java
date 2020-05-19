@@ -214,4 +214,25 @@ public class DatabaseConnection {
             System.err.println(e.getMessage());
         }
     }
+
+    /**
+     * Vérifier les clés étrangères ou pas
+     * @param value valeur
+     */
+    public static void checkForeignKeys(boolean value) {
+        String query = "SET FOREIGN_KEY_CHECKS=" + (value ? 1:0);
+        //Récupération de l'instance
+        DatabaseConnection databaseConnection = getInstance();
+        try {
+            //Creation d'une instruction SQL
+            Statement instruction = databaseConnection.connection.createStatement();
+            //Execution de la requête
+            instruction.execute(query);
+            //Fermeture de l'instruction (liberation des ressources)
+            instruction.close();
+        } catch (SQLException e) {
+            //Message d'erreur
+            System.err.println(e.getMessage());
+        }
+    }
 }

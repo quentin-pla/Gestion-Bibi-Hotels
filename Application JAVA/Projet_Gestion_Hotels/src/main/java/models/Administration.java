@@ -83,7 +83,7 @@ public class Administration {
                     //Nom du type de chambre
                     String room_type_name = bill.getReservation().getRoomType().getNAME();
                     //Incrémentation de 1 dans le ratio pour le type de chambre
-                    roomTypesRatio.put(room_type_name, roomTypesRatio.get(room_type_name) + 1);
+                    roomTypesRatio.put(room_type_name, roomTypesRatio.get(room_type_name) + bill.getReservation().getDURATION());
                 }
             }
         }
@@ -120,6 +120,7 @@ public class Administration {
         Map<String,Integer> results = new HashMap<>();
         //Pour chaque service facturé
         for (BilledService billedService : DatabaseData.getInstance().getBilledServices().values()) {
+            System.out.println(billedService.getAttributesData());
             //Si le service n'est pas contenu dans les résultats
             if (!results.containsKey(billedService.getService().getNAME()))
                 //Ajout du service dans les résultats

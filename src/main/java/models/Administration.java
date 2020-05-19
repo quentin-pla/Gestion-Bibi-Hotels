@@ -120,7 +120,6 @@ public class Administration {
         Map<String,Integer> results = new HashMap<>();
         //Pour chaque service facturé
         for (BilledService billedService : DatabaseData.getInstance().getBilledServices().values()) {
-            System.out.println(billedService.getAttributesData());
             //Si le service n'est pas contenu dans les résultats
             if (!results.containsKey(billedService.getService().getNAME()))
                 //Ajout du service dans les résultats

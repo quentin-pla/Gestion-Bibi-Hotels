@@ -3,78 +3,35 @@ import de.saxsys.javafx.test.JfxRunner;
 import junit.framework.TestCase;
 import models.*;
 import org.junit.AfterClass;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
-import static database.DatabaseConnection.*;
+import static database.DatabaseConnection.selectQuery;
+import static database.DatabaseConnection.updateQuery;
 
+/**
+ * Tests de la classe DatabaseConnection
+ */
 @RunWith(JfxRunner.class)
 public class DatabaseConnectionTests extends TestCase {
-
-    //Liste des modèles de test
-    private static Bill             testBill;
-    private static Client           testClient;
-    private static Hotel            testHotel;
-    private static Occupant         testOccupant;
-    private static Occupation       testOccupation;
-    private static Reservation      testReservation;
-    private static Room             testRoom;
-    private static RoomType         testRoomType;
-    private static Service          testService;
-    private static BilledService    testBilledService;
-    //Booléen permettant de savoir si les modèles de test sont initialisés
-    private static boolean initialized = false;
-
+    
     /**
      * Insertion des modèles de test
      */
-    @Before
-    public void insertModels() {
-        if (initialized) return;
-
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.add(Calendar.DATE, -1000);
-        Date arrival_date = cal.getTime();
-        cal.add(Calendar.DATE, 3);
-        Date exit_date = cal.getTime();
-
-        testHotel = new Hotel("test","test","test",3);
-        testClient = new Client("test","test","test","test","test","test");
-        testRoomType = new RoomType("test",100.00,2,false,false);
-        testRoom = new Room(testHotel.getID(), testRoomType.getID());
-        testReservation = new Reservation(testClient.getID(), testHotel.getID(), testRoomType.getID(), arrival_date, exit_date, 3, 1,2,false,false,false,false);
-        testOccupation = new Occupation(testReservation.getID(), testRoom.getID(), false);
-        testOccupant = new Occupant(testOccupation.getID(), "test", "test");
-        testService = new Service(testHotel.getID(), "test", 100.00, false);
-        testBill = new Bill(testReservation.getID(), testClient.getID(), 100.00, false, false);
-        testBilledService = new BilledService(testOccupation.getID(), testService.getID(), false);
-
-        initialized = true;
+    @BeforeClass
+    public static void insertModels() {
+        TestModels.insertModels();
     }
 
     /**
-     * Suppression des modèles de test de la base de données
+     * Suppression des modèles de test
      */
     @AfterClass
     public static void deleteModels() {
-        deleteQuery(testBilledService);
-        deleteQuery(testBill);
-        deleteQuery(testService);
-        deleteQuery(testOccupant);
-        deleteQuery(testOccupation);
-        deleteQuery(testReservation);
-        deleteQuery(testRoom);
-        deleteQuery(testRoomType);
-        deleteQuery(testClient);
-        deleteQuery(testHotel);
+        TestModels.deleteModels();
     }
 
     //################ SELECT ALL #################
@@ -88,7 +45,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testHotel.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.hotel.getAttributesData())) found = true;
             else assertTrue(element instanceof Hotel);
         assertTrue(found);
     }
@@ -102,7 +59,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testClient.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.client.getAttributesData())) found = true;
             else assertTrue(element instanceof Client);
         assertTrue(found);
     }
@@ -116,7 +73,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testRoomType.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.roomType.getAttributesData())) found = true;
             else assertTrue(element instanceof RoomType);
         assertTrue(found);
     }
@@ -130,7 +87,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testRoom.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.room.getAttributesData())) found = true;
             else assertTrue(element instanceof Room);
         assertTrue(found);
     }
@@ -144,7 +101,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testReservation.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.reservation.getAttributesData())) found = true;
             else assertTrue(element instanceof Reservation);
         assertTrue(found);
     }
@@ -158,7 +115,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testOccupation.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.occupation.getAttributesData())) found = true;
             else assertTrue(element instanceof Occupation);
         assertTrue(found);
     }
@@ -172,7 +129,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testOccupant.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.occupant.getAttributesData())) found = true;
             else assertTrue(element instanceof Occupant);
         assertTrue(found);
     }
@@ -186,7 +143,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testService.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.service.getAttributesData())) found = true;
             else assertTrue(element instanceof Service);
         assertTrue(found);
     }
@@ -200,7 +157,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testBill.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.bill.getAttributesData())) found = true;
             else assertTrue(element instanceof Bill);
         assertTrue(found);
     }
@@ -214,7 +171,7 @@ public class DatabaseConnectionTests extends TestCase {
         assertTrue(queryResult.size() > 0);
         boolean found = false;
         for (DatabaseModel element : queryResult)
-            if (element.getAttributesData().equals(testBilledService.getAttributesData())) found = true;
+            if (element.getAttributesData().equals(TestModels.billedService.getAttributesData())) found = true;
             else assertTrue(element instanceof BilledService);
         assertTrue(found);
     }
@@ -226,9 +183,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificHotel() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.HOTELS, testHotel.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.HOTELS, TestModels.hotel.getID());
         assertTrue(queryResult instanceof Hotel
-                && queryResult.getAttributesData().equals(testHotel.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.hotel.getAttributesData()));
     }
 
     /**
@@ -236,9 +193,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificClient() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.CLIENTS, testClient.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.CLIENTS, TestModels.client.getID());
         assertTrue(queryResult instanceof Client
-                && queryResult.getAttributesData().equals(testClient.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.client.getAttributesData()));
     }
 
     /**
@@ -246,9 +203,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificRoomType() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.ROOMTYPES, testRoomType.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.ROOMTYPES, TestModels.roomType.getID());
         assertTrue(queryResult instanceof RoomType
-                && queryResult.getAttributesData().equals(testRoomType.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.roomType.getAttributesData()));
     }
 
     /**
@@ -256,9 +213,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificRoom() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.ROOMS, testRoom.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.ROOMS, TestModels.room.getID());
         assertTrue(queryResult instanceof Room
-                && queryResult.getAttributesData().equals(testRoom.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.room.getAttributesData()));
     }
 
     /**
@@ -266,9 +223,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificReservation() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.RESERVATIONS, testReservation.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.RESERVATIONS, TestModels.reservation.getID());
         assertTrue(queryResult instanceof Reservation
-                && queryResult.getAttributesData().equals(testReservation.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.reservation.getAttributesData()));
     }
 
     /**
@@ -276,9 +233,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificOccupation() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.OCCUPATIONS, testOccupation.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.OCCUPATIONS, TestModels.occupation.getID());
         assertTrue(queryResult instanceof Occupation
-                && queryResult.getAttributesData().equals(testOccupation.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.occupation.getAttributesData()));
     }
 
     /**
@@ -286,9 +243,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificOccupant() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.OCCUPANTS, testOccupant.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.OCCUPANTS, TestModels.occupant.getID());
         assertTrue(queryResult instanceof Occupant
-                && queryResult.getAttributesData().equals(testOccupant.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.occupant.getAttributesData()));
     }
 
     /**
@@ -296,9 +253,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificService() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.SERVICES, testService.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.SERVICES, TestModels.service.getID());
         assertTrue(queryResult instanceof Service
-                && queryResult.getAttributesData().equals(testService.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.service.getAttributesData()));
     }
 
     /**
@@ -306,9 +263,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificBill() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.BILLS, testBill.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.BILLS, TestModels.bill.getID());
         assertTrue(queryResult instanceof Bill
-                && queryResult.getAttributesData().equals(testBill.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.bill.getAttributesData()));
     }
 
     /**
@@ -316,9 +273,9 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void selectSpecificBilledService() {
-        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.BILLEDSERVICES, testBilledService.getID());
+        DatabaseModel queryResult = selectQuery(DatabaseModel.Tables.BILLEDSERVICES, TestModels.billedService.getID());
         assertTrue(queryResult instanceof BilledService
-                && queryResult.getAttributesData().equals(testBilledService.getAttributesData()));
+                && queryResult.getAttributesData().equals(TestModels.billedService.getAttributesData()));
     }
 
     //################ UPDATE #################
@@ -328,8 +285,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificHotel() {
-        testHotel.setNAME("updated");
-        updateQuery(testHotel, "NAME");
+        TestModels.hotel.setNAME("updated");
+        updateQuery(TestModels.hotel, "NAME");
         selectSpecificHotel();
     }
 
@@ -338,8 +295,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificClient() {
-        testClient.setFIRSTNAME("updated");
-        updateQuery(testClient, "FIRSTNAME");
+        TestModels.client.setFIRSTNAME("updated");
+        updateQuery(TestModels.client, "FIRSTNAME");
         selectSpecificClient();
     }
 
@@ -348,8 +305,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificRoomType() {
-        testRoomType.setNAME("updated");
-        updateQuery(testRoomType, "NAME");
+        TestModels.roomType.setNAME("updated");
+        updateQuery(TestModels.roomType, "NAME");
         selectSpecificRoomType();
     }
 
@@ -358,8 +315,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificRoom() {
-        testRoom.setROOMTYPE_ID(testRoom.getROOMTYPE_ID());
-        updateQuery(testRoom, "ROOMTYPE_ID");
+        TestModels.room.setROOMTYPE_ID(TestModels.room.getROOMTYPE_ID());
+        updateQuery(TestModels.room, "ROOMTYPE_ID");
         selectSpecificRoom();
     }
 
@@ -368,8 +325,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificReservation() {
-        testReservation.setIS_PAYED(true);
-        updateQuery(testReservation, "IS_PAYED");
+        TestModels.reservation.setIS_PAYED(true);
+        updateQuery(TestModels.reservation, "IS_PAYED");
         selectSpecificReservation();
     }
 
@@ -378,8 +335,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificOccupation() {
-        testOccupation.setIS_CLIENT_PRESENT(true);
-        updateQuery(testOccupation, "IS_CLIENT_PRESENT");
+        TestModels.occupation.setIS_CLIENT_PRESENT(true);
+        updateQuery(TestModels.occupation, "IS_CLIENT_PRESENT");
         selectSpecificOccupation();
     }
 
@@ -388,8 +345,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificOccupant() {
-        testOccupant.setFIRSTNAME("updated");
-        updateQuery(testOccupant, "FIRSTNAME");
+        TestModels.occupant.setFIRSTNAME("updated");
+        updateQuery(TestModels.occupant, "FIRSTNAME");
         selectSpecificOccupant();
     }
 
@@ -398,8 +355,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificService() {
-        testService.setNAME("updated");
-        updateQuery(testService, "NAME");
+        TestModels.service.setNAME("updated");
+        updateQuery(TestModels.service, "NAME");
         selectSpecificService();
     }
 
@@ -408,8 +365,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificBill() {
-        testBill.setIS_ARCHIVED(true);
-        updateQuery(testBill, "IS_ARCHIVED");
+        TestModels.bill.setIS_ARCHIVED(true);
+        updateQuery(TestModels.bill, "IS_ARCHIVED");
         selectSpecificBill();
     }
 
@@ -418,8 +375,8 @@ public class DatabaseConnectionTests extends TestCase {
      */
     @Test
     public void updateSpecificBilledService() {
-        testBilledService.setIS_ARCHIVED(true);
-        updateQuery(testBilledService, "IS_ARCHIVED");
+        TestModels.billedService.setIS_ARCHIVED(true);
+        updateQuery(TestModels.billedService, "IS_ARCHIVED");
         selectSpecificBilledService();
     }
 }

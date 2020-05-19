@@ -86,6 +86,11 @@ public class ClientServicePanel extends BorderPane {
                 });
         //Ajout et dimensionnement des colonnes
         id_col.setMinWidth(10);
+        hotel_col.setMinWidth(100);
+        reservation_col.setMinWidth(100);
+        room_col.setMinWidth(100);
+        room_type_col.setMinWidth(150);
+        presence_col.setMinWidth(140);
         occupations.getColumns().add(id_col);
         occupations.getColumns().add(hotel_col);
         occupations.getColumns().add(reservation_col);

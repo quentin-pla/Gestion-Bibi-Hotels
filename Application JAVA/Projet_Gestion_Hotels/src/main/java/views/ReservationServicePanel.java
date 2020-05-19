@@ -107,6 +107,8 @@ public class ReservationServicePanel extends BorderPane {
             });
         //Ajout et dimensionnement des colonnes
         id_col.setMinWidth(10);
+        room_type_col.setMinWidth(130);
+        is_payed_col.setMinWidth(130);
         reservations.getColumns().add(id_col);
         reservations.getColumns().add(client_col);
         reservations.getColumns().add(room_type_col);

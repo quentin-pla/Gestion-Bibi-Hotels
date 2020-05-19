@@ -90,6 +90,8 @@ public class BillingServicePanel extends BorderPane {
                 });
         //Ajout et dimensionnement des colonnes
         id_col.setMinWidth(10);
+        reservation_col.setMinWidth(100);
+        amount_col.setMinWidth(130);
         bills.getColumns().add(id_col);
         bills.getColumns().add(reservation_col);
         bills.getColumns().add(client_col);

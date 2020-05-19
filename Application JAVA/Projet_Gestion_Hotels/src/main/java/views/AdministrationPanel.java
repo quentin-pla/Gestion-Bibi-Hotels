@@ -100,10 +100,16 @@ public class AdministrationPanel extends BorderPane {
      */
     public void initBilledServicesAmounts(Map<String,Integer> billedServicesAmounts) {
         servicesContainer.getChildren().clear();
-        for (Map.Entry<String,Integer> service : billedServicesAmounts.entrySet())
-            servicesContainer.getChildren().add(
-                    generateItem(service.getKey(),String.valueOf(service.getValue()), "")
-            );
+        if (!billedServicesAmounts.isEmpty()) {
+            for (Map.Entry<String, Integer> service : billedServicesAmounts.entrySet())
+                servicesContainer.getChildren().add(
+                        generateItem(service.getKey(), String.valueOf(service.getValue()), "")
+                );
+        } else {
+            Label nothing = new Label("Aucun service facturé");
+            nothing.getStyleClass().add("h4");
+            servicesContainer.getChildren().add(nothing);
+        }
     }
 
     /**

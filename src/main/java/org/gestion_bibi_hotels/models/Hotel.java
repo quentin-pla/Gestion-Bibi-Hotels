@@ -1,0 +1,98 @@
+package org.gestion_bibi_hotels.models;
+
+import org.gestion_bibi_hotels.database.DatabaseColumns;
+import org.gestion_bibi_hotels.database.DatabaseModel;
+
+/**
+ * Modèle Hôtel provenant de la base de données
+ */
+public class Hotel extends DatabaseModel {
+    /**
+     * Nom
+     */
+    private String NAME;
+
+    /**
+     * Adresse
+     */
+    private String STREET;
+
+    /**
+     * Ville
+     */
+    private String CITY;
+
+    /**
+     * Nombre d'étoiles
+     */
+    private int STAR_RATING;
+
+    /**
+     * Liste des colonnes
+     */
+    public enum Columns implements DatabaseColumns {
+        NAME,STREET,CITY,STAR_RATING
+    }
+
+    /**
+     * Constructeur
+     */
+    public Hotel() {
+        super(Tables.HOTELS);
+    }
+
+    /**
+     * Constructeur surchargé
+     * @param NAME nom
+     * @param STREET adresse
+     * @param CITY ville
+     * @param STAR_RATING nombre d'étoiles
+     */
+    public Hotel(String NAME, String STREET, String CITY, int STAR_RATING) {
+        super(Tables.HOTELS);
+        this.NAME = NAME;
+        this.STREET = STREET;
+        this.CITY = CITY;
+        this.STAR_RATING = STAR_RATING;
+        this.save();
+    }
+
+    //************* GETTERS & SETTERS ***************//
+
+    @Override
+    public DatabaseColumns[] getColumns() {
+        return Columns.values();
+    }
+
+    public String getNAME() {
+        return NAME;
+    }
+
+    public void setNAME(String NAME) {
+        this.NAME = NAME;
+    }
+
+    public String getSTREET() {
+        return STREET;
+    }
+
+    public void setSTREET(String STREET) {
+        this.STREET = STREET;
+    }
+
+    public String getCITY() {
+        return CITY;
+    }
+
+    public void setCITY(String CITY) {
+        this.CITY = CITY;
+    }
+
+    public int getSTAR_RATING() {
+        return STAR_RATING;
+    }
+
+    public void setSTAR_RATING(int STAR_RATING) {
+        this.STAR_RATING = STAR_RATING;
+    }
+}

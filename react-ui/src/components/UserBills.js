@@ -4,7 +4,6 @@ import socket from "../context/SocketIOInstance";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {Container, Table} from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 
 class UserBills extends Component {
 
@@ -24,7 +23,6 @@ class UserBills extends Component {
             loaded: false,
         };
 
-        this.payBill = this.payBill.bind(this);
         this.formatDate = this.formatDate.bind(this);
 
         this._isMounted = false;
@@ -64,15 +62,6 @@ class UserBills extends Component {
         return newdate.toLocaleDateString();
     }
 
-    /**
-     * Payer une facture
-     * @param id : identifiant de la facture
-     */
-    payBill(id) {
-        socket.emit("pay_bill", id);
-        this.refreshBills();
-    }
-
     render() {
         return (
             <Container fluid className={"mt-4"}>
@@ -92,7 +81,6 @@ class UserBills extends Component {
                                 <tr>
                                     <th>Réservation</th>
                                     <th>Montant TOTAL</th>
-                                    <th/>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -104,9 +92,6 @@ class UserBills extends Component {
                                                 - Du {this.formatDate(bill.reservation.arrival_date)} au {this.formatDate(bill.reservation.exit_date)}
                                             </td>
                                             <td>{bill.amount}€</td>
-                                            <td className={"text-right"}>
-                                                {!bill.is_payed ? <Button variant={"outline-success m-2"} onClick={() => this.payReservation(bill.id)}>Payer</Button> : null}
-                                            </td>
                                         </tr>
                                     )
                                 })}

@@ -63,15 +63,6 @@ p {
     box-shadow: 0 0 20px 10px rgba(0,0,0,0.1);
 }
 
-tr.strikeout td:before {
-    content: "";
-    position: absolute;
-    top: 65%;
-    left: 3rem;
-    border-bottom: 1px solid #111;
-    width: 90%;
-}
-
 /*************** Barre de recherche ****************/
 
 .searchInput {

@@ -173,7 +173,7 @@ io.sockets.on('connection', function (socket) {
         Room.findAll({
             where: {ID: roomIds},
             include: ['hotel','roomtype'],
-            group: ['hotel.hotel_name','roomtype.name']
+            group: ['hotel.name','roomtype.name']
         }).then((rooms) => {
             socket.emit('rooms_res', rooms);
         });
@@ -262,7 +262,7 @@ io.sockets.on('connection', function (socket) {
         Room.findAll({
             where: {ID: roomIds},
             include: [{model: Hotel},{model: RoomType, where: {BED_CAPACITY: {[Op.gte]: data.capacite/2}}}],
-            group: ['hotel.hotel_name','roomtype.name']
+            group: ['hotel.name','roomtype.name']
         }).then((rooms) => {
             socket.emit('rooms_res', rooms);
         })

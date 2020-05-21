@@ -65,6 +65,11 @@ const Reservation = require(path.join(__dirname, "../react-ui/src/database/model
  */
 const Bill = require(path.join(__dirname, "../react-ui/src/database/models/Bill"));
 
+/**
+ * Modèle Occupation de la base de données
+ */
+const Occupation = require(path.join(__dirname, "../react-ui/src/database/models/Occupation"));
+
 //Association des modèles
 Room.associate();
 Reservation.associate();
@@ -292,7 +297,7 @@ io.sockets.on('connection', function (socket) {
             where: {MAIL: mail}
         }).then((client) => {
             Bill.findAll({
-                where: {CLIENT_ID: client.id},
+                where: {CLIENT_ID: client.id, IS_PAYED: true},
                 include: [{model: Reservation, include: [{model: Hotel},{model: RoomType}]}]
             }).then((bills) => {
                 socket.emit("user_bills_res", bills);

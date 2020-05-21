@@ -138,14 +138,17 @@ class UserReservations extends Component {
                         :
                         null
                     }
-                    <MyVerticallyCenteredModal reservation={this.state.selectedReservation} payReservation={this.payReservation} show={this.state.modalShow} onHide={() => this.setState({modalShow: false})}/>
+                    <PaymentModal reservation={this.state.selectedReservation} payReservation={this.payReservation} show={this.state.modalShow} onHide={() => this.setState({modalShow: false})}/>
                 </Row>
             </Container>
         );
     }
 }
 
-function MyVerticallyCenteredModal(props) {
+/**
+ * Fenêtre de confirmation de paiement
+ */
+function PaymentModal(props) {
     let totalAmount = 0;
     let modalBody = null;
 

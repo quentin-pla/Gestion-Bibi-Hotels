@@ -36,7 +36,10 @@ class HotelRooms extends Component {
             reservationValidated: false,
             error: false,
             errorMessage: "",
-            loaded: false
+            loaded: false,
+            regular_client: false,
+            group_discount: 0,
+            regular_discount: 0
         };
 
         this.applyFilter = this.applyFilter.bind(this);
@@ -61,6 +64,14 @@ class HotelRooms extends Component {
         socket.on('rooms_res', (rooms) => {
             if (this._isMounted) this.setState({"rooms": rooms, "loaded": true});
         });
+        socket.emit("profil", this.context.mail);
+        socket.on("profil_info", (client) => {
+            this.setState({regular_client: client.is_regular});
+        });
+        socket.emit("get_discounts");
+        socket.on("discounts_result", (group_discount, regular_discount) => {
+            this.setState({group_discount: group_discount, regular_discount: regular_discount});
+        })
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -251,6 +262,9 @@ class HotelRooms extends Component {
                 <BookModal
                     show={this.state.modalShow}
                     room={this.state.selectedRoom}
+                    regular_client={this.state.regular_client}
+                    group_discount={this.state.group_discount}
+                    regular_discount={this.state.regular_discount}
                     preview={this.getRoomPreview(this.state.selectedRoom)}
                     dateA={this.state.dateA}
                     dateD={this.state.dateD}
@@ -311,6 +325,9 @@ function RoomItem(props) {
 function BookModal(props) {
     const {
         room,
+        regular_client,
+        group_discount,
+        regular_discount,
         preview,
         dateA,
         dateD,
@@ -373,6 +390,13 @@ function BookModal(props) {
         const totalDays = Math.abs(new Date(dateD) - new Date(dateA)) / (1000 * 60 * 60 * 24);
         const maxPeopleCount = room.roomtype.bed_capacity * maxRoomsCount * 2;
         room.duration = totalDays;
+        const discount_total = nbPersonnes >= 3 && regular_client ? group_discount + regular_discount
+            : nbPersonnes >= 3 ? group_discount : regular_client ? regular_discount : 0;
+        const discount_label = nbPersonnes >= 3 && regular_client ? "(Groupe et régulier: -" + discount_total + "%)"
+            : nbPersonnes >= 3 ? "(Groupe: -" + discount_total + "%)" : regular_client ? "(Régulier: -" + discount_total + "%)" : "";
+        let price = room.roomtype.price * totalDays * nbChambres;
+        price -= (price * discount_total) / 100;
+        price = Math.round(price * 100) / 100;
 
         modalContent = (
             <Modal.Body>
@@ -443,9 +467,18 @@ function BookModal(props) {
                                 <div className="d-flex flex-wrap align-content-center">
                                     <h4 className={"mb-0 my-auto"}>TOTAL</h4>
                                     <h4 className={"text-grey ml-2 mb-0 my-auto"}>
-                                        <strong>{Math.round(room.roomtype.price * totalDays * nbChambres * 100) / 100}€</strong>
+                                        <strong>{price}€</strong>
                                     </h4>
                                     {getReservationButton()}
+                                </div>
+                            </Col>
+                            <Col bsPrefix={"col-12"}>
+                                <div className="d-flex flex-wrap align-content-center">
+                                    {discount_label.length > 0 ?
+                                        <h5 className={"m-0 text-grey"}>{discount_label}</h5>
+                                        :
+                                        null
+                                    }
                                 </div>
                             </Col>
                         </Row>

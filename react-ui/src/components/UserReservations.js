@@ -27,6 +27,7 @@ class UserReservations extends Component {
         this.formatDate = this.formatDate.bind(this);
         this.payReservation = this.payReservation.bind(this);
         this.cancelReservation = this.cancelReservation.bind(this);
+        this.showPaymentModal = this.showPaymentModal.bind(this);
 
         this._isMounted = false;
     }
@@ -70,9 +71,11 @@ class UserReservations extends Component {
      * @param reservation
      */
     payReservation(reservation) {
-        socket.emit("pay_reservation", reservation.id);
-        if (this.state.modalShow) this.setState({modalShow: false});
-        this.refreshReservations();
+        if (!reservation.is_cancelled && !reservation.is_archived) {
+            socket.emit("pay_reservation", reservation.id, reservation.totalAmount);
+            if (this.state.modalShow) this.setState({modalShow: false});
+            this.refreshReservations();
+        }
     }
 
     /**
@@ -81,7 +84,22 @@ class UserReservations extends Component {
      */
     cancelReservation(reservation) {
         socket.emit("cancel_reservation", reservation.id);
-        this.refreshReservations();
+        socket.on("refresh_reservations", () => {
+            console.log("ok");
+            this.refreshReservations();
+        });
+    }
+
+    /**
+     * Récupérer le montant total 'une réservation
+     * @param reservation
+     */
+    showPaymentModal(reservation) {
+        socket.emit("get_total_amount", reservation.id);
+        socket.on("total_amount_result", (amount) => {
+            reservation.totalAmount = amount;
+            this.setState({modalShow: true, selectedReservation: reservation})
+        });
     }
 
     render() {
@@ -126,7 +144,7 @@ class UserReservations extends Component {
                                                         reservation.is_payed ? "Confirmée" : "Validée"
                                                 }</td>
                                                 <td className={"text-right"}>
-                                                    {!reservation.is_payed ? <Button variant={"outline-primary"} size={"sm"} className={"mr-2"} onClick={() => this.setState({modalShow: true, selectedReservation: reservation})}>Payer</Button> : null}
+                                                    {!reservation.is_cancelled && !reservation.is_payed ? <Button variant={"outline-primary"} size={"sm"} className={"mr-2"} onClick={() => this.showPaymentModal(reservation)}>Payer</Button> : null}
                                                     {!reservation.is_cancelled ? <Button variant={"outline-danger"} size={"sm"} onClick={() => this.cancelReservation(reservation)}>Annuler</Button> : null}
                                                 </td>
                                             </tr>
@@ -153,7 +171,6 @@ function PaymentModal(props) {
     let modalBody = null;
 
     if (props.reservation !== undefined) {
-        totalAmount = Math.round(props.reservation.roomtype.price * props.reservation.duration * 100) / 100;
         modalBody =
             (<Modal.Body>
                 <Row>
@@ -161,7 +178,7 @@ function PaymentModal(props) {
                         <h4>Payer réservation</h4>
                     </Col>
                     <Col className={"col-12"}>
-                        <p>Confirmer le paiement d'un montant total de {totalAmount}€ TTC ?</p>
+                        <p>Confirmer le paiement d'un montant total de {props.reservation.totalAmount}€ TTC ?</p>
                     </Col>
                     <Col className={"col-12 text-right"}>
                         <Button variant={"primary"} className="mt-3" onClick={() => props.payReservation(props.reservation)}>Payer</Button>

@@ -81,6 +81,7 @@ class UserBills extends Component {
                                 <tr>
                                     <th>Réservation</th>
                                     <th>Montant TOTAL</th>
+                                    <th>Statut</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -92,6 +93,9 @@ class UserBills extends Component {
                                                 - Du {this.formatDate(bill.reservation.arrival_date)} au {this.formatDate(bill.reservation.exit_date)}
                                             </td>
                                             <td>{bill.amount}€</td>
+                                            <td className={bill.reservation.is_cancelled && bill.reservation.is_payed ? "text-primary" : bill.is_payed ? "text-success" : "text-danger"}>{
+                                                bill.reservation.is_cancelled && bill.reservation.is_payed ? "Remboursée" : bill.is_payed ? "Payée" : "Attente paiement"
+                                            }</td>
                                         </tr>
                                     )
                                 })}

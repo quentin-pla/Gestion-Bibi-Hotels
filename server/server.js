@@ -297,7 +297,7 @@ io.sockets.on('connection', function (socket) {
             where: {MAIL: mail}
         }).then((client) => {
             Bill.findAll({
-                where: {CLIENT_ID: client.id, IS_PAYED: true},
+                where: {CLIENT_ID: client.id, IS_ARCHIVED: true},
                 include: [{model: Reservation, include: [{model: Hotel},{model: RoomType}]}]
             }).then((bills) => {
                 socket.emit("user_bills_res", bills);
@@ -308,13 +308,16 @@ io.sockets.on('connection', function (socket) {
     /**
      * Permet de payer une reservation
      */
-    socket.on("pay_reservation", (id) => {
+    socket.on("pay_reservation", (id, amount) => {
         Reservation.update({
             is_payed: true
-        }, {where: {ID: id}}).catch((err) => {
-            console.log(err)
+        }, {where: {ID: id}}).then(() => {
+            Bill.update({
+                amount: amount
+            }, {where: {RESERVATION_ID: id}}).then(() => socket.emit("refresh_reservations"));
         });
     });
+
     /**
      * Permet de confirmer une reservation
      */
@@ -329,10 +332,39 @@ io.sockets.on('connection', function (socket) {
     /**
      * Permet d'annuler une reservation
      */
-    socket.on("cancel_reservation", function (id) {
-        Reservation.update({
-            is_cancelled: true
-        }, {where: {ID: id}})
+    socket.on("cancel_reservation", async (id) => {
+        let totalAmount = await connection.query("call getTotalAmount(" + id + ")");
+        totalAmount = totalAmount[0].total;
+        Reservation.findOne({where: {ID: id}}).then((reservation) => {
+            reservation.is_cancelled = true;
+            reservation.save();
+            if (reservation.is_payed) {
+                Bill.update({
+                    amount: totalAmount, is_archived: true
+                }, {where: {RESERVATION_ID: id}}).then(() => socket.emit("refresh_reservations"));
+            } else {
+                Bill.destroy({where: {RESERVATION_ID: id}}).then(() => socket.emit("refresh_reservations"));
+            }
+        });
+    });
+
+    /**
+     * Récupérer le montant total d'une réservation
+     */
+    socket.on("get_total_amount", async (id) => {
+        let totalAmount = await connection.query("call getTotalAmount(" + id + ")");
+        totalAmount = totalAmount[0].total;
+        socket.emit("total_amount_result", totalAmount);
+    });
+
+    /**
+     * Récupérer les promotions en cours
+     */
+    socket.on("get_discounts", async () => {
+        let discounts = await connection.query("SELECT getGroupDiscount() AS group_discount, getRegularClientDiscount() AS regular_discount");
+        let group_discount = discounts[0][0].group_discount;
+        let regular_discount = discounts[0][0].regular_discount;
+        socket.emit("discounts_result", group_discount, regular_discount);
     });
 
     /**

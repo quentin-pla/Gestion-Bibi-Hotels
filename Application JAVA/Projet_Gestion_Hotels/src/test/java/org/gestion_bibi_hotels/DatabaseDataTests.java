@@ -36,6 +36,7 @@ public class DatabaseDataTests extends TestCase {
      */
     @Test
     public void retrieveAllItems() {
+        DatabaseData.getInstance().retrieveDatabase();
         assertFalse(DatabaseData.getInstance().getBills().isEmpty());
         assertFalse(DatabaseData.getInstance().getBilledServices().isEmpty());
         assertFalse(DatabaseData.getInstance().getClients().isEmpty());

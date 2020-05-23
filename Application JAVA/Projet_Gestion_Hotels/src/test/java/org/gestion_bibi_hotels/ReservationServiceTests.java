@@ -1,10 +1,9 @@
 package org.gestion_bibi_hotels;
 
-import org.gestion_bibi_hotels.database.DatabaseData;
-import org.gestion_bibi_hotels.database.DatabaseModel;
 import de.saxsys.javafx.test.JfxRunner;
 import javafx.collections.ObservableList;
-import org.gestion_bibi_hotels.models.Bill;
+import org.gestion_bibi_hotels.database.DatabaseData;
+import org.gestion_bibi_hotels.database.DatabaseModel;
 import org.gestion_bibi_hotels.models.Occupation;
 import org.gestion_bibi_hotels.models.Reservation;
 import org.gestion_bibi_hotels.models.ReservationService;
@@ -75,14 +74,11 @@ public class ReservationServiceTests {
      */
     @Test
     public void check4ArchiveReservation() {
-        int newBillID = TestModels.bill.getID() + 1;
-        TestModels.bill.delete();
         Reservation testReservation = ReservationService.getInstance(TestModels.hotel).getReservations().get(0);
         assertNotNull(testReservation);
         ReservationService.getInstance(TestModels.hotel).archiveReservation(testReservation);
         assertTrue(ReservationService.getInstance(TestModels.hotel).getArchives().contains(testReservation));
         assertTrue(testReservation.getIS_ARCHIVED());
-        TestModels.bill = (Bill) DatabaseData.getInstance().getReferenceFromID(DatabaseModel.Tables.BILLS, newBillID);
     }
 
     /**

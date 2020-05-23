@@ -53,13 +53,14 @@ public class ReservationServiceController {
             //Récupération de la réservation sélectionnée
             Reservation reservation = panel.getReservations().getSelectionModel().getSelectedItem();
             //Si la réservation existe
-            if (reservation != null)
+            if (reservation != null) {
+                //Suppression du focus sur la réservation
+                panel.getReservations().getSelectionModel().clearSelection();
+                //Suppression de la réservation du tableau
+                panel.getReservations().getItems().remove(reservation);
                 //Archivage de la réservation
                 ReservationService.getInstance(hotel).archiveReservation(reservation);
-            //Suppression du focus sur la réservation
-            panel.getReservations().getSelectionModel().clearSelection();
-            //Suppression de la réservation du tableau
-            panel.getReservations().getItems().remove(reservation);
+            }
             //Rafraichissement
             refreshPanel();
         });

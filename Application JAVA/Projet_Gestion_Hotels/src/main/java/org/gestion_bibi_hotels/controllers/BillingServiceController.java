@@ -47,15 +47,16 @@ public class BillingServiceController {
             //Récupération de la facture sélectionnée
             Bill bill = panel.getBills().getSelectionModel().getSelectedItem();
             //Si la facture existe
-            if (bill != null)
+            if (bill != null) {
+                //Suppression du focus sur la facture
+                panel.getBills().getSelectionModel().clearSelection();
+                //Suppression de la facture du tableau
+                panel.getBills().getItems().remove(bill);
                 //Archivage de la facture
                 BillingService.getInstance(hotel).archiveBill(bill);
-            //Suppression du focus sur la facture
-            panel.getBills().getSelectionModel().clearSelection();
-            //Suppression de la facture du tableau
-            panel.getBills().getItems().remove(bill);
-            //Rafraichissement
-            refreshPanel();
+                //Rafraichissement
+                refreshPanel();
+            }
         });
         //Définition de l'action du bouton de paiement
         panel.getMakePaymentButton().setOnAction(e -> {

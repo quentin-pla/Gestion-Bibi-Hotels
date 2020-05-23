@@ -167,7 +167,6 @@ class UserReservations extends Component {
  * Fenêtre de confirmation de paiement
  */
 function PaymentModal(props) {
-    let totalAmount = 0;
     let modalBody = null;
 
     if (props.reservation !== undefined) {

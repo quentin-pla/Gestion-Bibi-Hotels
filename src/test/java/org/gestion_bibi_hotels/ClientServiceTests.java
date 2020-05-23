@@ -110,8 +110,6 @@ public class ClientServiceTests {
      */
     @Test
     public void check7GetClientHistory() {
-        int newBillID = TestModels.bill.getID() + 1;
-        TestModels.bill.delete();
         ArrayList<Reservation> result = ClientService.getInstance().getClientHistory(TestModels.client);
         assertTrue(result.isEmpty());
         TestModels.reservation.setIS_ARCHIVED(true);
@@ -123,6 +121,5 @@ public class ClientServiceTests {
             if (reservation.getAttributesData().equals(TestModels.reservation.getAttributesData()))
                 found = true;
         assertTrue(found);
-        TestModels.bill = (Bill) DatabaseData.getInstance().getReferenceFromID(DatabaseModel.Tables.BILLS, newBillID);
     }
 }

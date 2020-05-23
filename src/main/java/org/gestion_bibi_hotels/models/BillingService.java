@@ -1,12 +1,14 @@
 package org.gestion_bibi_hotels.models;
 
-import org.gestion_bibi_hotels.database.DatabaseData;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
+import org.gestion_bibi_hotels.database.DatabaseData;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import static org.gestion_bibi_hotels.database.DatabaseConnection.*;
 
 /**
  * Service facturation
@@ -15,12 +17,12 @@ public class BillingService {
     /**
      * Réduction pour les groupes en pourcentages
      */
-    private final int groupDiscount = 10;
+    private final int groupDiscount = retrieveGroupDiscount();
 
     /**
      * Réduction pour les clients réguliers en pourcentages
      */
-    private final int regularClientDiscount = 20;
+    private final int regularClientDiscount = retrieveRegularClientDiscount();
 
     /**
      * Liste des factures en attente de paiement
@@ -182,31 +184,10 @@ public class BillingService {
      * @param bill facture
      */
     public void calculateTotalBillAmount(Bill bill) {
-        //Récupération des occupations liées à la réservation
-        ArrayList<Occupation> occupations = ReservationService.getInstance(hotel).getReservationOccupations(bill.getRESERVATION_ID());
-        //Montant total de la facture
-        double total_amount = 0.0;
-        //Pour chaque occupation
-        for (Occupation occupation : occupations) {
-            //Récupération du type de la chambre
-            RoomType roomType = occupation.getRoom().getRoomType();
-            //Ajout du montant du type de chambre au montant total pour le nombre de nuits passé
-            total_amount += roomType.getPRICE() * occupation.getReservation().getDURATION();
-            //Ajout du montant des services facturés
-            for (BilledService billedService : ClientService.getInstance().getBilledServices(occupation))
-                total_amount += billedService.getService().getPRICE();
-            //Promotion totale
-            double total_discount = 0.00;
-            //Réduction en fonction du nombre de personnes (isolé/groupe)
-            if (occupation.getReservation().getPEOPLE_COUNT() > 2) total_discount += groupDiscount;
-            //Réduction en fonction du status du client (régulier ou pas)
-            if (occupation.getReservation().getClient().getIS_REGULAR())
-                total_discount += regularClientDiscount;
-            //Application de la promotion totale
-            total_amount -= (total_amount * total_discount)/100;
-        }
+        //Récupération du montant total
+        double result = retrieveTotalAmount(bill);
         //Mise à jour du montant de la facture
-        bill.setAMOUNT((double) Math.round(total_amount * 100) / 100);
+        bill.setAMOUNT(result);
         //Mise à jour dans la base de données
         bill.updateColumn(Bill.Columns.AMOUNT);
     }

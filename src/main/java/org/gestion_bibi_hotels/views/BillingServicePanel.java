@@ -77,7 +77,7 @@ public class BillingServicePanel extends BorderPane {
         amount_col.setCellValueFactory(
                 param -> {
                     boolean condition = !(param.getValue().getAMOUNT() == 0.0);
-                    colorColumn(amount_col, Map.of(param.getValue().getAMOUNT() + "€",Color.BLACK,"À calculer",Color.RED));
+                    colorColumn(amount_col, Map.of("À calculer",Color.RED));
                     return new SimpleStringProperty(condition ? param.getValue().getAMOUNT() + "€" : "À calculer");
                 });
         //Colonne est payée
@@ -112,7 +112,8 @@ public class BillingServicePanel extends BorderPane {
                     public void updateItem(String item, boolean value) {
                         super.updateItem(item, value);
                         if (!isEmpty()) {
-                            setTextFill(conditionsColors.get(item));
+                            if (conditionsColors.get(item) == null) setTextFill(Color.BLACK);
+                            else setTextFill(conditionsColors.get(item));
                             setText(item);
                         }
                     }

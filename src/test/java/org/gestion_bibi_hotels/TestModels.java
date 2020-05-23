@@ -1,9 +1,12 @@
 package org.gestion_bibi_hotels;
 
+import org.gestion_bibi_hotels.database.DatabaseModel;
 import org.gestion_bibi_hotels.models.*;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import static org.gestion_bibi_hotels.database.DatabaseConnection.selectQuery;
 
 public abstract class TestModels {
     //Liste des modèles de test
@@ -39,7 +42,7 @@ public abstract class TestModels {
         occupation = new Occupation(reservation.getID(), room.getID(), false);
         occupant = new Occupant(occupation.getID(), "test", "test");
         service = new Service(hotel.getID(), "test", 100.00, false);
-        bill = new Bill(reservation.getID(), client.getID(), 0.00, false, false);
+        bill = (Bill) selectQuery(DatabaseModel.Tables.BILLS, "*", "WHERE RESERVATION_ID=" + reservation.getID()).get(0);
         billedService = new BilledService(occupation.getID(), service.getID(), false);
     }
 

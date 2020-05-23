@@ -1,5 +1,7 @@
 package org.gestion_bibi_hotels.database;
 
+import org.gestion_bibi_hotels.models.Bill;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
@@ -199,8 +201,7 @@ public class DatabaseConnection {
         //Suppression de la virgule à la fin de la chaine
         query = query.substring(0,query.length()-1);
         //Condition WHERE pour modifier seulement le tuple concerné
-        query = query.concat(" WHERE ID=" + model.getID());
-        //Récupération de l'instance
+        query = query.concat(" WHERE ID=" + model.getID());//Récupération de l'instance
         DatabaseConnection databaseConnection = getInstance();
         try {
             //Creation d'une instruction SQL
@@ -216,23 +217,89 @@ public class DatabaseConnection {
     }
 
     /**
-     * Vérifier les clés étrangères ou pas
-     * @param value valeur
+     * Récupérer le montant total d'une facture
+     * @param bill facture
      */
-    public static void checkForeignKeys(boolean value) {
-        String query = "SET FOREIGN_KEY_CHECKS=" + (value ? 1:0);
+    public static double retrieveTotalAmount(Bill bill) {
+        String query = "CALL getTotalAmount(" + bill.getRESERVATION_ID() + ")";
         //Récupération de l'instance
         DatabaseConnection databaseConnection = getInstance();
+        //Variable contenant le résultat
+        double result = 0.0;
         try {
             //Creation d'une instruction SQL
             Statement instruction = databaseConnection.connection.createStatement();
             //Execution de la requête
-            instruction.execute(query);
+            ResultSet resultSet = instruction.executeQuery(query);
+            //Récupération du résultat
+            resultSet.next();
+            //Mise à jour du résultat
+            result = resultSet.getDouble("total");
             //Fermeture de l'instruction (liberation des ressources)
             instruction.close();
         } catch (SQLException e) {
             //Message d'erreur
             System.err.println(e.getMessage());
         }
+        //Retour du résultat
+        return result;
+    }
+
+    /**
+     * Récupérer la promotion pour les clients réguliers
+     * @return montant
+     */
+    public static int retrieveRegularClientDiscount() {
+        String query = "SELECT getRegularClientDiscount()";
+        //Récupération de l'instance
+        DatabaseConnection databaseConnection = getInstance();
+        //Variable contenant le résultat
+        int result = 0;
+        try {
+            //Creation d'une instruction SQL
+            Statement instruction = databaseConnection.connection.createStatement();
+            //Execution de la requête
+            ResultSet resultSet = instruction.executeQuery(query);
+            //Récupération du résultat
+            resultSet.next();
+            //Mise à jour du résultat
+            result = resultSet.getInt("getRegularClientDiscount()");
+            //Fermeture de l'instruction (liberation des ressources)
+            instruction.close();
+        } catch (SQLException e) {
+            //Message d'erreur
+            System.err.println(e.getMessage());
+        }
+        //Retour du résultat
+        return result;
+    }
+
+    /**
+     * Récupérer la promotion pour les groupes
+     * @return montant
+     */
+    public static int retrieveGroupDiscount() {
+        String query = "SELECT getGroupDiscount()";
+        //Récupération de l'instance
+        DatabaseConnection databaseConnection = getInstance();
+        //Variable contenant le résultat
+        int result = 0;
+        try {
+            //Creation d'une instruction SQL
+            Statement instruction = databaseConnection.connection.createStatement();
+            //Execution de la requête
+            ResultSet resultSet = instruction.executeQuery(query);
+            //Récupération du résultat
+            resultSet.next();
+            //Mise à jour du résultat
+            result = resultSet.getInt("getGroupDiscount()");
+            //Fermeture de l'instruction (liberation des ressources)
+            instruction.close();
+        } catch (SQLException e) {
+            //Message d'erreur
+            System.err.println(e.getMessage());
+        }
+        //Retour du résultat
+        return result;
     }
 }

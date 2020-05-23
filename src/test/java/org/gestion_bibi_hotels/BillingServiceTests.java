@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import static org.gestion_bibi_hotels.database.DatabaseConnection.retrieveTotalAmount;
 import static org.junit.Assert.*;
 
 @RunWith(JfxRunner.class)
@@ -63,34 +64,23 @@ public class BillingServiceTests {
     public void check3CalculateTotalBillAmount() {
         assertEquals(0.0, TestModels.bill.getAMOUNT(), 0.0);
         BillingService.getInstance(TestModels.hotel).calculateTotalBillAmount(TestModels.bill);
-        double billedserviceprice = TestModels.billedService.getService().getPRICE();
-        double totalprice = (TestModels.room.getRoomType().getPRICE() * TestModels.reservation.getDURATION()) + billedserviceprice;
-        assertEquals(totalprice, TestModels.bill.getAMOUNT(), 0.0);
+        assertEquals(retrieveTotalAmount(TestModels.bill), TestModels.bill.getAMOUNT(), 0.0);
         TestModels.roomType.setPRICE(50.00);
         TestModels.roomType.updateColumn(RoomType.Columns.PRICE);
-        totalprice = (TestModels.room.getRoomType().getPRICE() * TestModels.reservation.getDURATION()) + billedserviceprice;
         BillingService.getInstance(TestModels.hotel).calculateTotalBillAmount(TestModels.bill);
-        assertEquals(totalprice, TestModels.bill.getAMOUNT(), 0.0);
+        assertEquals(retrieveTotalAmount(TestModels.bill), TestModels.bill.getAMOUNT(), 0.0);
         TestModels.reservation.setDURATION(5);
         TestModels.reservation.updateColumn(Reservation.Columns.DURATION);
-        totalprice = (TestModels.room.getRoomType().getPRICE() * TestModels.reservation.getDURATION()) + billedserviceprice;
         BillingService.getInstance(TestModels.hotel).calculateTotalBillAmount(TestModels.bill);
-        assertEquals(totalprice, TestModels.bill.getAMOUNT(), 0.0);
+        assertEquals(retrieveTotalAmount(TestModels.bill), TestModels.bill.getAMOUNT(), 0.0);
         TestModels.reservation.setPEOPLE_COUNT(4);
         TestModels.reservation.updateColumn(Reservation.Columns.PEOPLE_COUNT);
-        totalprice = ((TestModels.room.getRoomType().getPRICE() * TestModels.reservation.getDURATION())
-                + billedserviceprice);
-        totalprice -= (totalprice * BillingService.getInstance(TestModels.hotel).getGroupDiscount())/100.00;
         BillingService.getInstance(TestModels.hotel).calculateTotalBillAmount(TestModels.bill);
-        assertEquals(totalprice, TestModels.bill.getAMOUNT(), 0.0);
+        assertEquals(retrieveTotalAmount(TestModels.bill), TestModels.bill.getAMOUNT(), 0.0);
         TestModels.client.setIS_REGULAR(true);
         TestModels.client.updateColumn(Client.Columns.IS_REGULAR);
-        totalprice = ((TestModels.room.getRoomType().getPRICE() * TestModels.reservation.getDURATION())
-                + billedserviceprice);
-        totalprice -=  (totalprice * BillingService.getInstance(TestModels.hotel).getGroupDiscount())/100.00
-                + (totalprice * BillingService.getInstance(TestModels.hotel).getRegularClientDiscount())/100.00;
         BillingService.getInstance(TestModels.hotel).calculateTotalBillAmount(TestModels.bill);
-        assertEquals(totalprice, TestModels.bill.getAMOUNT(), 0.0);
+        assertEquals(retrieveTotalAmount(TestModels.bill), TestModels.bill.getAMOUNT(), 0.0);
     }
 
     /**

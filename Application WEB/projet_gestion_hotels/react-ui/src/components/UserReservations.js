@@ -139,14 +139,15 @@ class UserReservations extends Component {
                                                 <td>{reservation.duration} {reservation.duration > 1 ? "jours" : "jour"}</td>
                                                 <td>{reservation.room_count}</td>
                                                 <td>{reservation.people_count}</td>
-                                                <td className={reservation.is_archived ? "text-muted" : reservation.is_cancelled ? "text-danger" : reservation.is_payed ? "text-success" : "text-primary"}>{
-                                                    reservation.is_archived ? "Archivée" :
-                                                        reservation.is_cancelled ? "Annulée" :
-                                                            reservation.is_payed ? "Confirmée" : "Validée"
+                                                <td className={reservation.is_cancelled ? "text-danger" : reservation.is_archived ? "text-muted" : reservation.is_comfirmed ? "text-success" : reservation.is_payed ? "text-primary" : "text-warning"}>{
+                                                    reservation.is_cancelled ? "Annulée" :
+                                                        reservation.is_archived ? "Archivée" :
+                                                            reservation.is_comfirmed ? "En cours" :
+                                                                reservation.is_payed ? "Confirmée" : "Validée"
                                                 }</td>
                                                 <td className={"text-right"}>
-                                                    {!reservation.is_archived && !reservation.is_cancelled && !reservation.is_payed ? <Button variant={"outline-primary"} size={"sm"} className={"mr-2"} onClick={() => this.showPaymentModal(reservation)}>Payer</Button> : null}
-                                                    {!reservation.is_archived && !reservation.is_cancelled ? <Button variant={"outline-danger"} size={"sm"} onClick={() => this.cancelReservation(reservation)}>Annuler</Button> : null}
+                                                    {!reservation.is_archived && !reservation.is_comfirmed && !reservation.is_cancelled && !reservation.is_payed ? <Button variant={"outline-primary"} size={"sm"} className={"mr-2"} onClick={() => this.showPaymentModal(reservation)}>Payer</Button> : null}
+                                                    {!reservation.is_archived && !reservation.is_comfirmed && !reservation.is_cancelled ? <Button variant={"outline-danger"} size={"sm"} onClick={() => this.cancelReservation(reservation)}>Annuler</Button> : null}
                                                 </td>
                                             </tr>
                                         )

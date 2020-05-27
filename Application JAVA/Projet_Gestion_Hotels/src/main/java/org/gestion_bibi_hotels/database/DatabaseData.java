@@ -144,30 +144,8 @@ public class DatabaseData {
         //Récupération des données de la base de données toutes les 5s
         timer.schedule(new TimerTask() {
             public void run() {
-                //Service sélectionné
-                MainController.ServicePanel actual_service = MainController.getInstance().getSelected_service();
-                //Si le service existe
-                if (actual_service != null) {
-                    //Selon le service
-                    switch (actual_service) {
-                        case RESERVATION:
-                            //Récupération des réservations
-                            retrieveDatabaseReservations();
-                            break;
-                        case BILLING:
-                            //Récupération des factures
-                            retrieveDatabaseBills();
-                            break;
-                        case CLIENT:
-                            //Récupération des occupations
-                            retrieveDatabaseOccupations();
-                            //Récupération des services facturés
-                            retrieveDatabaseBilledServices();
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                //Rafraichissement des données de la base de données
+                retrieveDatabase();
             }
         } ,0,5000);
     }

@@ -57,11 +57,6 @@ public class MainController {
     private Hotel selected_hotel;
 
     /**
-     * Service sélectionné
-     */
-    private ServicePanel selected_service;
-
-    /**
      * Liste des services disponibles
      */
     public enum ServicePanel {
@@ -123,8 +118,6 @@ public class MainController {
      * Affichage de la fenêtre d'administration
      */
     public void switchToAdministration() {
-        //Service sélectionné Administration
-        selected_service = ServicePanel.ADMINISTRATION;
         //Affichage du panneau d'administration
         setWindow(administrationController.initPanel());
     }
@@ -133,8 +126,6 @@ public class MainController {
      * Affichage de la fenêtre du service client
      */
     public void switchToClientService() {
-        //Service sélectionné Client
-        selected_service = ServicePanel.CLIENT;
         //Affichage du service client
         setWindow(clientServiceController.initPanel());
     }
@@ -143,8 +134,6 @@ public class MainController {
      * Affichage de la fenêtre du service réservation
      */
     public void switchToReservationService() {
-        //Service sélectionné Réservation
-        selected_service = ServicePanel.RESERVATION;
         //Affichage du service réservation
         setWindow(reservationServiceController.initPanel());
     }
@@ -153,8 +142,6 @@ public class MainController {
      * Affichage de la fenêtre du service facturation
      */
     public void switchToBillingService() {
-        //Service sélectionné Facturation
-        selected_service = ServicePanel.BILLING;
         //Affichage de la fenêtre
         setWindow(billingServiceController.initPanel());
     }
@@ -185,9 +172,5 @@ public class MainController {
 
     public void setSelected_hotel(Hotel selected_hotel) {
         this.selected_hotel = selected_hotel;
-    }
-
-    public ServicePanel getSelected_service() {
-        return selected_service;
     }
 }

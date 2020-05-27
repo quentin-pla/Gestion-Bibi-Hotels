@@ -78,8 +78,8 @@ public class Administration {
         for (Hotel hotel : hotels) {
             //Pour chaque facture archivée de l'hotel
             for (Bill bill : BillingService.getInstance(hotel).getArchives()) {
-                //Si la date de sortie de la réservation est comprise dans les 3 derniers mois
-                if (cal.getTime().before(bill.getReservation().getEXIT_DATE())) {
+                //Si la date de sortie de la réservation est comprise dans les 3 derniers mois et que la réservation n'est pas annulée
+                if (cal.getTime().before(bill.getReservation().getEXIT_DATE()) && !bill.getReservation().getIS_CANCELLED()) {
                     //Nom du type de chambre
                     String room_type_name = bill.getReservation().getRoomType().getNAME();
                     //Incrémentation de 1 dans le ratio pour le type de chambre
@@ -105,8 +105,10 @@ public class Administration {
             results.put(hotel.getNAME(), 0.0);
             //Pour chaque facture archivée
             for (Bill bill : BillingService.getInstance(hotel).getArchives())
-                //Ajout des factures
-                results.put(hotel.getNAME(), results.get(hotel.getNAME()) + bill.getAMOUNT());
+                //Si la réservation liée n'est pas annulée
+                if (!bill.getReservation().getIS_CANCELLED())
+                    //Ajout des factures
+                    results.put(hotel.getNAME(), results.get(hotel.getNAME()) + bill.getAMOUNT());
         }
         //Retour des résultats
         return results;
@@ -120,13 +122,16 @@ public class Administration {
         Map<String,Integer> results = new HashMap<>();
         //Pour chaque service facturé
         for (BilledService billedService : DatabaseData.getInstance().getBilledServices().values()) {
-            //Si le service n'est pas contenu dans les résultats
-            if (!results.containsKey(billedService.getService().getNAME()))
-                //Ajout du service dans les résultats
-                results.put(billedService.getService().getNAME(), 1);
-            else
-                //Incrémentation du nombre de services facturés
-                results.put(billedService.getService().getNAME(), results.get(billedService.getService().getNAME()) + 1);
+            //Si la réservation liée n'est pas annulée
+            if (!billedService.getOccupation().getReservation().getIS_CANCELLED()) {
+                //Si le service n'est pas contenu dans les résultats
+                if (!results.containsKey(billedService.getService().getNAME()))
+                    //Ajout du service dans les résultats
+                    results.put(billedService.getService().getNAME(), 1);
+                else
+                    //Incrémentation du nombre de services facturés
+                    results.put(billedService.getService().getNAME(), results.get(billedService.getService().getNAME()) + 1);
+            }
         }
         //Retour des résultats
         return results;

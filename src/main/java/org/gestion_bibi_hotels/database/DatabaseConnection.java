@@ -13,17 +13,17 @@ public class DatabaseConnection {
     /**
      * URL de connexion
      */
-    private final String CONNECT_URL = "jdbc:mysql://mysql-gestion-hotel.alwaysdata.net/gestion-hotel_projet";
+    private final String CONNECT_URL = "jdbc:mysql://hote_mysql/base_de_donnees";
 
     /**
      * Identifiant
      */
-    private final String LOGIN = "***REMOVED***";
+    private final String LOGIN = "identifiant";
 
     /**
      * Mot de passe
      */
-    private final String PASSWORD = "***REMOVED***";
+    private final String PASSWORD = "mot_de_passe";
 
     /**
      * Connexion

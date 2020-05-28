@@ -25,6 +25,8 @@ application {
     mainClass.set("org.gestion_bibi_hotels.Main")
 }
 
+compileJava.options.encoding = 'UTF-8'
+
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {

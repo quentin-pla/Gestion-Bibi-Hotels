@@ -3,8 +3,8 @@ const sequelize = require('sequelize');
 const timezone = 'UTC';
 process.env.TZ = timezone;
 
-const connection = new sequelize.Sequelize('gestion-hotel_projet','***REMOVED***','***REMOVED***', {
-    host: 'mysql-gestion-hotel.alwaysdata.net',
+const connection = new sequelize.Sequelize('base_de_donnees','identifiant','mot_de_passe', {
+    host: 'host_mysql',
     dialect: 'mysql',
     logging: false,
     "timezone": "+02:00"
